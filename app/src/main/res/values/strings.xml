@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Interlink</string>
+    <string name="home">Inicio</string>
+    <string name="favorites">Favoritos</string>
+    <string name="devices">Dispositivos\n</string>
+    <string name="activity">Actividad\n</string>
+    <string name="inter_title">INTERLINK</string>
+</resources>
