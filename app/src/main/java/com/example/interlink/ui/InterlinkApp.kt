@@ -1,15 +1,14 @@
 package com.example.interlink.ui
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -19,13 +18,11 @@ import com.example.interlink.ui.components.BottomInterBar
 import com.example.interlink.ui.components.TopInterlinkBar
 import com.example.interlink.ui.navigation.InterNavHost
 import com.example.interlink.ui.theme.InterlinkTheme
-import com.example.interlink.ui.theme.md_theme_light_background
 
 // dejarle a bottom bar y riel por el divider, como la top bar
 
 // usar box with constraints para tema responsive
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InterlinkApp() {
     InterlinkTheme {
@@ -45,7 +42,6 @@ fun InterlinkApp() {
                             currentDestination = currentDestination,
                         ) { route ->
                             navController.navigate(route) {
-                                // Pop hasta la direccion de inicio inclusive
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
@@ -55,18 +51,24 @@ fun InterlinkApp() {
                         }
                     },
 
-                    modifier = Modifier.fillMaxHeight()
-                ) {
-                    InterNavHost(navController = navController)
+                    ) {innerPadding ->
+                    Box(
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                    {
+                        InterNavHost(navController = navController)
+                    }
                 }
             } else {
                 // app rail en row
                 // le paso la funcion que debe hacer cuando clickeo, como en el ejemplo del profe
                 Scaffold(
                     topBar = { TopInterlinkBar() }
-                ) {
+                ) {innerPadding ->
                     Row(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
                     ) {
                         //NavigationInterRail()
                         InterNavHost(navController = navController)
@@ -91,22 +93,9 @@ fun InterlinkAppPreview(){
     InterlinkApp()
 }
 
+/*
 @Preview(device = Devices.TABLET)
 @Composable
 fun InterlinkAppPreview2(){
     InterlinkApp()
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview
-@Composable
-fun scaffoldShow(){
-    InterlinkTheme{
-        Scaffold(
-            topBar = { TopInterlinkBar() },
-            containerColor = md_theme_light_background
-        ) {
-
-        }
-    }
-}
+}*/
