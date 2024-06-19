@@ -72,7 +72,6 @@ fun TopInterlinkBar() {
             },
             modifier = Modifier
                 .fillMaxSize()
-                .padding(),
 
         )
         HorizontalDivider(
