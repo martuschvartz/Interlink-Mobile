@@ -16,12 +16,3 @@ class RemoteAc : RemoteDevice<RemoteAcState>() {
         )
     }
 }
-
-/*
-"status": "off",
-        "temperature": 24,
-        "mode": "cool",
-        "verticalSwing": "auto",
-        "horizontalSwing": "auto",
-        "fanSpeed": "auto"
- */
