@@ -89,7 +89,6 @@ fun InterlinkApp() {
 @Preview
 @Composable
 fun InterlinkAppPreview(){
-
     InterlinkApp()
 }
 

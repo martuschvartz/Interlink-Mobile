@@ -30,10 +30,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.interlink.model.Device
+import com.example.interlink.model.DeviceType
+import com.example.interlink.model.Door
 import com.example.interlink.model.Lamp
 import com.example.interlink.model.Status
 import com.example.interlink.ui.InterlinkApp
 import com.example.interlink.ui.devices.DevicesViewModel
+import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.devices.LampUiState
 import com.example.interlink.ui.devices.LampViewModel
 import com.example.interlink.ui.getViewModelFactory
@@ -44,21 +47,27 @@ import com.example.interlink.ui.getViewModelFactory
 fun DevicesPage(
     modifier: Modifier = Modifier,
     viewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
-    lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
+    lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory()),
+    doorViewModel: DoorViewModel = viewModel(factory = getViewModelFactory()),
 ){
     val uiState by viewModel.uiState.collectAsState()
     val uiLampState by lampViewModel.uiState.collectAsState()
+    val uiDoorState by doorViewModel.uiState.collectAsState()
+    var selectedDeviceId : String? = null
 
     Column (
         modifier = modifier.fillMaxSize()
     ) {
 
-        DeviceList(devices = uiState.devices, lamp = uiLampState, onDeviceClick = { device ->
-            if (device is Lamp) {
-                lampViewModel.setCurrentDevice(device)
+        DeviceList(devices = uiState.devices, onDeviceClick = { device ->
+            selectedDeviceId = device.id
+            Log.d("Debug", "$selectedDeviceId")
+            when(device.type){
+                DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
+                DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
+                else -> {}
             }
         })
-
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -67,14 +76,14 @@ fun DevicesPage(
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
-                onClick = { lampViewModel.turnOn() },
+                onClick = { doorViewModel.open() },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text(text = "Turn On", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
             }
 
             Button(
-                onClick = { lampViewModel.turnOff() },
+                onClick = { doorViewModel.close() },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text(text = "Turn Off",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
@@ -83,9 +92,13 @@ fun DevicesPage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (uiLampState.currentDevice != null)
-            Text("Seleccionado: ${uiLampState.currentDevice!!.name}", color=Color.Black, style = MaterialTheme.typography.titleLarge)
-
+        if (selectedDeviceId != null) {
+            Text(
+                "Seleccionado: $selectedDeviceId",
+                color = Color.Black,
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
     }
 
 
@@ -93,7 +106,7 @@ fun DevicesPage(
 }
 
 @Composable
-fun DeviceList(devices: List<Device>, lamp: LampUiState, onDeviceClick: (Device) -> Unit) {
+fun DeviceList(devices: List<Device>, onDeviceClick: (Device) -> Unit) {
    LazyColumn {
         items(devices) { device ->
             DeviceItem(device = device, onClick = { onDeviceClick(device) })

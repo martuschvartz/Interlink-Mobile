@@ -22,11 +22,11 @@ class DoorViewModel(
     private val _uiState = MutableStateFlow(DoorUiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        collectOnViewModelScope(
-            repository.currentDevice
-        ) { state, response -> state.copy(currentDevice = response as Door?) }
-    }
+//    init {
+//        collectOnViewModelScope(
+//            repository.currentDevice
+//        ) { state, response -> state.copy(currentDevice = response as Door?) }
+//    }
 
     fun setCurrentDevice(device: Door) {
         _uiState.update { it.copy(currentDevice = device) }
