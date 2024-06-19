@@ -1,6 +1,7 @@
 package com.example.interlink.remote.api
 
 import com.example.interlink.remote.model.RemoteAc
+import com.example.interlink.remote.model.RemoteAlarm
 import com.example.interlink.remote.model.RemoteDevice
 import com.example.interlink.remote.model.RemoteDeviceType
 import com.example.interlink.remote.model.RemoteDoor
@@ -27,9 +28,10 @@ class DeviceTypeAdapter : JsonDeserializer<RemoteDevice<*>?> {
         val deviceTypeId = jsonDeviceTypeObject["id"].asString
 
         return when(deviceTypeId) {
-            RemoteDeviceType.LAMP_DEVICE_TYPE_ID -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteLamp?>() {}.type)
-            RemoteDeviceType.DOOR_DEVICE_TYPE_ID -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteDoor?>() {}.type)
-            RemoteDeviceType.AC_DEVICE_TYPE_ID -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAc?>() {}.type)
+            RemoteDeviceType.LAMP_DEVICE_TYPE_ID     -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteLamp?>() {}.type)
+            RemoteDeviceType.DOOR_DEVICE_TYPE_ID     -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteDoor?>() {}.type)
+            RemoteDeviceType.AC_DEVICE_TYPE_ID       -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAc?>() {}.type)
+            RemoteDeviceType.ALARM_DEVICE_TYPE_ID    -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAlarm?>() {}.type)
 
             else -> null
         }
