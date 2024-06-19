@@ -1,9 +1,7 @@
 package com.example.interlink.ui.pages
 
-import android.util.Log
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,9 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,6 +25,7 @@ import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
 import com.example.interlink.model.Lamp
+import com.example.interlink.ui.components.DeviceCard
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.devices.LampViewModel
@@ -70,21 +67,14 @@ fun DevicesPage(
     ) {
 
         // Esta primera funcion es lo primero que dejaria, mas abajo vas a ver porq en DeviceList()
-        DeviceList(devices = uiState.devices, onDeviceClick = { device ->
-
-            // Esto te lo deje por si queres hacer algo con solo expandir el seleccionado o algo asi, si no sacalo
-            selectedDeviceId = device.id
-
-            // El log para comprobar q selectedDeviceId va cambiando
-            Log.d("Debug", "$selectedDeviceId")
-
+        DeviceList(devices = uiState.devices){ device ->
             // Algo copado q encontre es este when() que funciona igual a un switch, lo re podes usar dentro de deviceCard en si :D!
             when(device.type){
                 DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
                 DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
                 else -> {}
             }
-        })
+        }
 
         // Esto que esta aca mandalo a la mierda pero te lo deje para q puedas ver como funciona la api
         Spacer(modifier = Modifier.height(16.dp))
@@ -146,12 +136,16 @@ fun DeviceList(devices: List<Device>, onDeviceClick: (Device) -> Unit) {
        // Trate de dejarte esto lo mas generico posible para q si cambias DeviceItem por DeviceCard (o como la quieras llamar) no sea dificil hacer el refractoring
        // Si no me dan mal los calculos solo tendrias que cambiar esto de aca para poner tus cards
         items(devices) { device ->
-            DeviceItem(device = device, onClick = { onDeviceClick(device) })
+            Box(modifier = Modifier.padding(10.dp)){
+                DeviceCard(device = device , onClick = { onDeviceClick(device) })
+            }
         }
     }
 
 }
 
+
+/*
 @Composable
 fun <T : Device> DeviceItem(device: T, onClick: () -> Unit) {
     // Nada importante aca, solo q la carta es clickeable y q tiene un outline, no mas q eso
@@ -170,4 +164,5 @@ fun <T : Device> DeviceItem(device: T, onClick: () -> Unit) {
             Text(text = device.name, color=Color.Black, style = MaterialTheme.typography.titleLarge)
         }
     }
-}
+}*/
+
