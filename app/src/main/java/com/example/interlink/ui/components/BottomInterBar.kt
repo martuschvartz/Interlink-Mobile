@@ -46,7 +46,8 @@ fun BottomInterBar(
                 CustomBarButton(
                     onClick = { onNavigate(item.route) },
                     destination = item,
-                    selected = item.route == currentDestination
+                    selected = item.route == currentDestination,
+                    tablet = false
                 )
             }
         }
