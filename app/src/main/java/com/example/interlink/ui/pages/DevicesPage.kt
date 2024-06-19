@@ -1,8 +1,5 @@
 package com.example.interlink.ui.pages
 
-import android.util.Log
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,31 +12,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+
+import com.example.interlink.model.Ac
+
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.interlink.model.Ac
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
 import com.example.interlink.model.Lamp
+
 import com.example.interlink.model.Status
 import com.example.interlink.ui.InterlinkApp
 import com.example.interlink.ui.devices.AcViewModel
+
+import com.example.interlink.ui.components.DeviceCard
+
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
-import com.example.interlink.ui.devices.LampUiState
 import com.example.interlink.ui.devices.LampViewModel
 import com.example.interlink.ui.getViewModelFactory
 
@@ -68,18 +66,17 @@ fun DevicesPage(
         modifier = modifier.fillMaxSize()
     ) {
 
-        DeviceList(devices = uiState.devices, onDeviceClick = { device ->
 
-            selectedDeviceId = device.id
-            Log.d("Debug", "$selectedDeviceId")
-
+        // Esta primera funcion es lo primero que dejaria, mas abajo vas a ver porq en DeviceList()
+        DeviceList(devices = uiState.devices){ device ->
+            // Algo copado q encontre es este when() que funciona igual a un switch, lo re podes usar dentro de deviceCard en si :D!
             when(device.type){
                 DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
                 DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
                 DeviceType.AC -> acViewModel.setCurrentDevice(device as Ac)
                 else -> {}
             }
-        })
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Test controls",  color=Color.Black, style = MaterialTheme.typography.titleLarge)
@@ -128,14 +125,19 @@ fun DevicesPage(
 fun DeviceList(devices: List<Device>, onDeviceClick: (Device) -> Unit) {
    LazyColumn {
         items(devices) { device ->
-            DeviceItem(device = device, onClick = { onDeviceClick(device) })
+            Box(modifier = Modifier.padding(10.dp)){
+                DeviceCard(device = device , onClick = { onDeviceClick(device) })
+            }
         }
     }
 
 }
 
+
+/*
 @Composable
-fun DeviceItem(device: Device, onClick: () -> Unit) {
+fun <T : Device> DeviceItem(device: T, onClick: () -> Unit) {
+    // Nada importante aca, solo q la carta es clickeable y q tiene un outline, no mas q eso
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -151,4 +153,5 @@ fun DeviceItem(device: Device, onClick: () -> Unit) {
             Text(text = device.name, color=Color.Black, style = MaterialTheme.typography.titleLarge)
         }
     }
-}
+}*/
+

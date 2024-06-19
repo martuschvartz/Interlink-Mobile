@@ -5,4 +5,11 @@
     <string name="devices">Devices\n</string>
     <string name="activity">Activity\n</string>
     <string name="inter_title">INTERLINK</string>
+
+    <!-- Para la puerta -->
+    <string name="opened">Opened</string>
+    <string name="closed">Closed</string>
+    <string name="locked">Locked</string>
+    <string name="unlocked">Unlocked</string>
+
 </resources>
