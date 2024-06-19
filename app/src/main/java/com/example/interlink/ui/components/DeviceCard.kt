@@ -24,7 +24,7 @@ fun DeviceCard(){
         modifier = Modifier
             .height(200.dp)
     ) {
-        Text(text = "Device ")
+        Text(text = "com.example.interlink.model.Device ")
     }
 
 }
