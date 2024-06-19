@@ -1,5 +1,6 @@
 package com.example.interlink.ui.pages
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,26 +40,24 @@ fun DevicesPage(
     viewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
     lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory())
 ){
-
     val uiState by viewModel.uiState.collectAsState()
     val uiLampState by lampViewModel.uiState.collectAsState()
 
-//    Box(
-//        modifier = modifier
-//    ){
-//        Text(text = "Devices $uiState.devices, $uiLampState", color = Color.Black)
-//    }
-
-    DeviceList(devices = uiState.devices, lamp = uiLampState)
+    DeviceList(devices = uiState.devices, lamp = uiLampState, onDeviceClick = { device ->
+        Log.d("DevicesPage", "Clicked Device: ${device.name}")
+        if (device is Lamp) {
+            lampViewModel.setCurrentDevice(device)
+        }
+    })
 }
 
 @Composable
-fun DeviceList(devices: List<Device>, lamp: LampUiState) {
+fun DeviceList(devices: List<Device>, lamp: LampUiState, onDeviceClick: (Device) -> Unit) {
    Column(
         modifier = Modifier.fillMaxSize()
     ) {
         devices.forEach { device ->
-            DeviceItem(device = device)
+            DeviceItem(device = device, onClick = { onDeviceClick(device) })
         }
        if (lamp.currentDevice != null)
        Text(text = lamp.currentDevice.name, color = Color.Black)
@@ -68,12 +67,12 @@ fun DeviceList(devices: List<Device>, lamp: LampUiState) {
 }
 
 @Composable
-fun DeviceItem(device: Device) {
+fun DeviceItem(device: Device, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { /* Handle item click */ },
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
