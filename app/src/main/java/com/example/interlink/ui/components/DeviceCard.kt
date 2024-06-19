@@ -1,30 +1,268 @@
 package com.example.interlink.ui.components
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.HeartBroken
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.RemoveCircle
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
+import com.example.interlink.ui.theme.md_theme_light_intergreen
+import com.example.interlink.ui.theme.md_theme_light_interred
 
 
+// recibe el showmoreText, que hacer cuando se clickea (que es negar el showMoreText)
+// ,el icono, el favorito
 @Composable
 fun DeviceCard(){
 
-    // por default la variable arranca sin expandirse
+    // por default la card arranca sin expandirse
+    var expanded by remember { mutableStateOf(false) }
+
+    // por default la card muestra info básica
+    var veryExpanded by remember { mutableStateOf(false) }
+
+
+    // por default la card arranca sin ser favorita
+    var fav by remember { mutableStateOf(false) }
+
+
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = md_theme_light_background
+            containerColor = md_theme_light_coffee
         ),
         modifier = Modifier
-            .height(200.dp)
-    ) {
-        Text(text = "com.example.interlink.model.Device ")
+            .wrapContentSize(),
+        shape = RoundedCornerShape(10.dp),
+        border = BorderStroke(3.dp, Color.Black)
+    ){
+        Column(
+            modifier = Modifier
+                .padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = md_theme_light_background
+                ),
+                modifier = Modifier
+                    .width(320.dp)
+                    .wrapContentHeight()
+                    .clickable {
+                        expanded = !expanded
+                               },
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(3.dp, Color.Black)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    // el icon es un placeholder
+                                    imageVector = Icons.Default.HeartBroken,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.padding(1.dp))
+                                Text(
+                                    // el titulo es un placeholder
+                                    text = "title",
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+
+                        Column {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                if (fav) {
+                                    IconButton(
+                                        onClick = { fav = !fav }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Star,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(width = 35.dp, height = 37.dp),
+                                            tint = Color(0xFFFFB703),
+                                        )
+                                    }
+                                } else {
+                                    IconButton(
+                                        onClick = { fav = !fav }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.StarOutline,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(width = 35.dp, height = 37.dp),
+                                            tint = Color.Black,
+                                        )
+                                    }
+                                }
+
+                                if (expanded) {
+                                    Icon(
+                                        imageVector = Icons.Default.KeyboardArrowUp,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(37.dp)
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.KeyboardArrowDown,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(37.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    if (expanded) {
+                        // aca va la información de los dispositivos
+                        Text(text = "more info")
+                    }
+                    if(veryExpanded){
+                        Text("MORE INFO")
+                    }
+                }
+            }
+
+            if (!expanded){
+                Spacer(modifier = Modifier.padding(5.dp))
+                Row(
+                    modifier = Modifier
+                        .width(320.dp)
+                ){
+                    Text(text = "basic info")
+                }
+            }
+
+            if(!veryExpanded && expanded) {
+                Spacer(modifier = Modifier.padding(10.dp))
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = md_theme_light_intergreen
+                    ),
+                    modifier = Modifier
+                        .height(60.dp)
+                        .wrapContentWidth()
+                        .clickable { veryExpanded = !veryExpanded },
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxHeight(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ){
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AddCircle,
+                                contentDescription = null,
+                            )
+                            Spacer(modifier = Modifier.padding(3.dp))
+                            Text(
+                                text = "Ver más detalle",
+                                style = MaterialTheme.typography.titleLarge
+                                )
+                        }
+                    }
+                }
+            }
+
+            if(veryExpanded && expanded) {
+                Spacer(modifier = Modifier.padding(10.dp))
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = md_theme_light_interred
+                    ),
+                    modifier = Modifier
+                        .height(60.dp)
+                        .wrapContentWidth()
+                        .clickable { veryExpanded = !veryExpanded },
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxHeight(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ){
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.RemoveCircle,
+                                contentDescription = null,
+                            )
+                            Spacer(modifier = Modifier.padding(3.dp))
+                            Text(
+                                text = "Ocultar",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
@@ -33,20 +271,16 @@ fun DeviceCard(){
 @Preview()
 @Composable
 fun DeviceCardPreview(){
-
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = md_theme_light_coffee,
-        ),
+    Surface(
         modifier = Modifier
-            //.wrapContentHeight()
-            .size(300.dp)
-
-
-
-    ){
+            .size(500.dp),
+        color = Color.White,
+    ) {
+        Box(
+            modifier = Modifier.padding(10.dp),
+        ){
+            DeviceCard()
+        }
 
     }
-
-    DeviceCard()
 }

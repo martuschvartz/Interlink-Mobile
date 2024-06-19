@@ -19,6 +19,7 @@ import com.example.interlink.ui.navigation.AppNavigation
 
 @Composable
 fun CustomBarButton(
+    tablet: Boolean,
     selected: Boolean = false,
     onClick: () -> Unit,
     destination: AppNavigation
@@ -49,12 +50,16 @@ fun CustomBarButton(
                         .align(Alignment.CenterHorizontally)
                         .size(41.dp)
                 )
-                Text(
-                    text = stringResource(id = destination.title),
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally) ,
-                    color = color
-                )
+
+                // Para la tablet, no muestra el texto de aquellos botones no seleccionados
+                if(selected || !tablet) {
+                    Text(
+                        text = stringResource(id = destination.title),
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                        color = color
+                    )
+                }
             }
         }
     }
@@ -63,5 +68,5 @@ fun CustomBarButton(
 @Preview
 @Composable
 fun CustomBarButtonPreview(){
-    CustomBarButton(onClick = {}, destination = AppNavigation.ACTIVITY  , selected = true)
+    CustomBarButton(onClick = {}, destination = AppNavigation.ACTIVITY  , selected = true, tablet = false)
 }
