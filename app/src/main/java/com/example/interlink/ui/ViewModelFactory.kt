@@ -11,6 +11,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.example.interlink.ApiApplication
 import com.example.interlink.repository.DeviceRepository
 import com.example.interlink.ui.devices.DevicesViewModel
+import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.devices.LampViewModel
 
 @Composable
@@ -42,6 +43,9 @@ public class ViewModelFactory (
 
             isAssignableFrom(LampViewModel::class.java) ->
                 LampViewModel(deviceRepository)
+
+            isAssignableFrom(DoorViewModel::class.java) ->
+                DoorViewModel(deviceRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
