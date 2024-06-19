@@ -1,15 +1,15 @@
 package com.example.interlink.ui.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,15 +30,21 @@ fun AlarmDialog(
     onConfirmation: () -> Unit,
 ){
     Dialog(onDismissRequest){
-        ElevatedCard(
+        Card(
            modifier = Modifier
                .size(310.dp, 226.dp)
-               .border(3.dp, Color.Black, RoundedCornerShape(10.dp)),
+               .customShadow(
+                   borderRadius = 10.dp,
+                   offsetY = 5.dp,
+                   offsetX = 5.dp,
+                   spread = 3f
+               ),
+            border = BorderStroke(3.dp, Color.Black),
            shape = RoundedCornerShape(10.dp),
            colors = CardDefaults.cardColors(
                containerColor = md_theme_light_background,
                contentColor = Color.Black
-           ),
+           )
         ) {
             Column(
                 modifier = Modifier
