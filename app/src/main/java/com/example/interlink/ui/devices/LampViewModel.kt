@@ -28,6 +28,10 @@ class LampViewModel(
         ) { state, response -> state.copy(currentDevice = response as Lamp?) }
     }
 
+    fun setCurrentDevice(device: Lamp) {
+        _uiState.update { it.copy(currentDevice = device) }
+    }
+
     fun turnOn() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Lamp.TURN_ON_ACTION) },
         { state, _ -> state }
