@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.interlink.model.Ac
 
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interlink.model.Alarm
 
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
@@ -35,6 +36,7 @@ import com.example.interlink.ui.InterlinkApp
 import com.example.interlink.ui.devices.AcViewModel
 
 import com.example.interlink.ui.components.DeviceCard
+import com.example.interlink.ui.devices.AlarmViewModel
 
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
@@ -55,6 +57,7 @@ fun DevicesPage(
     lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory()),
     doorViewModel: DoorViewModel = viewModel(factory = getViewModelFactory()),
     acViewModel: AcViewModel = viewModel(factory = getViewModelFactory()),
+    alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory()),
 ){
 
     val uiState by viewModel.uiState.collectAsState()
@@ -74,6 +77,7 @@ fun DevicesPage(
                 DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
                 DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
                 DeviceType.AC -> acViewModel.setCurrentDevice(device as Ac)
+                DeviceType.ALARM -> alarmViewModel.setCurrentDevice(device as Alarm)
                 else -> {}
             }
         }
@@ -87,31 +91,40 @@ fun DevicesPage(
         ) {
 
             Button(
-                onClick = { acViewModel.turnOn() },
+                onClick = { alarmViewModel.armStay("1234") },
                 modifier = Modifier.padding(8.dp)
             ) {
-                Text(text = "Turn On", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "arm", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
             }
 
             Button(
-                onClick = { acViewModel.turnOff() },
+                onClick = { alarmViewModel.disarm("1234") },
                 modifier = Modifier.padding(8.dp)
             ) {
-                Text(text = "Turn Off",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "disarm",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+
+            Button(
+                onClick = { alarmViewModel.changeSecurityCode("1234", "0000") },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(text = "Change", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
             }
 
             Button(
-                onClick = { acViewModel.setMode("cool") },
+                onClick = { alarmViewModel.changeSecurityCode("0000", "1234") },
                 modifier = Modifier.padding(8.dp)
             ) {
-                Text(text = "cool",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
-            }
-
-            Button(
-                onClick = { acViewModel.setMode("heat") },
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(text = "heat",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "ChangeBack",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
             }
         }
 
