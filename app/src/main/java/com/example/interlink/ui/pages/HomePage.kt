@@ -24,7 +24,6 @@ import com.example.interlink.ui.theme.md_theme_light_coffee
 fun HomePage(
     modifier: Modifier = Modifier
 ){
-
     Box(
         modifier = Modifier
             .fillMaxSize()

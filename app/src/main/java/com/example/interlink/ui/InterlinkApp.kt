@@ -101,7 +101,6 @@ fun InterlinkApp() {
 @Preview(locale = "es")
 @Composable
 fun InterlinkAppPreview(){
-
     InterlinkApp()
 }
 
