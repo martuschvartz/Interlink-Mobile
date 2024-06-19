@@ -43,6 +43,11 @@ import com.example.interlink.ui.getViewModelFactory
 
 // el modifier default es la misma clase Modifier, sino es el que le paso
 
+// Algo importante: Todo lo q esta adentro de model, remote y repository no es *necesario* q lo leas
+// Si lo queres leer by all means go ahead asi entendes mas mejor q esta pasando con el api pero te deje las cosas para q
+// esten lo mas simples posibles para q puedas meterle al ui y te despreocupes por el api
+// Obvio q si algo esta mal avisame
+
 @Composable
 fun DevicesPage(
     modifier: Modifier = Modifier,
@@ -50,18 +55,37 @@ fun DevicesPage(
     lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory()),
     doorViewModel: DoorViewModel = viewModel(factory = getViewModelFactory()),
 ){
+
+    // Estas variables iniciales son las que podemos usar para ver los estados de los devices, la idea es la siguiente:
+        // El uiState generico (el primero) es el que tiene la lista de devices y se actualiza sola, es genial
+        // Cada tipo de dispositivo tiene a su vez su propio uiState para poder controlar sus funciones, andate a interlink/ui/devices/DoorUiState para ver el ejemplo
     val uiState by viewModel.uiState.collectAsState()
     val uiLampState by lampViewModel.uiState.collectAsState()
     val uiDoorState by doorViewModel.uiState.collectAsState()
     var selectedDeviceId : String? = null
 
+    // ===========================================================================================
+    // A partir de aca irian los devices, atm solo tengo hecho lo de door y lamp pero los demas
+    // salen facil, lo dificil era la infraestructura general q ya esta 10 puntos, estos botones
+    // si prendes la api y agregas una(s) puertas/lamparas van a funcionar y ya hacen los llamados
+    // y demas con la api, si esta apagada va a tirar error en la consola (allegedly)
+    // ===========================================================================================
+
+    // Columna generica
     Column (
         modifier = modifier.fillMaxSize()
     ) {
 
+        // Esta primera funcion es lo primero que dejaria, mas abajo vas a ver porq en DeviceList()
         DeviceList(devices = uiState.devices, onDeviceClick = { device ->
+
+            // Esto te lo deje por si queres hacer algo con solo expandir el seleccionado o algo asi, si no sacalo
             selectedDeviceId = device.id
+
+            // El log para comprobar q selectedDeviceId va cambiando
             Log.d("Debug", "$selectedDeviceId")
+
+            // Algo copado q encontre es este when() que funciona igual a un switch, lo re podes usar dentro de deviceCard en si :D!
             when(device.type){
                 DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
                 DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
@@ -69,35 +93,53 @@ fun DevicesPage(
             }
         })
 
+        // Esto que esta aca mandalo a la mierda pero te lo deje para q puedas ver como funciona la api
         Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Door controls",  color=Color.Black, style = MaterialTheme.typography.titleLarge)
 
+        // Algo asi tipo estas rows son las q me imagino que podrian ir adnetro de las cartas de dispositivos solo q mas lindos
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
+
             Button(
+                // en este caso usamos el doorViewModel q controla puertas y tiene la funcion open que la ejecuta sobre el currentDevice
                 onClick = { doorViewModel.open() },
                 modifier = Modifier.padding(8.dp)
             ) {
-                Text(text = "Turn On", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Open", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
             }
 
             Button(
                 onClick = { doorViewModel.close() },
                 modifier = Modifier.padding(8.dp)
             ) {
-                Text(text = "Turn Off",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Close",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Light controls",  color=Color.Black, style = MaterialTheme.typography.titleLarge)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
 
-        if (selectedDeviceId != null) {
-            Text(
-                "Seleccionado: $selectedDeviceId",
-                color = Color.Black,
-                style = MaterialTheme.typography.titleLarge
-            )
+            Button(
+                // Same as el caso de door solo q ni mires lamp porq lo voy a terminar volando probablemente
+                onClick = { lampViewModel.turnOn() },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(text = "Turn On", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+            }
+
+            Button(
+                onClick = { lampViewModel.turnOff() },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(text = "Turn Off",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+            }
         }
     }
 
@@ -108,6 +150,8 @@ fun DevicesPage(
 @Composable
 fun DeviceList(devices: List<Device>, onDeviceClick: (Device) -> Unit) {
    LazyColumn {
+       // Trate de dejarte esto lo mas generico posible para q si cambias DeviceItem por DeviceCard (o como la quieras llamar) no sea dificil hacer el refractoring
+       // Si no me dan mal los calculos solo tendrias que cambiar esto de aca para poner tus cards
         items(devices) { device ->
             DeviceItem(device = device, onClick = { onDeviceClick(device) })
         }
@@ -117,6 +161,7 @@ fun DeviceList(devices: List<Device>, onDeviceClick: (Device) -> Unit) {
 
 @Composable
 fun DeviceItem(device: Device, onClick: () -> Unit) {
+    // Nada importante aca, solo q la carta es clickeable y q tiene un outline, no mas q eso
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
