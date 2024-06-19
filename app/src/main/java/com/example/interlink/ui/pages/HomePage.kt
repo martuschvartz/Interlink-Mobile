@@ -12,4 +12,5 @@ fun HomePage(
     modifier: Modifier = Modifier
 ){
     Text(text = "Home", color = Color.Black)
+    Text(text = "Home", color = Color.Black)
 }
