@@ -7,9 +7,15 @@
     <string name="activity">Actividad\n</string>
     <string name="inter_title">INTERLINK</string>
 
+    <!-- Estados -->
+    <string name="open">Abrir</string>
+    <string name="close">Cerrar</string>
+
     <!-- Para la puerta -->
     <string name="opened">Abierto</string>
     <string name="closed">Cerrado</string>
     <string name="locked">Trabada</string>
     <string name="unlocked">Destrabada</string>
+    <string name="state">Estado:</string>
+    <string name="lock">Traba:</string>
 </resources>
