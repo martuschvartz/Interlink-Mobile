@@ -10,6 +10,8 @@
     <!-- Estados -->
     <string name="open">Abrir</string>
     <string name="close">Cerrar</string>
+    <string name="lockAction">Trabar</string>
+    <string name="unlockAction">Destrabar</string>
 
     <!-- Para la puerta -->
     <string name="opened">Abierto</string>
