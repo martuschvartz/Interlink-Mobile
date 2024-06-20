@@ -35,4 +35,7 @@ interface DeviceService {
         @Path("action") action: String,
         @Body parameters: Array<*>
     ): Response<RemoteResult<Array<*>>>
+
+    @GET("devices/events")
+    suspend fun getEvents(): Response<RemoteResult<List<RemoteDevice<*>>>>
 }
