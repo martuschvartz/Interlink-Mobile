@@ -42,8 +42,10 @@ import androidx.lifecycle.ViewModel
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
+import com.example.interlink.model.Speaker
 import com.example.interlink.ui.components.devices.actions.DoorAction
 import com.example.interlink.ui.components.devices.description.DoorDescription
+import com.example.interlink.ui.components.devices.description.SpeakerDescription
 import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
@@ -219,7 +221,7 @@ fun <T : Device, VM : ViewModel> DeviceCard(
                     ) {
                         when(device.type){
                             DeviceType.LAMP -> {}
-                            DeviceType.SPEAKER -> {}
+                            DeviceType.SPEAKER -> SpeakerDescription(device as Speaker)
                             DeviceType.BLINDS -> {}
                             DeviceType.ALARM -> {}
                             DeviceType.DOOR -> DoorDescription(device as Door)

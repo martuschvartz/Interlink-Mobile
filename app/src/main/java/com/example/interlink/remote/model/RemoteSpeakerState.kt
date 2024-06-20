@@ -14,6 +14,6 @@ class RemoteSpeakerState {
     lateinit var genre: String
 
     @SerializedName("song")
-    lateinit var song: Song
+    var song: Song? = null
 
 }
