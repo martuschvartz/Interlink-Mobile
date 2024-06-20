@@ -40,9 +40,13 @@ class Ac (
     }
 
     companion object {
-        const val OPEN_ACTION = "open"
-        const val CLOSE_ACTION = "close"
-        const val LOCK_ACTION = "lock"
-        const val UNLOCK_ACTION = "unlock"
+        const val TURN_ON_ACTION = "turnOn"
+        const val TURN_OFF_ACTION = "turnOff"
+        const val SET_TEMPERATURE_ACTION = "setTemperature"
+        const val SET_MODE_ACTION = "setMode"
+        const val SET_VERTICAL_SWING_ACTION = "setVerticalSwing"
+        const val SET_HORIZONTAL_SWING_ACTION = "setHorizontalSwing"
+        const val SET_FAN_SPEED_ACTION = "setFanSpeed"
+
     }
 }

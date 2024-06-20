@@ -11,11 +11,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+
+import com.example.interlink.model.Ac
+
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
 import com.example.interlink.model.Lamp
+
+import com.example.interlink.model.Status
+import com.example.interlink.ui.InterlinkApp
+import com.example.interlink.ui.devices.AcViewModel
+
 import com.example.interlink.ui.components.DeviceCard
+
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.devices.LampViewModel
@@ -34,24 +44,14 @@ fun DevicesPage(
     viewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
     lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory()),
     doorViewModel: DoorViewModel = viewModel(factory = getViewModelFactory()),
+    acViewModel: AcViewModel = viewModel(factory = getViewModelFactory()),
 ){
 
-    // Estas variables iniciales son las que podemos usar para ver los estados de los devices, la idea es la siguiente:
-        // El uiState generico (el primero) es el que tiene la lista de devices y se actualiza sola, es genial
-        // Cada tipo de dispositivo tiene a su vez su propio uiState para poder controlar sus funciones, andate a interlink/ui/devices/DoorUiState para ver el ejemplo
     val uiState by viewModel.uiState.collectAsState()
     val uiLampState by lampViewModel.uiState.collectAsState()
     val uiDoorState by doorViewModel.uiState.collectAsState()
     var selectedDeviceId : String? = null
 
-    // ===========================================================================================
-    // A partir de aca irian los devices, atm solo tengo hecho lo de door y lamp pero los demas
-    // salen facil, lo dificil era la infraestructura general q ya esta 10 puntos, estos botones
-    // si prendes la api y agregas una(s) puertas/lamparas van a funcionar y ya hacen los llamados
-    // y demas con la api, si esta apagada va a tirar error en la consola (allegedly)
-    // ===========================================================================================
-
-    // Columna generica
     Column (
         modifier = modifier.fillMaxSize()
     ) {
@@ -90,8 +90,6 @@ fun DevicesPage(
 @Composable
 fun DeviceList(devices: List<Device>, onDeviceClick: (Device) -> Unit) {
    LazyColumn {
-       // Trate de dejarte esto lo mas generico posible para q si cambias DeviceItem por DeviceCard (o como la quieras llamar) no sea dificil hacer el refractoring
-       // Si no me dan mal los calculos solo tendrias que cambiar esto de aca para poner tus cards
         items(devices) { device ->
             Box(modifier = Modifier.padding(10.dp)){
                 DeviceCard(device = device, viewModel = , onClick = { onDeviceClick(device) })
