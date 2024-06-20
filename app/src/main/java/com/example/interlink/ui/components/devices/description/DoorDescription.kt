@@ -20,11 +20,10 @@ fun DoorDescription(
 ){
     // si en la pagina no cambia la descripcion es porque aca lo puse como variable "no ref"
 
-    var status = when(doorDevice.status){
-        Status.ON -> null
-        Status.OFF -> null
+    val status = when(doorDevice.status){
         Status.OPENED -> stringResource(id = R.string.opened)
         Status.CLOSED -> stringResource(id = R.string.closed)
+        else -> null
     }
 
     Row {
