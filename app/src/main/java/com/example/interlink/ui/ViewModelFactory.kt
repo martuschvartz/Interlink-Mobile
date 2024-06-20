@@ -16,6 +16,7 @@ import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.devices.LampViewModel
+import com.example.interlink.ui.devices.SpeakerViewModel
 
 @Composable
 fun getViewModelFactory(defaultArgs: Bundle? = null): ViewModelFactory {
@@ -58,6 +59,9 @@ public class ViewModelFactory (
 
             isAssignableFrom(BlindsViewModel::class.java) ->
                 BlindsViewModel(deviceRepository)
+
+            isAssignableFrom(SpeakerViewModel::class.java) ->
+                SpeakerViewModel(deviceRepository)
 
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

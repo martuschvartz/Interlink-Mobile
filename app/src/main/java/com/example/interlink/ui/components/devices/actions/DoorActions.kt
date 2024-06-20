@@ -42,6 +42,7 @@ fun DoorAction(
         Status.OFF -> null
         Status.OPENED -> stringResource(id = R.string.opened)
         Status.CLOSED -> stringResource(id = R.string.closed)
+        else -> null
     }
 
     Row(

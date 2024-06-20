@@ -21,6 +21,7 @@ import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
 import com.example.interlink.model.Lamp
+import com.example.interlink.model.Speaker
 
 import com.example.interlink.model.Status
 import com.example.interlink.ui.InterlinkApp
@@ -33,6 +34,7 @@ import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.devices.LampViewModel
+import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.getViewModelFactory
 
 // el modifier default es la misma clase Modifier, sino es el que le paso
@@ -51,6 +53,7 @@ fun DevicesPage(
     acViewModel: AcViewModel = viewModel(factory = getViewModelFactory()),
     alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory()),
     blindsViewModel: BlindsViewModel = viewModel(factory = getViewModelFactory()),
+    speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory()),
 ){
 
     val uiState by viewModel.uiState.collectAsState()
@@ -66,19 +69,22 @@ fun DevicesPage(
             items(uiState.devices) { device ->
                 Box(modifier = Modifier.padding(10.dp)){
                     val deviceViewModel = when(device.type){
-                        DeviceType.LAMP -> lampViewModel
-                        DeviceType.SPEAKER -> null
-                        DeviceType.BLINDS -> null
-                        DeviceType.ALARM -> null
-                        DeviceType.DOOR -> doorViewModel
-                        DeviceType.AC -> null
+                        DeviceType.LAMP     -> lampViewModel
+                        DeviceType.SPEAKER  -> speakerViewModel
+                        DeviceType.BLINDS   -> blindsViewModel
+                        DeviceType.ALARM    -> alarmViewModel
+                        DeviceType.DOOR     -> doorViewModel
+                        DeviceType.AC       -> acViewModel
                     }
                     DeviceCard(device = device, viewModel = deviceViewModel ) { device ->
                         // Algo copado q encontre es este when() que funciona igual a un switch, lo re podes usar dentro de deviceCard en si :D!
                         when(device.type){
-                            DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
-                            DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
-                            else -> {}
+                            DeviceType.LAMP     -> lampViewModel.setCurrentDevice(device as Lamp)
+                            DeviceType.DOOR     -> doorViewModel.setCurrentDevice(device as Door)
+                            DeviceType.SPEAKER  -> speakerViewModel.setCurrentDevice(device as Speaker)
+                            DeviceType.BLINDS   -> blindsViewModel.setCurrentDevice(device as Blinds)
+                            DeviceType.ALARM    -> alarmViewModel.setCurrentDevice(device as Alarm)
+                            DeviceType.AC       -> acViewModel.setCurrentDevice(device as Ac)
                         }
                     }
                 }

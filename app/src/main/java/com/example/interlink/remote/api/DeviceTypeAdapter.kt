@@ -7,6 +7,7 @@ import com.example.interlink.remote.model.RemoteDevice
 import com.example.interlink.remote.model.RemoteDeviceType
 import com.example.interlink.remote.model.RemoteDoor
 import com.example.interlink.remote.model.RemoteLamp
+import com.example.interlink.remote.model.RemoteSpeaker
 import com.google.gson.Gson
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -34,6 +35,7 @@ class DeviceTypeAdapter : JsonDeserializer<RemoteDevice<*>?> {
             RemoteDeviceType.AC_DEVICE_TYPE_ID       -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAc?>() {}.type)
             RemoteDeviceType.ALARM_DEVICE_TYPE_ID    -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAlarm?>() {}.type)
             RemoteDeviceType.BLINDS_DEVICE_TYPE_ID    -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteBlinds?>() {}.type)
+            RemoteDeviceType.SPEAKER_DEVICE_TYPE_ID    -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteSpeaker?>() {}.type)
 
             else -> null
         }
