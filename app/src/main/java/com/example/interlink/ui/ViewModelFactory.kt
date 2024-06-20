@@ -12,6 +12,7 @@ import com.example.interlink.ApiApplication
 import com.example.interlink.repository.DeviceRepository
 import com.example.interlink.ui.devices.AcViewModel
 import com.example.interlink.ui.devices.AlarmViewModel
+import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.devices.LampViewModel
@@ -54,6 +55,9 @@ public class ViewModelFactory (
 
             isAssignableFrom(AlarmViewModel::class.java) ->
                 AlarmViewModel(deviceRepository)
+
+            isAssignableFrom(BlindsViewModel::class.java) ->
+                BlindsViewModel(deviceRepository)
 
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

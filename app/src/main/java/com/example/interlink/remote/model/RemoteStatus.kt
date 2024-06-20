@@ -7,6 +7,8 @@ object RemoteStatus {
     const val OFF = "off"
     const val OPENED = "opened"
     const val CLOSED = "closed"
+    const val OPENING = "opening"
+    const val CLOSING = "closing"
 
 
     fun asModel(status: String): Status {
@@ -15,6 +17,8 @@ object RemoteStatus {
             OFF -> Status.OFF
             OPENED -> Status.OPENED
             CLOSED -> Status.CLOSED
+            OPENING -> Status.OPENING
+            CLOSING -> Status.CLOSING
             else -> Status.OFF
         }
     }
