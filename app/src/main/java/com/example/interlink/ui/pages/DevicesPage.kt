@@ -25,6 +25,7 @@ import com.example.interlink.model.Ac
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interlink.model.Alarm
+import com.example.interlink.model.Blinds
 
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
@@ -37,6 +38,7 @@ import com.example.interlink.ui.devices.AcViewModel
 
 import com.example.interlink.ui.components.DeviceCard
 import com.example.interlink.ui.devices.AlarmViewModel
+import com.example.interlink.ui.devices.BlindsViewModel
 
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
@@ -58,11 +60,10 @@ fun DevicesPage(
     doorViewModel: DoorViewModel = viewModel(factory = getViewModelFactory()),
     acViewModel: AcViewModel = viewModel(factory = getViewModelFactory()),
     alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory()),
+    blindsViewModel: BlindsViewModel = viewModel(factory = getViewModelFactory()),
 ){
 
     val uiState by viewModel.uiState.collectAsState()
-    val uiLampState by lampViewModel.uiState.collectAsState()
-    val uiDoorState by doorViewModel.uiState.collectAsState()
     var selectedDeviceId : String? = null
 
     Column (
@@ -78,6 +79,7 @@ fun DevicesPage(
                 DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
                 DeviceType.AC -> acViewModel.setCurrentDevice(device as Ac)
                 DeviceType.ALARM -> alarmViewModel.setCurrentDevice(device as Alarm)
+                DeviceType.BLINDS -> blindsViewModel.setCurrentDevice(device as Blinds)
                 else -> {}
             }
         }
@@ -91,46 +93,21 @@ fun DevicesPage(
         ) {
 
             Button(
-                onClick = { alarmViewModel.armStay("1234") },
+                onClick = { blindsViewModel.setLevel(50) },
                 modifier = Modifier.padding(8.dp)
             ) {
-                Text(text = "arm", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "50", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
             }
 
             Button(
-                onClick = { alarmViewModel.disarm("1234") },
+                onClick = { blindsViewModel.setLevel(70) },
                 modifier = Modifier.padding(8.dp)
             ) {
-                Text(text = "disarm",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-
-            Button(
-                onClick = { alarmViewModel.changeSecurityCode("1234", "0000") },
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(text = "Change", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
-            }
-
-            Button(
-                onClick = { alarmViewModel.changeSecurityCode("0000", "1234") },
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(text = "ChangeBack",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "70",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
             }
         }
 
     }
-
-
 
 }
 
