@@ -1,27 +1,17 @@
 package com.example.interlink.ui.pages
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
 import com.example.interlink.model.Lamp
@@ -65,71 +55,38 @@ fun DevicesPage(
     Column (
         modifier = modifier.fillMaxSize()
     ) {
-
-        // Esta primera funcion es lo primero que dejaria, mas abajo vas a ver porq en DeviceList()
-        DeviceList(devices = uiState.devices){ device ->
-            // Algo copado q encontre es este when() que funciona igual a un switch, lo re podes usar dentro de deviceCard en si :D!
-            when(device.type){
-                DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
-                DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
-                else -> {}
+        LazyColumn {
+            // Trate de dejarte esto lo mas generico posible para q si cambias DeviceItem por DeviceCard (o como la quieras llamar) no sea dificil hacer el refractoring
+            // Si no me dan mal los calculos solo tendrias que cambiar esto de aca para poner tus cards
+            items(uiState.devices) { device ->
+                Box(modifier = Modifier.padding(10.dp)){
+                    val deviceViewModel = when(device.type){
+                        DeviceType.LAMP -> lampViewModel
+                        DeviceType.SPEAKER -> null
+                        DeviceType.BLINDS -> null
+                        DeviceType.ALARM -> null
+                        DeviceType.DOOR -> doorViewModel
+                        DeviceType.AC -> null
+                    }
+                    DeviceCard(device = device, viewModel = deviceViewModel ) { device ->
+                        // Algo copado q encontre es este when() que funciona igual a un switch, lo re podes usar dentro de deviceCard en si :D!
+                        when(device.type){
+                            DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
+                            DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
+                            else -> {}
+                        }
+                    }
+                }
             }
         }
 
-        // Esto que esta aca mandalo a la mierda pero te lo deje para q puedas ver como funciona la api
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Door controls",  color=Color.Black, style = MaterialTheme.typography.titleLarge)
-
-        // Algo asi tipo estas rows son las q me imagino que podrian ir adnetro de las cartas de dispositivos solo q mas lindos
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-
-            Button(
-                // en este caso usamos el doorViewModel q controla puertas y tiene la funcion open que la ejecuta sobre el currentDevice
-                onClick = { doorViewModel.open() },
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(text = "Open", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
-            }
-
-            Button(
-                onClick = { doorViewModel.close() },
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(text = "Close",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Light controls",  color=Color.Black, style = MaterialTheme.typography.titleLarge)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-
-            Button(
-                // Same as el caso de door solo q ni mires lamp porq lo voy a terminar volando probablemente
-                onClick = { lampViewModel.turnOn() },
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(text = "Turn On", color=Color.Black, style = MaterialTheme.typography.bodyLarge)
-            }
-
-            Button(
-                onClick = { lampViewModel.turnOff() },
-                modifier = Modifier.padding(8.dp)
-            ) {
-                Text(text = "Turn Off",  color=Color.Black, style = MaterialTheme.typography.bodyLarge)
-            }
-        }
     }
 
 
 
 }
 
+/*
 @Composable
 fun DeviceList(devices: List<Device>, onDeviceClick: (Device) -> Unit) {
    LazyColumn {
@@ -137,12 +94,14 @@ fun DeviceList(devices: List<Device>, onDeviceClick: (Device) -> Unit) {
        // Si no me dan mal los calculos solo tendrias que cambiar esto de aca para poner tus cards
         items(devices) { device ->
             Box(modifier = Modifier.padding(10.dp)){
-                DeviceCard(device = device , onClick = { onDeviceClick(device) })
+                DeviceCard(device = device, viewModel = , onClick = { onDeviceClick(device) })
             }
         }
     }
 
 }
+*/
+
 
 
 /*

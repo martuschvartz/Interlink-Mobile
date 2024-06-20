@@ -6,10 +6,16 @@
     <string name="activity">Activity\n</string>
     <string name="inter_title">INTERLINK</string>
 
+    <!-- Estados -->
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
     <!-- Para la puerta -->
     <string name="opened">Opened</string>
     <string name="closed">Closed</string>
     <string name="locked">Locked</string>
     <string name="unlocked">Unlocked</string>
+    <string name="state">State:</string>
+    <string name="lock">Lock:</string>
 
 </resources>

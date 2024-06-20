@@ -3,7 +3,6 @@ package com.example.interlink.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Blinds
@@ -30,7 +27,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,14 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
-import com.example.interlink.model.Status
 import com.example.interlink.ui.components.devices.actions.DoorAction
 import com.example.interlink.ui.components.devices.description.DoorDescription
+import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
 
@@ -56,10 +52,13 @@ import com.example.interlink.ui.theme.md_theme_light_coffee
 // va a recibir el contenido según el device (tanto como info básica o la info completa)
 // y los controles, y si el device asociado a la device card es el
 @Composable
-fun <T : Device> DeviceCard(
+fun <T : Device, VM : ViewModel> DeviceCard(
     device: T,
+    viewModel: VM?,
     onClick: (Device) -> Unit
 ){
+
+    // viewModels
 
     // por default la card arranca sin expandirse
     var expanded by remember { mutableStateOf(false) }
@@ -81,11 +80,10 @@ fun <T : Device> DeviceCard(
                 containerColor = md_theme_light_coffee
             ),
             modifier = Modifier
-                .wrapContentSize()
                 .customShadow(
                     borderRadius = 10.dp,
-                    offsetY = 5.dp,
-                    offsetX = 5.dp,
+                    offsetY = 6.dp,
+                    offsetX = 6.dp,
                     spread = 3f
                 ),
             shape = RoundedCornerShape(10.dp),
@@ -94,15 +92,19 @@ fun <T : Device> DeviceCard(
             Column(
                 modifier = Modifier
                     .padding(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = md_theme_light_background
                     ),
                     modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 6.dp,
+                            offsetX = 6.dp,
+                            spread = 3f
+                        )
                         .width(320.dp)
-                        .wrapContentHeight()
                         .clickable {
                             expanded = !expanded
                             onClick(device)
@@ -112,7 +114,7 @@ fun <T : Device> DeviceCard(
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(10.dp)
+                            .padding(10.dp),
                     ) {
                         Row(
                             modifier = Modifier
@@ -189,15 +191,21 @@ fun <T : Device> DeviceCard(
                                 }
                             }
                         }
+
                         if (expanded) {
                             // aca va las accinoes de los dispositivos
-                            when(device.type){
-                                DeviceType.LAMP -> {}
-                                DeviceType.SPEAKER -> {}
-                                DeviceType.BLINDS -> {}
-                                DeviceType.ALARM -> {}
-                                DeviceType.DOOR -> DoorAction()
-                                DeviceType.AC -> {}
+                            Row(
+                                modifier = Modifier
+                                    .padding(5.dp),
+                            ){
+                                when (device.type) {
+                                    DeviceType.LAMP -> {}
+                                    DeviceType.SPEAKER -> {}
+                                    DeviceType.BLINDS -> {}
+                                    DeviceType.ALARM -> {}
+                                    DeviceType.DOOR -> DoorAction(device as Door, viewModel as DoorViewModel)
+                                    DeviceType.AC -> {}
+                                }
                             }
                         }
                     }
@@ -225,7 +233,7 @@ fun <T : Device> DeviceCard(
 
 }
 
-
+/*
 @Preview
 @Composable
 fun DeviceCardPreview(){
@@ -239,8 +247,10 @@ fun DeviceCardPreview(){
         Box(
             modifier = Modifier.padding(10.dp),
         ){
-            //DeviceCard(door, )
+            DeviceCard(door){
+
+            }
         }
 
     }
-}
+}*/
