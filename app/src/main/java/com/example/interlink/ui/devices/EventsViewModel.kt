@@ -3,10 +3,14 @@ package com.example.interlink.ui.devices
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interlink.DataSourceException
+import com.example.interlink.model.Device
+import com.example.interlink.model.DeviceType
 import com.example.interlink.repository.DeviceRepository
 import com.example.interlink.model.Error
 import com.example.interlink.model.Event
+import com.example.interlink.remote.model.RemoteEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,15 +26,19 @@ class EventsViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        collectOnViewModelScope(
-            repository.events
-        ) { state, response ->
-            state.copy(events = state.events + response) }
+        viewModelScope.launch {
+            collectOnViewModelScope(
+                repository.events
+            ) { state, response ->
+                var filtered: List<RemoteEvent> = filterEvents(response)
+                state.copy(events = state.events + filtered) }
+        }
+
     }
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
-        updateState: (EventsUiState, T) -> EventsUiState
+        updateState: suspend (EventsUiState, T) -> EventsUiState
     ) = viewModelScope.launch {
         flow
             .distinctUntilChanged()
@@ -44,5 +52,26 @@ class EventsViewModel(
         } else {
             Error(null, e.message ?: "", null)
         }
+    }
+
+    private suspend fun filterEvents(eventList : List<RemoteEvent>) : List<RemoteEvent> {
+        var dev : Device
+        val toRet = eventList.filter{ event ->
+            dev = repository.getDevice(event.deviceId)
+            when(dev.type){
+                DeviceType.DOOR -> {
+                    Log.d("DEBUG", event.event)
+                    when (event.event) {
+                        "statusChanged" -> true
+                        "lockChanged" -> true
+                        else -> false
+                    }
+                }
+                DeviceType.ALARM -> event.event == "statusChanged"
+                DeviceType.BLINDS-> event.event == "statusChanged"
+                else -> false
+            }
+        }
+        return toRet
     }
 }

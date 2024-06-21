@@ -71,7 +71,6 @@ class PreprocessingConverterFactory(private val gson: Gson) : Converter.Factory(
             }
 
             val cleanedResponse = Gson().toJson(events)
-            Log.d("DEBUG","Cleaned Response: $cleanedResponse") // Debugging
             return cleanedResponse
         }
 
