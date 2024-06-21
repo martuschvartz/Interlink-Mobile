@@ -54,6 +54,6 @@ class DeviceRemoteDataSource (private val deviceService: DeviceService
     }
 
     companion object {
-        const val DELAY: Long = 10000
+        const val DELAY: Long = 5000
     }
 }

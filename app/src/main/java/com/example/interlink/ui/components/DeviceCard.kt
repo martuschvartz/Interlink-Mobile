@@ -42,12 +42,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import com.example.interlink.model.Ac
+import com.example.interlink.model.Blinds
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
 import com.example.interlink.model.Status
-import com.example.interlink.ui.components.devices.actions.DoorAction
+import com.example.interlink.ui.components.devices.actions.AcActions
+import com.example.interlink.ui.components.devices.actions.BlindsActions
+import com.example.interlink.ui.components.devices.actions.DoorActions
+import com.example.interlink.ui.components.devices.description.AcDescription
+import com.example.interlink.ui.components.devices.description.BlindsDescription
 import com.example.interlink.ui.components.devices.description.DoorDescription
+import com.example.interlink.ui.devices.AcViewModel
+import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
@@ -56,17 +64,13 @@ import com.example.interlink.ui.theme.md_theme_light_coffee
 // va a recibir el contenido según el device (tanto como info básica o la info completa)
 // y los controles, y si el device asociado a la device card es el
 @Composable
-fun <T : Device, VM : ViewModel> DeviceCard(
+fun <T : Device> DeviceCard(
     currentDevice: Boolean,
     device: T,
-    viewModel: VM?,
+    viewModel: ViewModel?,
+    expanded: Boolean = false,
     onClick: (Device) -> Unit
 ){
-
-    // viewModels
-
-    // por default la card arranca sin expandirse
-    var expanded by remember { mutableStateOf(false) }
 
     // por default la card arranca sin ser favorita
     var fav by remember { mutableStateOf(false) }
@@ -109,9 +113,8 @@ fun <T : Device, VM : ViewModel> DeviceCard(
                             offsetX = 6.dp,
                             spread = 3f
                         )
-                        .width(320.dp)
+                        .width(340.dp)
                         .clickable {
-                            expanded = !expanded
                             onClick(device)
                         },
                     shape = RoundedCornerShape(10.dp),
@@ -206,10 +209,10 @@ fun <T : Device, VM : ViewModel> DeviceCard(
                                 when (device.type) {
                                     DeviceType.LAMP -> {}
                                     DeviceType.SPEAKER -> {}
-                                    DeviceType.BLINDS -> {}
+                                    DeviceType.BLINDS -> BlindsActions(device as Blinds, viewModel as BlindsViewModel)
                                     DeviceType.ALARM -> {}
-                                    DeviceType.DOOR -> DoorAction(device as Door, viewModel as DoorViewModel)
-                                    DeviceType.AC -> {}
+                                    DeviceType.DOOR -> DoorActions(device as Door, viewModel as DoorViewModel)
+                                    DeviceType.AC -> AcActions(device as  Ac, viewModel as AcViewModel)
                                 }
                             }
                         }
@@ -220,15 +223,15 @@ fun <T : Device, VM : ViewModel> DeviceCard(
                     Spacer(modifier = Modifier.padding(5.dp))
                     Row(
                         modifier = Modifier
-                            .width(320.dp)
+                            .width(340.dp)
                     ) {
                         when(device.type){
                             DeviceType.LAMP -> {}
                             DeviceType.SPEAKER -> {}
-                            DeviceType.BLINDS -> {}
+                            DeviceType.BLINDS -> BlindsDescription(device as Blinds)
                             DeviceType.ALARM -> {}
                             DeviceType.DOOR -> DoorDescription(device as Door)
-                            DeviceType.AC -> {}
+                            DeviceType.AC -> AcDescription(device as Ac)
                         }
                     }
                 }

@@ -11,22 +11,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.interlink.R
-import com.example.interlink.model.Door
+import com.example.interlink.model.Ac
 import com.example.interlink.model.Status
 
 @Composable
-fun DoorDescription(
-    doorDevice : Door
+fun AcDescription(
+    acDevice : Ac
 ){
-    val status = when(doorDevice.status){
-        Status.OPENED -> stringResource(id = R.string.doorOpened)
-        Status.CLOSED -> stringResource(id = R.string.doorClosed)
+    val status = when(acDevice.status){
+        Status.ON -> stringResource(id = R.string.acOn)
+        Status.OFF -> stringResource(id = R.string.acOff)
         else -> null
-    }
-
-    val locked = when(doorDevice.lock){
-        "locked" -> stringResource(id = R.string.doorLocked)
-        else -> stringResource(id = R.string.unlockAction)
     }
 
     Row {
@@ -35,7 +30,7 @@ fun DoorDescription(
                 text = status,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyLarge
-                )
+            )
         }
         Spacer(modifier = Modifier.padding(2.dp))
         Text(
@@ -45,7 +40,7 @@ fun DoorDescription(
         )
         Spacer(modifier = Modifier.padding(2.dp))
         Text(
-            text = locked,
+            text = acDevice.temperature.toString()+"°",
             color = Color.White,
             style = MaterialTheme.typography.bodyLarge
         )
