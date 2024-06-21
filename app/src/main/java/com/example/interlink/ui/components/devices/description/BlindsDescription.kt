@@ -11,22 +11,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.interlink.R
-import com.example.interlink.model.Door
+import com.example.interlink.model.Blinds
 import com.example.interlink.model.Status
 
 @Composable
-fun DoorDescription(
-    doorDevice : Door
+fun BlindsDescription(
+    blindsDevice : Blinds
 ){
-    val status = when(doorDevice.status){
-        Status.OPENED -> stringResource(id = R.string.doorOpened)
-        Status.CLOSED -> stringResource(id = R.string.doorClosed)
+    val status = when(blindsDevice.status){
+        Status.OPENED -> stringResource(id = R.string.blindsOpened)
+        Status.CLOSED -> stringResource(id = R.string.blindsClosed)
+        Status.OPENING -> stringResource(id = R.string.openingAction)
+        Status.CLOSING -> stringResource(id = R.string.closingAction)
         else -> null
-    }
-
-    val locked = when(doorDevice.lock){
-        "locked" -> stringResource(id = R.string.doorLocked)
-        else -> stringResource(id = R.string.unlockAction)
     }
 
     Row {
@@ -35,7 +32,7 @@ fun DoorDescription(
                 text = status,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyLarge
-                )
+            )
         }
         Spacer(modifier = Modifier.padding(2.dp))
         Text(
@@ -45,7 +42,13 @@ fun DoorDescription(
         )
         Spacer(modifier = Modifier.padding(2.dp))
         Text(
-            text = locked,
+            text = stringResource(id = R.string.blindsCurrentLevel),
+            color = Color.White,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Spacer(modifier = Modifier.padding(1.dp))
+        Text(
+            text = blindsDevice.currentLevel.toString(),
             color = Color.White,
             style = MaterialTheme.typography.bodyLarge
         )
