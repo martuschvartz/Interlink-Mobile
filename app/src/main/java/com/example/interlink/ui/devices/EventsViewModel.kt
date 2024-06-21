@@ -31,7 +31,7 @@ class EventsViewModel(
                 repository.events
             ) { state, response ->
                 var filtered: List<RemoteEvent> = filterEvents(response)
-                state.copy(events = state.events + filtered) }
+                state.copy(events = filtered + state.events) }
         }
 
     }
@@ -58,9 +58,9 @@ class EventsViewModel(
         var dev : Device
         val toRet = eventList.filter{ event ->
             dev = repository.getDevice(event.deviceId)
+            event.device = dev
             when(dev.type){
                 DeviceType.DOOR -> {
-                    Log.d("DEBUG", event.event)
                     when (event.event) {
                         "statusChanged" -> true
                         "lockChanged" -> true
