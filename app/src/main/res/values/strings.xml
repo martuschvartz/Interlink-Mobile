@@ -6,6 +6,7 @@
     <string name="activity">Activity\n</string>
     <string name="inter_title">INTERLINK</string>
 
+
     <!-- Estados Generales-->
     <string name="onAction">Turn On</string>
     <string name="offACtion">Turn Off</string>
@@ -16,6 +17,7 @@
     <string name="lockAction">Lock</string>
     <string name="unlockAction">Unlock</string>
     <string name="state">State:</string>
+
 
     <!-- Para la puerta -->
     <string name="doorOpened">Opened</string>
@@ -32,6 +34,7 @@
     <string name="blindsClosed">Closed</string>
     <string name="loading">Processing</string>
 
+
     <!-- Para el aire  -->
     <string name="acOn">On</string>
     <string name="acOff">Off</string>
@@ -44,4 +47,10 @@
     <string name="heat">Heat</string>
     <string name="fan">Fan</string>
 
+
+    <!-- Para la alarma -->
+    <string name="alarmOnLocal">Locally On</string>
+    <string name="alarmOnRemote">Remotely On</string>
+    <string name="alarmOff">Off</string>
+    <string name="changePass">Change Pin</string>
 </resources>

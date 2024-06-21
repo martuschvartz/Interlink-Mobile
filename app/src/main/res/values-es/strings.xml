@@ -7,6 +7,7 @@
     <string name="activity">Actividad\n</string>
     <string name="inter_title">INTERLINK</string>
 
+
     <!-- Estados Generales-->
     <string name="onAction">Encender</string>
     <string name="offACtion">Apagar</string>
@@ -18,6 +19,7 @@
     <string name="unlockAction">Destrabar</string>
     <string name="state">Estado:</string>
 
+
     <!-- Para la puerta -->
     <string name="doorOpened">Abierto</string>
     <string name="doorClosed">Cerrado</string>
@@ -25,12 +27,14 @@
     <string name="doorUnlocked">Destrabada</string>
     <string name="doorLock">Traba:</string>
 
+
     <!-- Para la persiana -->
     <string name="blindsCurrentLevel">Nivel Actual:</string>
     <string name="blindsLevel">Nivel:</string>
     <string name="blindsOpened">Abierta</string>
     <string name="blindsClosed">Cerrada</string>
     <string name="loading">Procesando</string>
+
 
     <!-- Para el aire  -->
     <string name="acOn">Encendido</string>
@@ -43,4 +47,12 @@
     <string name="cool">Frío</string>
     <string name="heat">Calor</string>
     <string name="fan">Ventilador</string>
+
+
+    <!-- Para la alarma -->
+    <string name="alarmOnLocal">Encendida Local</string>
+    <string name="alarmOnRemote">Encendida Remoto</string>
+    <string name="alarmOff">Apagada</string>
+    <string name="changePass">Cambiar Pin</string>
+
 </resources>
