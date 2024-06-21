@@ -1,6 +1,7 @@
 package com.example.interlink.remote.api
 
 import com.example.interlink.remote.model.RemoteDevice
+import com.example.interlink.remote.model.RemoteEvent
 import com.example.interlink.remote.model.RemoteResult
 import retrofit2.Response
 import retrofit2.http.Body
@@ -37,5 +38,5 @@ interface DeviceService {
     ): Response<RemoteResult<Array<*>>>
 
     @GET("devices/events")
-    suspend fun getEvents(): Response<RemoteResult<List<RemoteDevice<*>>>>
+    suspend fun getEvents(): Response<RemoteEvent>
 }

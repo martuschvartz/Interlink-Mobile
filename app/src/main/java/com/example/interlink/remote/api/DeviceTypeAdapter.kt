@@ -36,7 +36,6 @@ class DeviceTypeAdapter : JsonDeserializer<RemoteDevice<*>?> {
             RemoteDeviceType.ALARM_DEVICE_TYPE_ID    -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteAlarm?>() {}.type)
             RemoteDeviceType.BLINDS_DEVICE_TYPE_ID    -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteBlinds?>() {}.type)
             RemoteDeviceType.SPEAKER_DEVICE_TYPE_ID    -> gson.fromJson(jsonDeviceObject, object : TypeToken<RemoteSpeaker?>() {}.type)
-
             else -> null
         }
     }

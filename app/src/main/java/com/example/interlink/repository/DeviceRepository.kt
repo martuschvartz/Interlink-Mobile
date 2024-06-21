@@ -4,6 +4,7 @@ import com.example.interlink.model.Device
 import com.example.interlink.model.Lamp
 import com.example.interlink.model.Door
 import com.example.interlink.remote.DeviceRemoteDataSource
+import com.example.interlink.remote.model.DataContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -38,5 +39,9 @@ class DeviceRepository(
         parameters: Array<*> = emptyArray<Any>()
     ): Array<*> {
         return remoteDataSource.executeDeviceAction(deviceId, action, parameters)
+    }
+
+    suspend fun getEvents(): DataContent {
+        return remoteDataSource.getEvents()
     }
 }
