@@ -9,12 +9,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.interlink.ApiApplication
+import com.example.interlink.model.Event
 import com.example.interlink.repository.DeviceRepository
 import com.example.interlink.ui.devices.AcViewModel
 import com.example.interlink.ui.devices.AlarmViewModel
 import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
+import com.example.interlink.ui.devices.EventsViewModel
 import com.example.interlink.ui.devices.LampViewModel
 import com.example.interlink.ui.devices.SpeakerViewModel
 
@@ -44,6 +46,9 @@ public class ViewModelFactory (
         when {
             isAssignableFrom(DevicesViewModel::class.java) ->
                 DevicesViewModel(deviceRepository)
+
+            isAssignableFrom(EventsViewModel::class.java) ->
+                EventsViewModel(deviceRepository)
 
             isAssignableFrom(LampViewModel::class.java) ->
                 LampViewModel(deviceRepository)

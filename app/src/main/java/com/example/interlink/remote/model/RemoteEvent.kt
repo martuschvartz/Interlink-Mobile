@@ -1,35 +1,21 @@
 package com.example.interlink.remote.model
 
+import com.example.interlink.model.Event
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 
-data class RemoteEvent(
-    @SerializedName("id")
-    val id: String,
+class RemoteEvent {
 
-    @SerializedName("data")
-    val data: DataContent
-)
-
-data class DataContent(
-    @SerializedName("data")
-    val innerData: InnerData
-)
-
-data class InnerData(
     @SerializedName("timestamp")
-    val timestamp: String,
+    lateinit var timestamp: String
 
     @SerializedName("deviceId")
-    val deviceId: String,
+    lateinit var deviceId: String
 
     @SerializedName("event")
-    val event: String,
+    lateinit var event: String
 
-//    @SerializedName("args")
-//    val args: Args
-)
-//
-//data class Args(
-//    @SerializedName("newStatus")
-//    val newStatus: String
-//)
+    @SerializedName("args")
+    lateinit var args: JsonObject
+
+}

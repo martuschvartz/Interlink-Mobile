@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.interlink.DataSourceException
 import com.example.interlink.repository.DeviceRepository
 import com.example.interlink.model.Error
+import com.example.interlink.model.Event
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,21 +14,21 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DevicesViewModel(
+class EventsViewModel(
     private val repository: DeviceRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(DevicesUiState())
+    private val _uiState = MutableStateFlow(EventsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
         collectOnViewModelScope(
-            repository.devices
-        ) { state, response -> state.copy(devices = response) }
+            repository.events
+        ) { state, response -> state.copy(events = response) }
     }
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
-        updateState: (DevicesUiState, T) -> DevicesUiState
+        updateState: (EventsUiState, T) -> EventsUiState
     ) = viewModelScope.launch {
         flow
             .distinctUntilChanged()

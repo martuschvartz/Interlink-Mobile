@@ -1,7 +1,7 @@
 package com.example.interlink.remote
 
+import android.util.Log
 import com.example.interlink.remote.api.DeviceService
-import com.example.interlink.remote.model.DataContent
 import com.example.interlink.remote.model.RemoteDevice
 import com.example.interlink.remote.model.RemoteEvent
 import kotlinx.coroutines.delay
@@ -17,6 +17,16 @@ class DeviceRemoteDataSource (private val deviceService: DeviceService
                 deviceService.getDevices()
             }
             emit(devices)
+            delay(DELAY)
+        }
+    }
+
+    val events: Flow<List<RemoteEvent>> = flow{
+        while(true){
+            val events = handleApiEvent {
+                deviceService.getEvents()
+            }
+            emit(events)
             delay(DELAY)
         }
     }
@@ -55,13 +65,7 @@ class DeviceRemoteDataSource (private val deviceService: DeviceService
         }
     }
 
-    suspend fun getEvents(): DataContent {
-        return handleApiEvent {
-            deviceService.getEvents()
-        }
-    }
-
     companion object {
-        const val DELAY: Long = 10000
+        const val DELAY: Long = 1000
     }
 }

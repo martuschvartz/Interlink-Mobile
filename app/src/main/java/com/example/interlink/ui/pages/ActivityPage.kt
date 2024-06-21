@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interlink.ui.devices.DevicesViewModel
+import com.example.interlink.ui.devices.EventsViewModel
 import com.example.interlink.ui.getViewModelFactory
 import kotlinx.coroutines.delay
 
@@ -20,18 +21,11 @@ import kotlinx.coroutines.delay
 @Composable
 fun ActivityPage(
     modifier: Modifier = Modifier,
-    viewModel: DevicesViewModel = viewModel(factory = getViewModelFactory()),
+    viewModel: EventsViewModel = viewModel(factory = getViewModelFactory()),
     ){
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            viewModel.callGetEvent()
-            delay(5000) // Adjust the delay time as needed
-        }
-    }
-
-    Column(modifier = modifier) {
+   Column(modifier = modifier) {
         Text("${uiState.newEvents}", color = Color.Black, style = MaterialTheme.typography.titleLarge)
         uiState.events.forEach { event ->
             Text(event.toString(), color = Color.Black, style = MaterialTheme.typography.bodyLarge)

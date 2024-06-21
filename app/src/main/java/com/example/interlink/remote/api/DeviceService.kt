@@ -38,5 +38,5 @@ interface DeviceService {
     ): Response<RemoteResult<Array<*>>>
 
     @GET("devices/events")
-    suspend fun getEvents(): Response<RemoteEvent>
+    suspend fun getEvents(): Response<List<RemoteEvent>>
 }

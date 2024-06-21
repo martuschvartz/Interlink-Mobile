@@ -1,9 +1,13 @@
 package com.example.interlink.model
 
-data class Event (
-    var title: String,
-    var artist: String,
-    var album: String,
-    var duration: String,
-    var progress: String
-)
+import com.example.interlink.remote.model.RemoteEvent
+import com.google.gson.JsonObject
+
+abstract class Event(
+    val timestamp: String?,
+    val deviceInt: String?,
+    val event: String?,
+    val args: JsonObject?,
+) {
+    abstract fun asRemoteModel(): RemoteEvent
+}

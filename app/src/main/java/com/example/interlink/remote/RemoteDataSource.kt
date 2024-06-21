@@ -2,7 +2,6 @@ package com.example.interlink.remote
 
 import android.util.Log
 import com.example.interlink.DataSourceException
-import com.example.interlink.remote.model.DataContent
 import com.example.interlink.remote.model.RemoteError
 import com.example.interlink.remote.model.RemoteEvent
 import com.example.interlink.remote.model.RemoteResult
@@ -48,14 +47,14 @@ abstract class RemoteDataSource {
     }
 
     suspend fun handleApiEvent(
-        execute: suspend () -> Response<RemoteEvent>
-    ): DataContent {
+        execute: suspend () -> Response<List<RemoteEvent>>
+    ): List<RemoteEvent> {
         try {
             val response = execute()
-            Log.d("DEBUG", "${response.body()}")
+            Log.d("DEBUG", "$response}")
             val body = response.body()
             if (response.isSuccessful && body != null) {
-                return body.data
+                return body
             }
             response.errorBody()?.let {
                 val gson = Gson()

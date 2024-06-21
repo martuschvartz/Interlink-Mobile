@@ -10,9 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 
-// Esto es lo que se encarga de corregir el desastre que devuelve el endpoint de /events
-// No planeo dejar comentarios explicando que hace porque realmente no vale la pena, es basicamente
-// solucionar en el front un problema de la api
 class PreprocessingConverterFactory(private val gson: Gson) : Converter.Factory() {
 
     override fun responseBodyConverter(
@@ -29,34 +26,53 @@ class PreprocessingConverterFactory(private val gson: Gson) : Converter.Factory(
         private val delegate: Converter<ResponseBody, T>
     ) : Converter<ResponseBody, T> {
 
-        fun preprocessResponse(input: String): String {
-            if (input.isEmpty() || input[0] != 'i') {
+        private fun preprocessResponse(input: String): String {
+            if (input.isEmpty()){
+                return "[]"
+            }
+
+            if (input[0] != 'i') {
                 return input
             }
 
-            val regex = Regex("data: \"(\\w+)\": \"([^\"]+)\"")
-            val matches = regex.findAll(input)
-            val jsonObject = JsonObject()
-            for (match in matches) {
-                val key = match.groupValues[1]
-                val value = match.groupValues[2]
-                jsonObject.addProperty(key, value)
-            }
-            val argsRegex = Regex("data: \"args\": \\{(.+?)\\}")
-            val argsMatch = argsRegex.find(input)
-            if (argsMatch != null) {
-                val argsString = argsMatch.groupValues[1]
-                val argsObject = JsonObject()
-                val argsKeyValuePairs = argsString.split(",")
-                for (pair in argsKeyValuePairs) {
-                    val (key, value) = pair.split(":").map { it.trim().replace("\"", "") }
-                    argsObject.addProperty(key, value)
+            val events = mutableListOf<JsonObject>()
+
+            val eventRegex = Regex("id: '(\\d+)\\s+data: \\{(.*?)\\s+data: \\}", RegexOption.DOT_MATCHES_ALL)
+            val eventMatches = eventRegex.findAll(input)
+
+            for (eventMatch in eventMatches) {
+                val id = eventMatch.groupValues[1]
+                val dataBlock = eventMatch.groupValues[2]
+
+                val dataRegex = Regex("data: \"(\\w+)\": \"([^\"]+)\"")
+                val matches = dataRegex.findAll(dataBlock)
+                val jsonObject = JsonObject()
+                jsonObject.addProperty("id", id)
+                for (match in matches) {
+                    val key = match.groupValues[1]
+                    val value = match.groupValues[2]
+                    jsonObject.addProperty(key, value)
                 }
-                jsonObject.add("args", argsObject)
+
+                val argsRegex = Regex("data: \"args\": \\{(.+?)\\}")
+                val argsMatch = argsRegex.find(dataBlock)
+                if (argsMatch != null) {
+                    val argsString = argsMatch.groupValues[1]
+                    val argsObject = JsonObject()
+                    val argsKeyValuePairs = argsString.split(",")
+                    for (pair in argsKeyValuePairs) {
+                        val (key, value) = pair.split(":").map { it.trim().replace("\"", "") }
+                        argsObject.addProperty(key, value)
+                    }
+                    jsonObject.add("args", argsObject)
+                }
+
+                events.add(jsonObject)
             }
-            val cleaned = Gson().toJson(jsonObject)
-            Log.d("DEBUG", cleaned)
-            return cleaned
+
+            val cleanedResponse = Gson().toJson(events)
+            Log.d("DEBUG","Cleaned Response: $cleanedResponse") // Debugging
+            return cleanedResponse
         }
 
         override fun convert(value: ResponseBody): T? {
