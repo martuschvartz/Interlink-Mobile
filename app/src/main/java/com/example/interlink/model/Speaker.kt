@@ -1,5 +1,6 @@
 package com.example.interlink.model
 
+import android.util.Log
 import com.example.interlink.remote.model.RemoteDevice
 import com.example.interlink.remote.model.RemoteSpeaker
 import com.example.interlink.remote.model.RemoteSpeakerState
@@ -10,6 +11,7 @@ class Speaker (
     val status: Status,
     val volume: Int,
     val genre: String,
+    val song: Song? = null
 ) : Device(id, name, DeviceType.SPEAKER) {
 
     override fun asRemoteModel(): RemoteDevice<RemoteSpeakerState> {
@@ -17,6 +19,7 @@ class Speaker (
         state.status = Status.asRemoteModel(status)
         state.volume = volume
         state.genre = genre
+        state.song = song
 
         val model = RemoteSpeaker()
         model.id = id

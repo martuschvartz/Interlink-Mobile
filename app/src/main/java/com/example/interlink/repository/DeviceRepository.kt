@@ -3,7 +3,9 @@ package com.example.interlink.repository
 import com.example.interlink.model.Device
 import com.example.interlink.model.Lamp
 import com.example.interlink.model.Door
+import com.example.interlink.model.Event
 import com.example.interlink.remote.DeviceRemoteDataSource
+import com.example.interlink.remote.model.RemoteEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -14,7 +16,10 @@ class DeviceRepository(
         remoteDataSource.devices
             .map { it.map { jt -> jt.asModel() } }
 
-//    val currentDevice = devices.map { it.firstOrNull { jt -> jt is Lamp } }
+    val events: Flow<List<RemoteEvent>> =
+        remoteDataSource.events
+//            .map{ it.map { jt -> jt.asModel()}}
+
 
     suspend fun getDevice(deviceId: String): Device {
         return remoteDataSource.getDevice(deviceId).asModel()
@@ -39,4 +44,8 @@ class DeviceRepository(
     ): Array<*> {
         return remoteDataSource.executeDeviceAction(deviceId, action, parameters)
     }
+
+//    suspend fun getEvents(): RemoteEvent {
+//        return remoteDataSource.getEvents()
+//    }
 }

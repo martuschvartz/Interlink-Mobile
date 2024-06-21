@@ -23,6 +23,7 @@ private val gson = GsonBuilder()
 
 private val retrofit = Retrofit.Builder()
     .baseUrl(BuildConfig.API_BASE_URL)
+    .addConverterFactory(PreprocessingConverterFactory(gson))
     .addConverterFactory(GsonConverterFactory.create(gson))
     .client(okHttpClient)
     .build()

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DevicesViewModel(
-    repository: DeviceRepository
+    private val repository: DeviceRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DevicesUiState())
     val uiState = _uiState.asStateFlow()
