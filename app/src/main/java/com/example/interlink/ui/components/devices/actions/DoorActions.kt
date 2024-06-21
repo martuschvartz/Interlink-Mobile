@@ -37,112 +37,214 @@ fun DoorAction(
     doorDevice : Door,
     doorViewModel : DoorViewModel?
 ){
-    var status = when(doorDevice.status){
-        Status.ON -> null
-        Status.OFF -> null
+    val status = when(doorDevice.status){
         Status.OPENED -> stringResource(id = R.string.opened)
         Status.CLOSED -> stringResource(id = R.string.closed)
         else -> null
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        Column(){
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = stringResource(id = R.string.state),
-                    color = Color.Black,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.padding(2.dp))
-                if (status != null) {
-                    Text(
-                        text = status,
-                        color = Color.Gray,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-            }
-        }
-        if(doorDevice.status == Status.OPENED){
-            // boton de cerrar
-            OutlinedButton(
-                modifier = Modifier
-                    .customShadow(
-                        borderRadius = 10.dp,
-                        offsetY = 8.dp,
-                        offsetX = 6.dp,
-                        spread = 2f
-                    ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = md_theme_light_interred,
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(3.dp, Color.Black),
-                onClick = {
-                    doorViewModel?.close()
-                }
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(vertical = 5.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.close),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-            }
-        }
-        if(doorDevice.status == Status.CLOSED){
-            // boton de abrir que abra la puerta, enabled si la puerta está destrabada, si no no se puede tocar
+    val locked = when(doorDevice.lock){
+        "locked" -> stringResource(id = R.string.locked)
+        "unlocked" -> stringResource(id = R.string.unlocked)
+        else -> null
+    }
 
-            OutlinedButton(
-                modifier = Modifier
-                    .customShadow(
-                        borderRadius = 10.dp,
-                        offsetY = 8.dp,
-                        offsetX = 6.dp,
-                        spread = 2f
-                    ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = md_theme_light_intergreen,
-                    contentColor = Color.White,
-                    disabledContentColor = Color.White,
-                    disabledContainerColor = md_theme_light_intergrey
-                ),
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(3.dp, Color.Black),
-                onClick = {
-                    doorViewModel?.open()
-                },
-                enabled = doorDevice.lock == "unlocked"
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(vertical = 5.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+    Column{
+        Row(
+            modifier = Modifier
+                .padding(bottom = 5.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column{
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(id = R.string.open),
+                        text = stringResource(id = R.string.state),
+                        color = Color.Black,
                         style = MaterialTheme.typography.titleLarge
                     )
+                    Spacer(modifier = Modifier.padding(2.dp))
+                    if (status != null) {
+                        Text(
+                            text = status,
+                            color = Color.Gray,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+            if (doorDevice.status == Status.OPENED) {
+                // boton de cerrar
+                OutlinedButton(
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 6.dp,
+                            spread = 3f
+                        ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = md_theme_light_interred,
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black),
+                    onClick = {
+                        doorViewModel?.close()
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(vertical = 5.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.close),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+            if (doorDevice.status == Status.CLOSED) {
+                // boton de abrir que abra la puerta, enabled si la puerta está destrabada, si no no se puede tocar
+                OutlinedButton(
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 6.dp,
+                            spread = 3f
+                        ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = md_theme_light_intergreen,
+                        contentColor = Color.White,
+                        disabledContentColor = Color.White,
+                        disabledContainerColor = md_theme_light_intergrey
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black),
+                    onClick = {
+                        doorViewModel?.open()
+                    },
+                    enabled = doorDevice.lock == "unlocked"
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(vertical = 5.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.open),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .padding(top = 5.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column{
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.lock),
+                        color = Color.Black,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(modifier = Modifier.padding(2.dp))
+                    if (locked != null) {
+                        Text(
+                            text = locked,
+                            color = Color.Gray,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+            if (doorDevice.lock == "locked") {
+                // boton de destrabar
+                OutlinedButton(
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 6.dp,
+                            spread = 3f
+                        ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = md_theme_light_interred,
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black),
+                    onClick = {
+                        doorViewModel?.unlock()
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(vertical = 5.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.unlockAction),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+            if (doorDevice.lock == "unlocked") {
+                // boton de trabar que traba la puerta, enabled si la puerta está cerrada, si no no se puede tocar
+                OutlinedButton(
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 6.dp,
+                            spread = 3f
+                        ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = md_theme_light_intergreen,
+                        contentColor = Color.White,
+                        disabledContentColor = Color.White,
+                        disabledContainerColor = md_theme_light_intergrey
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black),
+                    onClick = {
+                        doorViewModel?.lock()
+                    },
+                    enabled = doorDevice.status == Status.CLOSED
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(vertical = 5.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.lockAction),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
                 }
             }
         }
     }
-
-// otras rows con otras acciones
 
 }
 
