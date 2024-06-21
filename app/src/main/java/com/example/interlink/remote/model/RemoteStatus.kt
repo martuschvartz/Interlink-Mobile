@@ -9,6 +9,9 @@ object RemoteStatus {
     const val CLOSED = "closed"
     const val OPENING = "opening"
     const val CLOSING = "closing"
+    const val PLAYING = "playing"
+    const val STOPPED = "stopped"
+    const val PAUSED = "paused"
 
 
     fun asModel(status: String): Status {
@@ -19,6 +22,9 @@ object RemoteStatus {
             CLOSED -> Status.CLOSED
             OPENING -> Status.OPENING
             CLOSING -> Status.CLOSING
+            PLAYING -> Status.PLAYING
+            STOPPED -> Status.STOPPED
+            PAUSED -> Status.PAUSED
             else -> Status.OFF
         }
     }

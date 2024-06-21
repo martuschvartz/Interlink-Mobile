@@ -1,5 +1,6 @@
 package com.example.interlink.remote.model
 
+import com.example.interlink.model.Song
 import com.google.gson.annotations.SerializedName
 
 class RemoteSpeakerState {
@@ -11,5 +12,8 @@ class RemoteSpeakerState {
 
     @SerializedName("genre")
     lateinit var genre: String
+
+    @SerializedName("song")
+    var song: Song? = null
 
 }

@@ -1,7 +1,9 @@
 package com.example.interlink.remote
 
+import android.util.Log
 import com.example.interlink.DataSourceException
 import com.example.interlink.remote.model.RemoteError
+import com.example.interlink.remote.model.RemoteEvent
 import com.example.interlink.remote.model.RemoteResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -36,6 +38,47 @@ abstract class RemoteDataSource {
                 getDetailsFromException(e)
             )
         } catch (e: Exception) {
+            throw DataSourceException(
+                UNEXPECTED_ERROR_CODE,
+                "Unexpected error",
+                getDetailsFromException(e)
+            )
+        }
+    }
+
+    suspend fun handleApiEvent(
+        execute: suspend () -> Response<List<RemoteEvent>>
+    ): List<RemoteEvent> {
+        try {
+            val response = execute()
+//            Log.d("DEBUG", "$response}")
+            val body = response.body()
+            if (response.isSuccessful && body != null) {
+                return body
+            }
+            response.errorBody()?.let {
+                val gson = Gson()
+                val error = gson.fromJson<RemoteError>(
+                    it.string(),
+                    object : TypeToken<RemoteError?>() {}.type
+                )
+                throw DataSourceException(error.code, "", error.description)
+            }
+            throw DataSourceException(UNEXPECTED_ERROR_CODE, "Missing error", null)
+        } catch (e: DataSourceException) {
+//            Log.d("DEBUG", "$e")
+            throw e
+        } catch (e: IOException) {
+//            Log.d("DEBUG", "$e")
+
+            throw DataSourceException(
+                CONNECTION_ERROR_CODE,
+                "Connection error",
+                getDetailsFromException(e)
+            )
+        } catch (e: Exception) {
+//            Log.d("DEBUG", "$e")
+
             throw DataSourceException(
                 UNEXPECTED_ERROR_CODE,
                 "Unexpected error",

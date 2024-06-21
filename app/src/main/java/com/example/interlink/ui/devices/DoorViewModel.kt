@@ -15,8 +15,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// Este es el viewModel de puerta q se encarga de guardar el estado de una (1) puerta para
-// ejecutar funciones sobre ella, la idea esq con el front elegis q device es el q controla esto
 class DoorViewModel(
     private val repository: DeviceRepository
 ) : ViewModel()  {
@@ -24,12 +22,10 @@ class DoorViewModel(
     private val _uiState = MutableStateFlow(DoorUiState())
     val uiState = _uiState.asStateFlow()
 
-    // Esta es la funcion que determina q device es el q vas a estar controlando con el ViewModel
     fun setCurrentDevice(device: Door) {
         _uiState.update { it.copy(currentDevice = device) }
     }
 
-    // Aca van las funciones en si (el Door.OPEN_ACTION esta en la clase Door mas arriba)
     fun open() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.OPEN_ACTION) },
         { state, _ -> state }

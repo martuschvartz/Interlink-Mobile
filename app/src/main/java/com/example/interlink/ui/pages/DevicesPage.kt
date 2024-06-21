@@ -7,11 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interlink.model.Ac
@@ -27,6 +31,7 @@ import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
 import com.example.interlink.ui.devices.LampViewModel
+import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.getViewModelFactory
 
 // el modifier default es la misma clase Modifier, sino es el que le paso
@@ -45,6 +50,7 @@ fun DevicesPage(
     acViewModel: AcViewModel = viewModel(factory = getViewModelFactory()),
     alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory()),
     blindsViewModel: BlindsViewModel = viewModel(factory = getViewModelFactory()),
+    speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory()),
 ){
 
     val uiState by viewModel.uiState.collectAsState()
@@ -88,10 +94,12 @@ fun DevicesPage(
                 }
             }
         }
-
+        
     }
 
 }
+
+
 
 /*
 @Composable
