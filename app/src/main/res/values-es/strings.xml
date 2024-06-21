@@ -53,6 +53,8 @@
     <string name="alarmOnLocal">Encendida Local</string>
     <string name="alarmOnRemote">Encendida Remoto</string>
     <string name="alarmOff">Apagada</string>
-    <string name="changePass">Cambiar Pin</string>
-
+    <string name="changeCode">Cambiar Código</string>
+    <string name="insertCodeLabel">Ingrese el código</string>
+    <string name="oldCodeLabel">Ingrese el código original</string>
+    <string name="newCodeLabel">Ingrese el nuevo código de 4 dígitos</string>
 </resources>

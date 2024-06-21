@@ -52,5 +52,8 @@
     <string name="alarmOnLocal">Locally On</string>
     <string name="alarmOnRemote">Remotely On</string>
     <string name="alarmOff">Off</string>
-    <string name="changePass">Change Pin</string>
+    <string name="changeCode">Change Code</string>
+    <string name="insertCodeLabel">Insert code</string>
+    <string name="oldCodeLabel">Insert original code</string>
+    <string name="newCodeLabel">Insert new four digit code</string>
 </resources>
