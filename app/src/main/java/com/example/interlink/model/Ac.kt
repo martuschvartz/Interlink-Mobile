@@ -1,8 +1,14 @@
 package com.example.interlink.model
 
-import com.example.interlink.remote.model.RemoteDevice
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AcUnit
+import androidx.compose.material.icons.filled.Air
+import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.interlink.remote.model.RemoteAc
 import com.example.interlink.remote.model.RemoteAcState
+import com.example.interlink.remote.model.RemoteDevice
+
 /*
 "status": "off",
         "temperature": 24,
@@ -37,6 +43,15 @@ class Ac (
         model.name = name
         model.setState(state)
         return model
+    }
+
+    fun getImageVector(): ImageVector? {
+        return when(mode){
+            "cool" -> Icons.Default.AcUnit
+            "heat" -> Icons.Default.WbSunny
+            "fan" -> Icons.Default.Air
+            else -> null
+        }
     }
 
     companion object {

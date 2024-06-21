@@ -7,17 +7,40 @@
     <string name="activity">Actividad\n</string>
     <string name="inter_title">INTERLINK</string>
 
-    <!-- Estados -->
-    <string name="open">Abrir</string>
-    <string name="close">Cerrar</string>
+    <!-- Estados Generales-->
+    <string name="onAction">Encender</string>
+    <string name="offACtion">Apagar</string>
+    <string name="openAction">Abrir</string>
+    <string name="openingAction">Abriendo</string>
+    <string name="closeAction">Cerrar</string>
+    <string name="closingAction">Cerrando</string>
     <string name="lockAction">Trabar</string>
     <string name="unlockAction">Destrabar</string>
+    <string name="state">Estado:</string>
 
     <!-- Para la puerta -->
-    <string name="opened">Abierto</string>
-    <string name="closed">Cerrado</string>
-    <string name="locked">Trabada</string>
-    <string name="unlocked">Destrabada</string>
-    <string name="state">Estado:</string>
-    <string name="lock">Traba:</string>
+    <string name="doorOpened">Abierto</string>
+    <string name="doorClosed">Cerrado</string>
+    <string name="doorLocked">Trabada</string>
+    <string name="doorUnlocked">Destrabada</string>
+    <string name="doorLock">Traba:</string>
+
+    <!-- Para la persiana -->
+    <string name="blindsCurrentLevel">Nivel Actual:</string>
+    <string name="blindsLevel">Nivel:</string>
+    <string name="blindsOpened">Abierta</string>
+    <string name="blindsClosed">Cerrada</string>
+    <string name="loading">Procesando</string>
+
+    <!-- Para el aire  -->
+    <string name="acOn">Encendido</string>
+    <string name="acOff">Apagado</string>
+    <string name="mode">Modo</string>
+    <string name="temp"> Temp.</string>
+    <string name="verticalBlades">Aspas(V)</string>
+    <string name="horizontalBlades">Aspas(H)</string>
+    <string name="velocity">Vel. Ventilador</string>
+    <string name="cool">Frío</string>
+    <string name="heat">Calor</string>
+    <string name="fan">Ventilador</string>
 </resources>
