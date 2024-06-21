@@ -1,5 +1,6 @@
 package com.example.interlink.ui.devices
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.interlink.DataSourceException
@@ -23,7 +24,8 @@ class EventsViewModel(
     init {
         collectOnViewModelScope(
             repository.events
-        ) { state, response -> state.copy(events = response) }
+        ) { state, response ->
+            state.copy(events = state.events + response) }
     }
 
     private fun <T> collectOnViewModelScope(

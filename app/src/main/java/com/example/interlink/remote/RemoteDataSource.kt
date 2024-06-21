@@ -51,7 +51,7 @@ abstract class RemoteDataSource {
     ): List<RemoteEvent> {
         try {
             val response = execute()
-            Log.d("DEBUG", "$response}")
+//            Log.d("DEBUG", "$response}")
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 return body
@@ -66,10 +66,10 @@ abstract class RemoteDataSource {
             }
             throw DataSourceException(UNEXPECTED_ERROR_CODE, "Missing error", null)
         } catch (e: DataSourceException) {
-            Log.d("DEBUG", "$e")
+//            Log.d("DEBUG", "$e")
             throw e
         } catch (e: IOException) {
-            Log.d("DEBUG", "$e")
+//            Log.d("DEBUG", "$e")
 
             throw DataSourceException(
                 CONNECTION_ERROR_CODE,
@@ -77,7 +77,7 @@ abstract class RemoteDataSource {
                 getDetailsFromException(e)
             )
         } catch (e: Exception) {
-            Log.d("DEBUG", "$e")
+//            Log.d("DEBUG", "$e")
 
             throw DataSourceException(
                 UNEXPECTED_ERROR_CODE,
