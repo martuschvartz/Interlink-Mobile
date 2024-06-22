@@ -29,6 +29,8 @@ import com.example.interlink.model.DeviceType
 import com.example.interlink.remote.model.RemoteEvent
 import com.example.interlink.ui.theme.md_theme_light_coffee
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 @Composable
@@ -90,8 +92,10 @@ fun EventCard(event : RemoteEvent) {
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Black
                         )
+                        val instant = parseTimestamp(event.timestamp)
+                        val formattedTimestamp = formatTimestamp(instant!!)
                         Text(
-                            text = event.timestamp,
+                            text = formattedTimestamp,
                             style = MaterialTheme.typography.bodyMedium,
 //                            fontWeight = FontWeight.SemiBold,
                             color = Color.Black
@@ -141,3 +145,16 @@ fun eventDescription(event: RemoteEvent) : String{
     return toRet
 }
 
+fun parseTimestamp(timestamp: String): Instant? {
+    return try {
+        Instant.parse(timestamp)
+    } catch (e: DateTimeParseException) {
+        e.printStackTrace()
+        null
+    }
+}
+
+fun formatTimestamp(instant: Instant, pattern: String = "HH:mm"): String {
+    val formatter = DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.systemDefault())
+    return formatter.format(instant)
+}

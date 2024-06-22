@@ -76,6 +76,7 @@ dependencies {
     implementation (libs.androidx.material.icons.extended)
     implementation(libs.gson)
     implementation(libs.converter.gson)
+    implementation(libs.accompanist.permissions)
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.adaptive.android)

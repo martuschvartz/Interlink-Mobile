@@ -5,6 +5,8 @@
     <string name="devices">Devices\n</string>
     <string name="activity">Activity\n</string>
     <string name="inter_title">INTERLINK</string>
+    <string name="channel_name">Device notifications</string>
+    <string name="channel_description">Device notifications</string>
 
     <!-- Estados Generales-->
     <string name="onAction">Turn On</string>

@@ -6,6 +6,8 @@
     <string name="devices">Dispositivos\n</string>
     <string name="activity">Actividad\n</string>
     <string name="inter_title">INTERLINK</string>
+    <string name="channel_name">Device notifications</string>
+    <string name="channel_description">Device notifications</string>
 
     <!-- Estados Generales-->
     <string name="onAction">Encender</string>
@@ -31,6 +33,7 @@
     <string name="blindsOpened">Abierta</string>
     <string name="blindsClosed">Cerrada</string>
     <string name="loading">Procesando</string>
+
 
     <!-- Para el aire  -->
     <string name="acOn">Encendido</string>
