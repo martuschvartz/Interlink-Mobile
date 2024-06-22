@@ -80,7 +80,7 @@ class SpeakerViewModel(
 
     fun getPlaylist() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.GET_PLAYLIST_ACTION) },
-        { state, response : List<Any> -> state },
+        { state, response : List<Any?> -> state },
     )
 
     suspend fun fetchPlaylist() : List<Any?>?{
@@ -111,7 +111,6 @@ class SpeakerViewModel(
                 block()
             }.onSuccess { response ->
                 _uiState.update { updateState(it, response).copy(loading = false) }
-                Log.d("DEBUG", "Mandamos $response")
                 resultDeferred.complete(response)
             }.onFailure { e ->
                 _uiState.update { it.copy(loading = false, error = handleError(e)) }
@@ -139,26 +138,6 @@ class SpeakerViewModel(
 //        }
 //    }
 
-    private fun <R> updateOnViewModelScope(
-        block: suspend () -> R,
-        updateState: (SpeakerUiState, R) -> SpeakerUiState,
-        stateToChange: MutableStateFlow<SpeakerUiState>
-    ): Job = viewModelScope.launch {
-        _uiState.update { it.copy(loading = true, error = null) }
-        stateToChange.update { it.copy(loading = true, error = null) }
-        Log.d("DEBUG", "${stateToChange}")
-        runCatching {
-            block()
-        }.onSuccess { response ->
-            val result = if (response is List<*>) response else emptyList<Any>()
-            stateToChange.update { updateState(it, response).copy(loading = false, playlist = result) }
-            Log.d("DEBUG", "$stateToChange")
-            _uiState.update { updateState(it, response).copy(loading = false, playlist = result) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(loading = false, error = handleError(e)) }
-            stateToChange.update { it.copy(loading = false, error = handleError(e)) }
-        }
-    }
 
     private fun handleError(e: Throwable): Error {
         return if (e is DataSourceException) {

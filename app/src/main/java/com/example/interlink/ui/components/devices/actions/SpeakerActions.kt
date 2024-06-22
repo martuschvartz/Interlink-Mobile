@@ -55,6 +55,7 @@ import com.example.interlink.ui.theme.md_theme_light_coffee
 import com.example.interlink.ui.theme.md_theme_light_interblue
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_interred
+import com.google.gson.JsonParser
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -131,6 +132,8 @@ fun SpeakerActions(
 
     // playlist
     var showPlaylist by remember { mutableStateOf(false) }
+    var playlist by remember { mutableStateOf<List<Any?>?>(emptyList())}
+
 
     // si cada 1 segundo hace un update de los device, puedo tener una variable mutablestateof
     // que sea el porcentaje de la cancion pasada, se hace mediante un calculo con la duracion
@@ -542,7 +545,7 @@ fun SpeakerActions(
                     border = BorderStroke(3.dp, Color.Black),
                     onClick = {
                         speakerViewModel.getPlaylist()
-                        var playlist : List<Any?>?= emptyList()
+
                         coroutineScope.launch {
                             playlist = speakerViewModel.fetchPlaylist()
                             Log.d("DEBUG", "Nos llega: ${playlist}")
@@ -566,7 +569,7 @@ fun SpeakerActions(
                 }
 
                 if(showPlaylist){
-                    ShowPlaylist{
+                    ShowPlaylist(playlist){
                         showPlaylist = false
                     }
                 }
@@ -578,9 +581,13 @@ fun SpeakerActions(
 
 @Composable
 fun ShowPlaylist(
-    onDismissRequest: () -> Unit,
-    // recibiría también la playlist y la song seleccionada para ponerla en verde si es que esta playing esa song
+    playlist : List<Any?>?,
+    onDismissRequest: () -> Unit
 ){
+    if (playlist == null){
+        return
+    }
+
     Dialog(onDismissRequest = onDismissRequest) {
         OutlinedCard(
             modifier = Modifier
@@ -602,15 +609,13 @@ fun ShowPlaylist(
                     .padding(10.dp),
             ){
 
-                // la lista es un placeholder:
-                val songs = listOf(
-                    "HOLA ESTE ES UN TEXTO MUY LARGO QUE SEGURO NO ENTRA",
-                    "SONG2",
-                    "SONG 3",
-                    "SONG 4"
-                )
+                playlist.forEach{
+                    val startIndex = it.toString().indexOf('=') + 1 // Start after the '=' character
+                    val commaIndex = it.toString().indexOf(',', startIndex)
+                    val title = it.toString().substring(startIndex, commaIndex).trim()
 
-                songs.forEach{
+
+                    Log.d("DEBUG", title)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -638,7 +643,7 @@ fun ShowPlaylist(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = it,
+                                    text = title,
                                     color = Color.Black,
                                     style = MaterialTheme.typography.titleMedium
                                 )
