@@ -1,6 +1,8 @@
 package com.example.interlink.ui.components.devices.actions
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,9 +28,11 @@ import com.example.interlink.model.Door
 import com.example.interlink.model.Status
 import com.example.interlink.ui.components.customShadow
 import com.example.interlink.ui.devices.DoorViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_intergrey
 import com.example.interlink.ui.theme.md_theme_light_interred
+import kotlinx.coroutines.launch
 
 @Composable
 fun DoorActions(
@@ -189,7 +194,7 @@ fun DoorActions(
                     shape = RoundedCornerShape(10.dp),
                     border = BorderStroke(3.dp, Color.Black),
                     onClick = {
-                        doorViewModel.unlock()
+
                     }
                 ) {
                     Column(

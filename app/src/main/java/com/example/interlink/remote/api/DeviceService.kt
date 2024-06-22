@@ -31,11 +31,11 @@ interface DeviceService {
     suspend fun deleteDevice(@Path("deviceId") deviceId: String): Response<RemoteResult<Boolean>>
 
     @PUT("devices/{deviceId}/{action}")
-    suspend fun executeDeviceAction(
+    suspend fun <T : Any> executeDeviceAction(
         @Path("deviceId") deviceId: String,
         @Path("action") action: String,
         @Body parameters: Array<*>
-    ): Response<RemoteResult<Array<*>>>
+    ): Response<RemoteResult<T>>
 
     @GET("devices/events")
     suspend fun getEvents(): Response<List<RemoteEvent>>
