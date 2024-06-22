@@ -1,5 +1,6 @@
 package com.example.interlink.ui.devices
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.interlink.DataSourceException
@@ -7,6 +8,8 @@ import com.example.interlink.model.Speaker
 import com.example.interlink.model.Error
 import com.example.interlink.repository.DeviceRepository
 import com.google.gson.JsonObject
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.reflect.typeOf
 
 class SpeakerViewModel(
     private val repository: DeviceRepository
@@ -76,9 +80,13 @@ class SpeakerViewModel(
 
     fun getPlaylist() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.GET_PLAYLIST_ACTION) },
-        { state, response : JsonObject -> state }
+        { state, response : List<Any?> -> state },
     )
 
+    suspend fun fetchPlaylist() : List<Any?>?{
+        val resultDeferred = getPlaylist()
+        return resultDeferred.await()
+    }
 
 
     private fun <T> collectOnViewModelScope(
@@ -94,16 +102,25 @@ class SpeakerViewModel(
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
         updateState: (SpeakerUiState, R) -> SpeakerUiState
-    ): Job = viewModelScope.launch {
-        _uiState.update { it.copy(loading = true, error = null) }
-        runCatching {
-            block()
-        }.onSuccess { response ->
-            _uiState.update { updateState(it, response).copy(loading = false) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(loading = false, error = handleError(e)) }
+    ): CompletableDeferred<R?> {
+        val resultDeferred = CompletableDeferred<R?>()
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true, error = null) }
+            runCatching {
+                block()
+            }.onSuccess { response ->
+                _uiState.update { updateState(it, response).copy(loading = false) }
+                resultDeferred.complete(response)
+            }.onFailure { e ->
+                _uiState.update { it.copy(loading = false, error = handleError(e)) }
+                resultDeferred.complete(null)
+            }
         }
+
+        return resultDeferred
     }
+
 
     private fun handleError(e: Throwable): Error {
         return if (e is DataSourceException) {

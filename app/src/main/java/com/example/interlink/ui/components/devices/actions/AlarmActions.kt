@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,7 @@ import com.example.interlink.ui.theme.md_theme_light_interblue
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_intergrey
 import com.example.interlink.ui.theme.md_theme_light_interred
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -60,6 +62,11 @@ fun AlarmActions(
     var turnOnDialog by remember { mutableStateOf(false) }
     var insertCodeDialog by remember { mutableStateOf(false) }
     var changeCodeDialog by remember { mutableStateOf(false) }
+
+
+    var codeEntered by remember { mutableStateOf("0000") }
+    var response by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     val actionButtonTitle : String
     val actionButtonColor : Color
@@ -149,9 +156,14 @@ fun AlarmActions(
                 ChangeCodeDialog(
                     onDismissRequest = { changeCodeDialog = false }
                 ) { oldCode, newCode ->
-                    val res = alarmViewModel.changeSecurityCode(oldCode, newCode)
-                    Log.d("DEBUG","$res")
-                    res
+
+                    codeEntered = newCode
+
+                    coroutineScope.launch {
+                        response = alarmViewModel.fetchNewVal { alarmViewModel.changeSecurityCode(oldCode, newCode) }!!
+                        Log.d("DEBUG", "Nos llega: ${response}")
+                    }
+
                 }
             }*/
         }

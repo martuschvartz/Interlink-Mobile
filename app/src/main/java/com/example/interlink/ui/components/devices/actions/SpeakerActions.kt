@@ -1,6 +1,7 @@
 package com.example.interlink.ui.components.devices.actions
 
 import SelectTextField
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,10 +29,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,17 +48,21 @@ import com.example.interlink.R
 import com.example.interlink.model.Speaker
 import com.example.interlink.model.Status
 import com.example.interlink.ui.components.customShadow
+import com.example.interlink.ui.devices.SpeakerUiState
 import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
 import com.example.interlink.ui.theme.md_theme_light_interblue
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_interred
+import com.google.gson.JsonParser
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun SpeakerActions(
     speakerDevice : Speaker,
-    speakerViewModel: SpeakerViewModel
+    speakerViewModel: SpeakerViewModel,
 ){
 
     // Estados
@@ -69,6 +76,7 @@ fun SpeakerActions(
     val actionButtonTitle : String
     val actionButtonTextColor : Color
     val actionButtonColor : Color
+    val coroutineScope = rememberCoroutineScope()
 
     if(speakerDevice.status == Status.PLAYING || speakerDevice.status == Status.PAUSED){
         actionButtonColor = md_theme_light_interred
@@ -124,6 +132,8 @@ fun SpeakerActions(
 
     // playlist
     var showPlaylist by remember { mutableStateOf(false) }
+    var playlist by remember { mutableStateOf<List<Any?>?>(emptyList())}
+
 
 
     Column{
@@ -528,7 +538,14 @@ fun SpeakerActions(
                     shape = RoundedCornerShape(10.dp),
                     border = BorderStroke(3.dp, Color.Black),
                     onClick = {
-                        showPlaylist = true
+                        speakerViewModel.getPlaylist()
+
+                        coroutineScope.launch {
+                            playlist = speakerViewModel.fetchPlaylist()
+                            Log.d("DEBUG", "Nos llega: ${playlist}")
+                            showPlaylist = true
+                        }
+
                     }
                 ) {
                     Column(
@@ -546,7 +563,7 @@ fun SpeakerActions(
                 }
 
                 if(showPlaylist){
-                    ShowPlaylist{
+                    ShowPlaylist(playlist){
                         showPlaylist = false
                     }
                 }
@@ -558,9 +575,13 @@ fun SpeakerActions(
 
 @Composable
 fun ShowPlaylist(
-    onDismissRequest: () -> Unit,
-    // recibiría también la playlist y la song seleccionada para ponerla en verde si es que esta playing esa song
+    playlist : List<Any?>?,
+    onDismissRequest: () -> Unit
 ){
+    if (playlist == null){
+        return
+    }
+
     Dialog(onDismissRequest = onDismissRequest) {
         OutlinedCard(
             modifier = Modifier
@@ -582,15 +603,13 @@ fun ShowPlaylist(
                     .padding(10.dp),
             ){
 
-                // la lista es un placeholder:
-                val songs = listOf(
-                    "HOLA ESTE ES UN TEXTO MUY LARGO QUE SEGURO NO ENTRA",
-                    "SONG2",
-                    "SONG 3",
-                    "SONG 4"
-                )
+                playlist.forEach{
+                    val startIndex = it.toString().indexOf('=') + 1 // Start after the '=' character
+                    val commaIndex = it.toString().indexOf(',', startIndex)
+                    val title = it.toString().substring(startIndex, commaIndex).trim()
 
-                songs.forEach{
+
+                    Log.d("DEBUG", title)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -618,7 +637,7 @@ fun ShowPlaylist(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = it,
+                                    text = title,
                                     color = Color.Black,
                                     style = MaterialTheme.typography.titleMedium
                                 )
