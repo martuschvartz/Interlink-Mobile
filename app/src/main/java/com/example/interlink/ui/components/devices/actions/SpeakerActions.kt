@@ -135,12 +135,6 @@ fun SpeakerActions(
     var playlist by remember { mutableStateOf<List<Any?>?>(emptyList())}
 
 
-    // si cada 1 segundo hace un update de los device, puedo tener una variable mutablestateof
-    // que sea el porcentaje de la cancion pasada, se hace mediante un calculo con la duracion
-    // total de la cancion y el tiempo transcurrido. O sea a esa variable le asigno el resultado
-    // de la funcion supongo, porque se va a ir updateando todo el tiempo
-
-
 
     Column{
 

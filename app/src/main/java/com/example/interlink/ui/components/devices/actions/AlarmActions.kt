@@ -1,6 +1,5 @@
 package com.example.interlink.ui.components.devices.actions
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -64,10 +63,10 @@ fun AlarmActions(
     var insertCodeDialog by remember { mutableStateOf(false) }
     var changeCodeDialog by remember { mutableStateOf(false) }
 
+
     var codeEntered by remember { mutableStateOf("0000") }
     var response by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-
 
     val actionButtonTitle : String
     val actionButtonColor : Color
@@ -152,20 +151,21 @@ fun AlarmActions(
                     )
                 }
             }
-
+/*
             if(changeCodeDialog){
                 ChangeCodeDialog(
-                    onDismissRequest = { changeCodeDialog = false },
-                    codeEntered = codeEntered,
+                    onDismissRequest = { changeCodeDialog = false }
                 ) { oldCode, newCode ->
+
                     codeEntered = newCode
 
                     coroutineScope.launch {
                         response = alarmViewModel.fetchNewVal { alarmViewModel.changeSecurityCode(oldCode, newCode) }!!
                         Log.d("DEBUG", "Nos llega: ${response}")
                     }
+
                 }
-            }
+            }*/
         }
     }
 }
@@ -174,20 +174,16 @@ fun AlarmActions(
 @Composable
 fun ChangeCodeDialog(
     onDismissRequest: () -> Unit,
-    codeEntered: String,
-    onCodeChanged: (String, String) -> Unit
+    onCodeChanged: (String, String) -> Boolean
 ){
     Dialog(onDismissRequest){
 
         // variables intermedias
-        var tempCodeEntered by remember { mutableStateOf(codeEntered) }
-        var tempNewCode by remember { mutableStateOf("0000") }
+        var tempCodeEntered by remember { mutableStateOf("") }
+        var tempNewCode by remember { mutableStateOf("") }
 
-        var codeEnteredEnable by remember { mutableStateOf(true) }
         var newCodeEnable by remember { mutableStateOf(true) }
-        var buttonEnabled by remember { mutableStateOf(true) }
-
-        buttonEnabled = (codeEnteredEnable && newCodeEnable)
+        var codeEnteredEnabled by remember { mutableStateOf(true) }
 
         val focusManager = LocalFocusManager.current
 
@@ -223,18 +219,23 @@ fun ChangeCodeDialog(
                     Column(
                         verticalArrangement = Arrangement.Center
                     ){
+                        Text(
+                            modifier = Modifier.padding(3.dp),
+                            text = stringResource(id = R.string.oldCodeLabel),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.titleSmall
+                        )
                         OutlinedTextField(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             value = tempCodeEntered,
                             onValueChange = {
                                 tempCodeEntered = it
-                                codeEnteredEnable = true
                             },
-                            isError = !codeEnteredEnable,
+                            isError = !codeEnteredEnabled,
                             singleLine = true,
                             supportingText = {
-                                if (!codeEnteredEnable) {
+                                if (!codeEnteredEnabled) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
                                         text = stringResource(id = R.string.enterAgain),
@@ -243,7 +244,7 @@ fun ChangeCodeDialog(
                                 }
                             },
                             trailingIcon = {
-                                if (!codeEnteredEnable)
+                                if (!codeEnteredEnabled)
                                     Icon(Icons.Filled.Error,null, tint = MaterialTheme.colorScheme.error)
                             },
                             keyboardOptions = KeyboardOptions.Default.copy(
@@ -251,7 +252,6 @@ fun ChangeCodeDialog(
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = {
-                                    codeEnteredEnable = (tempCodeEntered == codeEntered)
                                     focusManager.clearFocus()
                                 }
                             ),
@@ -262,12 +262,17 @@ fun ChangeCodeDialog(
                                 unfocusedTextColor = Color.Black,
                                 focusedBorderColor = md_theme_light_interblue,
                                 unfocusedBorderColor = md_theme_light_coffee
-                            ),
-                            label = { stringResource(id = R.string.oldCodeLabel) }
+                            )
                         )
 
                         Spacer(modifier = Modifier.padding(5.dp))
 
+                        Text(
+                            modifier = Modifier.padding(3.dp),
+                            text = stringResource(id = R.string.newCodeLabel),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.titleSmall
+                        )
                         OutlinedTextField(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -307,8 +312,7 @@ fun ChangeCodeDialog(
                                 unfocusedTextColor = Color.Black,
                                 focusedBorderColor = md_theme_light_interblue,
                                 unfocusedBorderColor = md_theme_light_coffee
-                            ),
-                            label = { stringResource(id = R.string.newCodeLabel)}
+                            )
                         )
                     }
                 }
@@ -340,10 +344,12 @@ fun ChangeCodeDialog(
                         shape = RoundedCornerShape(10.dp),
                         border = BorderStroke(3.dp, Color.Black),
                         onClick = {
+                            codeEnteredEnabled = onCodeChanged(tempCodeEntered, tempNewCode)
+
+                            // chequeo si cierro el dialogo o no
                             onDismissRequest()
-                            onCodeChanged(tempCodeEntered, tempNewCode)
                         },
-                        enabled = buttonEnabled
+                        enabled = newCodeEnable
                     ) {
                         Column {
                             Column(
