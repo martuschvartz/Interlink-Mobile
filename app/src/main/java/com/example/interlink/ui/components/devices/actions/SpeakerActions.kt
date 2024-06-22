@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.example.interlink.R
 import com.example.interlink.model.Speaker
 import com.example.interlink.model.Status
@@ -47,6 +48,7 @@ import com.example.interlink.ui.components.customShadow
 import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
+import com.example.interlink.ui.theme.md_theme_light_interblue
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_interred
 
@@ -119,6 +121,9 @@ fun SpeakerActions(
             currentTime = it.progress
         )
     } ?: 0f
+
+    // playlist
+    var showPlaylist by remember { mutableStateOf(false) }
 
     // si cada 1 segundo hace un update de los device, puedo tener una variable mutablestateof
     // que sea el porcentaje de la cancion pasada, se hace mediante un calculo con la duracion
@@ -274,7 +279,7 @@ fun SpeakerActions(
             SelectTextField(
                 modifier = Modifier
                     .width(200.dp)
-                    .height(100.dp),
+                    .height(80.dp),
                 showIcon = false,
                 initialValue = Pair(Pair(speakerDevice.genre,speakerDevice.genre),null),
                 options = genres,
@@ -366,7 +371,7 @@ fun SpeakerActions(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding( bottom = 10.dp)
+                                .padding(bottom = 10.dp)
                         ){
                             speakerDevice.song?.let {
                                 Text(
@@ -505,10 +510,130 @@ fun SpeakerActions(
                     }
                 }
             }
+
+
+            // row de playlist
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+                OutlinedCard(
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 5.dp,
+                            spread = 3f
+                        ),
+                    colors = CardDefaults.outlinedCardColors(
+                        containerColor = md_theme_light_interblue
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black),
+                    onClick = {
+                        showPlaylist = true
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(15.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Text(
+                            text = stringResource(id = R.string.seePlaylist),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+
+                if(showPlaylist){
+                    ShowPlaylist{
+                        showPlaylist = false
+                    }
+                }
+            }
         }
 
-        // row de playlist
+    }
+}
 
+@Composable
+fun ShowPlaylist(
+    onDismissRequest: () -> Unit,
+    // recibiría también la playlist y la song seleccionada para ponerla en verde si es que esta playing esa song
+){
+    Dialog(onDismissRequest = onDismissRequest) {
+        OutlinedCard(
+            modifier = Modifier
+                .customShadow(
+                    borderRadius = 10.dp,
+                    offsetY = 8.dp,
+                    offsetX = 5.dp,
+                    spread = 3f
+                ),
+            colors = CardDefaults.outlinedCardColors(
+                containerColor = md_theme_light_coffee
+            ),
+            shape = RoundedCornerShape(10.dp),
+            border = BorderStroke(3.dp, Color.Black)
+
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(10.dp),
+            ){
+
+                // la lista es un placeholder:
+                val songs = listOf(
+                    "HOLA ESTE ES UN TEXTO MUY LARGO QUE SEGURO NO ENTRA",
+                    "SONG2",
+                    "SONG 3",
+                    "SONG 4"
+                )
+
+                songs.forEach{
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        OutlinedCard(
+                            modifier = Modifier
+                                .customShadow(
+                                    borderRadius = 10.dp,
+                                    offsetY = 8.dp,
+                                    offsetX = 5.dp,
+                                    spread = 3f
+                                ),
+                            colors = CardDefaults.outlinedCardColors(
+                                containerColor = md_theme_light_background
+                            ),
+                            shape = RoundedCornerShape(10.dp),
+                            border = BorderStroke(3.dp, Color.Black)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(15.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = it,
+                                    color = Color.Black,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
