@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.compose.runtime.Composable
 import com.example.interlink.BuildConfig
 import com.example.interlink.MyIntent
+import com.example.interlink.R
 import com.example.interlink.remote.model.EventData
 import com.example.interlink.remote.model.RemoteEvent
 import com.google.gson.Gson
@@ -19,27 +19,16 @@ import kotlinx.coroutines.launch
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.EventDevice
-import com.example.interlink.remote.api.DateTypeAdapter
-import com.example.interlink.remote.api.DeviceTypeAdapter
-import com.example.interlink.remote.model.RemoteDevice
 import com.example.interlink.remote.model.RemoteDeviceType
-import com.example.interlink.remote.model.RemoteEventDevice
-import com.example.interlink.remote.model.RemoteResult
-import com.google.gson.GsonBuilder
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.Date
 import org.json.JSONObject
 
 class ServerEventReceiver : BroadcastReceiver() {
 
     private val gson = Gson()
-    private val dson = GsonBuilder()
-        .registerTypeAdapter(Date::class.java, DateTypeAdapter())
-        .registerTypeAdapter(com.example.interlink.remote.model.RemoteDevice::class.java, DeviceTypeAdapter())
-        .create()
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -47,20 +36,22 @@ class ServerEventReceiver : BroadcastReceiver() {
 
         GlobalScope.launch(Dispatchers.IO) {
             val events = fetchEvents()
-//            var remoteEvents : List<RemoteEvent> = emptyList()
+            if (events != null) {
+                val remoteEvents = parseEvents(events)
 
-            events?.forEach {
+                remoteEvents.forEach {
+                    
+                    val notifString = eventDescription(it, context)
 
-                fetchDevice(it.deviceId)
-
-                Log.d(TAG, "Broadcasting send notification intent (${it.deviceId})")
-                val intent2 = Intent().apply {
-                    action = MyIntent.SHOW_NOTIFICATION
-                    `package` = MyIntent.PACKAGE
-                    // Esto tendria que ser el evento
-                    putExtra(MyIntent.DEVICE_ID, it.deviceId)
+                    Log.d(TAG, "Broadcasting send notification intent (${notifString})")
+                    val intent2 = Intent().apply {
+                        action = MyIntent.SHOW_NOTIFICATION
+                        `package` = MyIntent.PACKAGE
+                        // Esto tendria que ser el evento
+                        putExtra(MyIntent.EVENT_DATA, notifString)
+                    }
+                    context?.sendOrderedBroadcast(intent2, null)
                 }
-                context?.sendOrderedBroadcast(intent2, null)
             }
         }
     }
@@ -146,7 +137,7 @@ class ServerEventReceiver : BroadcastReceiver() {
             }
             var newDev = EventDevice(id, name, type)
             Log.d(TAG, "Device es: ${newDev.type}")
-            null
+            newDev
 
         } else {
             Log.d(TAG, "No device found")
@@ -157,7 +148,7 @@ class ServerEventReceiver : BroadcastReceiver() {
     private fun parseEvents(events : List<EventData>) : List<RemoteEvent>{
         var toRet : List<RemoteEvent> = emptyList()
         events.forEach{event ->
-            var newEvent = RemoteEvent()
+            val newEvent = RemoteEvent()
             newEvent.event = event.event
             newEvent.args = JsonObject()
             event.args.forEach { (key, value) ->
@@ -165,11 +156,68 @@ class ServerEventReceiver : BroadcastReceiver() {
             }
             newEvent.deviceId = event.deviceId
             newEvent.timestamp = event.timestamp
+            newEvent.device = fetchDevice(event.deviceId)!!
+
+            toRet = toRet + newEvent
         }
 
+        toRet = filterEvents(toRet)
         return toRet
     }
 
+    private fun filterEvents(eventList : List<RemoteEvent>) : List<RemoteEvent> {
+        val toRet = eventList.filter{ event ->
+            when(event.device.type){
+                DeviceType.DOOR -> {
+                    when (event.event) {
+                        "statusChanged" -> true
+                        "lockChanged" -> true
+                        else -> false
+                    }
+                }
+                DeviceType.ALARM -> event.event == "statusChanged"
+                DeviceType.BLINDS-> event.event == "statusChanged"
+                else -> false
+            }
+        }
+        return toRet
+    }
+
+    private fun eventDescription(event: RemoteEvent, context: Context?) : String{
+        var toRet : String = ""
+        val argsObject = event.args.asJsonObject
+        when(event.device.type){
+            DeviceType.DOOR -> {
+                when (event.event) {
+                    "statusChanged" -> {
+                        when(argsObject["newStatus"].asString){
+                            "opened" -> toRet = context!!.getString(R.string.openedDoor)
+                            "closed" -> toRet = context!!.getString(R.string.closedDoor)
+                        }
+                    }
+                    "lockChanged" -> when(argsObject["newLock"].asString){
+                        "locked" -> toRet = context!!.getString(R.string.lockedDoor)
+                        "unlocked" -> toRet = context!!.getString(R.string.unlockedDoor)
+                    }
+                }
+            }
+            DeviceType.ALARM -> when(argsObject["newStatus"].asString){
+                "armedStay" -> toRet= context!!.getString(R.string.armedAlarm)
+                "armedAway" -> toRet = context!!.getString(R.string.armedAlarm)
+                "disarmed" -> toRet = context!!.getString(R.string.disarmedAlarm)
+            }
+            DeviceType.BLINDS-> when(argsObject["newStatus"].asString){
+                "opened" -> toRet = context!!.getString(R.string.openedBlinds)
+                "closed" -> toRet = context!!.getString(R.string.closedBlinds)
+                "opening" -> toRet = context!!.getString(R.string.openingBlinds)
+                "closing" -> toRet = context!!.getString(R.string.closingBlinds)
+            }
+
+            else -> {}
+        }
+
+        return toRet
+    }  
     companion object {
         private const val TAG = "NOTIF"
     }
