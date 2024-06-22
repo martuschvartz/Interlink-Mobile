@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,9 +61,11 @@ import com.example.interlink.ui.devices.AcViewModel
 import com.example.interlink.ui.devices.AlarmViewModel
 import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DoorViewModel
+import com.example.interlink.ui.devices.FavoritesEntryViewModel
 import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
+import kotlinx.coroutines.launch
 
 
 // va a recibir el contenido según el device (tanto como info básica o la info completa)
@@ -73,8 +76,11 @@ fun <T : Device> DeviceCard(
     device: T,
     viewModel: ViewModel?,
     expanded: Boolean = false,
+    favDevViewModel : FavoritesEntryViewModel,
     onClick: (Device) -> Unit
 ){
+
+    val coroutineScope = rememberCoroutineScope()
 
     // por default la card arranca sin ser favorita
     var fav by remember { mutableStateOf(false) }
@@ -161,7 +167,27 @@ fun <T : Device> DeviceCard(
                                 ) {
                                     if (fav) {
                                         IconButton(
-                                            onClick = { fav = !fav }
+                                            onClick = {
+                                                fav = !fav
+                                                if(fav){
+                                                    coroutineScope.launch {
+                                                        device.id?.let {
+                                                            favDevViewModel.insertFavorite(
+                                                                it
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                else{
+                                                    coroutineScope.launch {
+                                                        device.id?.let {
+                                                            favDevViewModel.deleteFavorite(
+                                                                it
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Default.Star,

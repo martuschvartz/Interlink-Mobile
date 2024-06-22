@@ -1,5 +1,6 @@
 package com.example.interlink.ui.pages
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,8 +13,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.example.interlink.ui.devices.FavoritesEntryViewModel
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,8 +26,11 @@ import com.example.interlink.ui.theme.md_theme_light_coffee
 
 @Composable
 fun HomePage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    favDevViewModel : FavoritesEntryViewModel
 ){
+
+    val favorites by favDevViewModel.getFavoritesId().collectAsState(initial = emptyList())
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,13 +62,14 @@ fun HomePage(
             }
         }
 
+    Column(
+        modifier = Modifier
+    ) {
 
+        favorites.forEach { 
+            Text(text = it)
+        }
     }
 }
 
 
-@Preview
-@Composable
-fun HomePagePreview(){
-    HomePage()
-}
