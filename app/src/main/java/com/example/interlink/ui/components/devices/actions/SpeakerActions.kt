@@ -17,16 +17,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.interlink.R
@@ -85,7 +93,19 @@ fun SpeakerActions(
         } ?: ""
     }
 
+    // Pausa
+    var paused by remember { mutableStateOf(speakerDevice.status == Status.PAUSED) }
 
+    val pauseButtonIcon : ImageVector
+    val pauseButtonColor : Color
+
+    if(paused){
+        pauseButtonIcon = Icons.Default.PlayArrow
+        pauseButtonColor = md_theme_light_intergreen
+    }else{
+        pauseButtonIcon = Icons.Default.Pause
+        pauseButtonColor = md_theme_light_interred
+    }
 
     // si cada 1 segundo hace un update de los device, puedo tener una variable mutablestateof
     // que sea el porcentaje de la cancion pasada, se hace mediante un calculo con la duracion
@@ -141,8 +161,9 @@ fun SpeakerActions(
                     if(speakerDevice.status == Status.STOPPED){
                         speakerViewModel.play()
                     }
-                    if(speakerDevice.status == Status.PLAYING){
+                    else{
                         speakerViewModel.stop()
+                        paused = false
                     }
                 }
             ) {
@@ -308,6 +329,124 @@ fun SpeakerActions(
                                     )
                                 }
                             }
+                        }
+
+                        // botones de control
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                        ){
+                            OutlinedCard(
+                                modifier = Modifier
+                                    .customShadow(
+                                        borderRadius = 10.dp,
+                                        offsetY = 8.dp,
+                                        offsetX = 5.dp,
+                                        spread = 3f
+                                    ),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = md_theme_light_intergreen
+                                ),
+                                shape = RoundedCornerShape(10.dp),
+                                border = BorderStroke(3.dp, Color.Black),
+                                onClick = {
+                                    speakerViewModel.previousSong()
+                                }
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(15.dp),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.SkipPrevious,
+                                        contentDescription = null,
+                                        tint = Color.Black,
+                                        modifier = Modifier
+                                            .size(50.dp)
+                                    )
+                                }
+                            }
+
+
+                            OutlinedCard(
+                                modifier = Modifier
+                                    .customShadow(
+                                        borderRadius = 10.dp,
+                                        offsetY = 8.dp,
+                                        offsetX = 5.dp,
+                                        spread = 3f
+                                    ),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = pauseButtonColor
+                                ),
+                                shape = RoundedCornerShape(10.dp),
+                                border = BorderStroke(3.dp, Color.Black),
+                                onClick = {
+                                    if (speakerDevice.status == Status.PAUSED) {
+                                        speakerViewModel.resume()
+                                        paused = false
+                                    }
+                                    if (speakerDevice.status == Status.PLAYING) {
+                                        speakerViewModel.pause()
+                                        paused = true
+                                    }
+                                }
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(15.dp),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(
+                                        imageVector = pauseButtonIcon,
+                                        contentDescription = null,
+                                        tint = Color.Black,
+                                        modifier = Modifier
+                                            .size(50.dp)
+                                    )
+                                }
+                            }
+
+
+                            OutlinedCard(
+                                modifier = Modifier
+                                    .customShadow(
+                                        borderRadius = 10.dp,
+                                        offsetY = 8.dp,
+                                        offsetX = 5.dp,
+                                        spread = 3f
+                                    ),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = md_theme_light_intergreen
+                                ),
+                                shape = RoundedCornerShape(10.dp),
+                                border = BorderStroke(3.dp, Color.Black),
+                                onClick = {
+                                    speakerViewModel.nextSong()
+                                }
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(15.dp),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.SkipNext,
+                                        contentDescription = null,
+                                        tint = Color.Black,
+                                        modifier = Modifier
+                                            .size(50.dp)
+                                    )
+                                }
+                            }
+
+
                         }
                     }
                 }
