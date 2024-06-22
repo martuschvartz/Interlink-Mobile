@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.interlink"
-        minSdk = 24
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -76,6 +76,7 @@ dependencies {
     implementation (libs.androidx.material.icons.extended)
     implementation(libs.gson)
     implementation(libs.converter.gson)
+    implementation(libs.accompanist.permissions)
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.adaptive.android)

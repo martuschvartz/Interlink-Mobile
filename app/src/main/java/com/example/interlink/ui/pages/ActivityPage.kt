@@ -18,9 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interlink.R
 import com.example.interlink.model.Ac
 import com.example.interlink.model.Alarm
 import com.example.interlink.model.Blinds
@@ -43,13 +45,6 @@ fun ActivityPage(
     ){
     val uiState by viewModel.uiState.collectAsState()
 
-//   Column(modifier = modifier) {
-//        Text("${uiState.newEvents}", color = Color.Black, style = MaterialTheme.typography.titleLarge)
-//        uiState.events.forEach { event ->
-//            Text(event.toString(), color = Color.Black, style = MaterialTheme.typography.bodyLarge)
-//        }
-//    }
-
     Column (
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -59,9 +54,8 @@ fun ActivityPage(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
         ){
-            // prob tenga q ser un R.string o algo asi
           Text(
-              text = "  Activity",
+              text = stringResource(id = R.string.activity),
               color = Color.Black,
               style = MaterialTheme.typography.headlineLarge,
               fontWeight = FontWeight.Bold
