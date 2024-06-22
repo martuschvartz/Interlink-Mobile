@@ -43,13 +43,15 @@ class ServerEventReceiver : BroadcastReceiver() {
                     
                     val notifString = eventDescription(it, context)
 
-                    Log.d(TAG, "Broadcasting send notification intent (${notifString})")
+
                     val intent2 = Intent().apply {
                         action = MyIntent.SHOW_NOTIFICATION
                         `package` = MyIntent.PACKAGE
                         // Esto tendria que ser el evento
                         putExtra(MyIntent.EVENT_DATA, notifString)
                     }
+                    Log.d(TAG, "Broadcasting send notification intent (${intent2})")
+
                     context?.sendOrderedBroadcast(intent2, null)
                 }
             }
@@ -216,7 +218,7 @@ class ServerEventReceiver : BroadcastReceiver() {
             else -> {}
         }
 
-        return toRet
+        return "${event.device.name}: " + toRet
     }  
     companion object {
         private const val TAG = "NOTIF"

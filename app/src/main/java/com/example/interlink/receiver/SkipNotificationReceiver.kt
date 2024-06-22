@@ -9,9 +9,7 @@ import com.example.interlink.MyIntent
 class SkipNotificationReceiver (private val deviceId: String) : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action.equals(MyIntent.SHOW_NOTIFICATION) &&
-            intent.getStringExtra(MyIntent.DEVICE_ID).equals(deviceId)
-        ) {
+        if (intent.action.equals(MyIntent.SHOW_NOTIFICATION)) {
             Log.d(TAG, "Skipping notification send ($deviceId)")
             abortBroadcast()
         }

@@ -15,17 +15,17 @@ import com.example.interlink.R
 class ShowNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == MyIntent.SHOW_NOTIFICATION) {
-            val deviceId: String? = intent.getStringExtra(MyIntent.DEVICE_ID)
-            Log.d(TAG, "Show notification intent received {$deviceId)")
+            val eventData: String? = intent.getStringExtra(MyIntent.EVENT_DATA)
+            Log.d(TAG, "Show notification intent received {$eventData)")
 
-            showNotification(context, deviceId!!)
+            showNotification(context, eventData!!)
         }
     }
 
-    private fun showNotification(context: Context, deviceId: String) {
+    private fun showNotification(context: Context, eventData: String) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra(MyIntent.DEVICE_ID, deviceId)
+            putExtra(MyIntent.EVENT_DATA, eventData)
         }
         val pendingIntent =
             PendingIntent.getActivity(
@@ -38,7 +38,7 @@ class ShowNotificationReceiver : BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context, ApiApplication.CHANNEL_ID)
             .setSmallIcon(R.drawable.notification)
             .setContentTitle("Interlink")
-            .setContentText(deviceId)
+            .setContentText(eventData)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -46,7 +46,7 @@ class ShowNotificationReceiver : BroadcastReceiver() {
         try {
             val notificationManager = NotificationManagerCompat.from(context)
             if (notificationManager.areNotificationsEnabled())
-                notificationManager.notify(deviceId.hashCode(), builder.build())
+                notificationManager.notify(eventData.hashCode(), builder.build())
         } catch (e: SecurityException) {
             Log.d(TAG, "Notification permission not granted $e")
         }
