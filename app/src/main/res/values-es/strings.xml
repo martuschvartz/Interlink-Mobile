@@ -6,6 +6,8 @@
     <string name="devices">Dispositivos\n</string>
     <string name="activity">Actividad\n</string>
     <string name="inter_title">INTERLINK</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
 
 
     <!-- Estados Generales-->
@@ -17,6 +19,8 @@
     <string name="closingAction">Cerrando</string>
     <string name="lockAction">Trabar</string>
     <string name="unlockAction">Destrabar</string>
+    <string name="playAction">Reproducir</string>
+    <string name="stopAction">Detener</string>
     <string name="state">Estado:</string>
 
 
@@ -57,4 +61,17 @@
     <string name="insertCodeLabel">Ingrese el código</string>
     <string name="oldCodeLabel">Ingrese el código original</string>
     <string name="newCodeLabel">Ingrese el nuevo código de 4 dígitos</string>
+    <string name="enterAgain">Código incorrecto</string>
+    <string name="invalidCode">Código inválido</string>
+
+
+    <!-- Para el parlante -->
+    <string name="paused">Pausado</string>
+    <string name="playing">Reproduciendo</string>
+    <string name="stopped">Pausado</string>
+    <string name="volume">Volumen</string>
+    <string name="genre">Génerp</string>
+    <string name="seePlaylist">Ver Playlist</string>
+    <string name="clasical">Clásica</string>
+    <string name="club">Boliche</string>
 </resources>

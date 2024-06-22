@@ -5,6 +5,8 @@
     <string name="devices">Devices\n</string>
     <string name="activity">Activity\n</string>
     <string name="inter_title">INTERLINK</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
 
 
     <!-- Estados Generales-->
@@ -16,6 +18,8 @@
     <string name="closingAction">Closing</string>
     <string name="lockAction">Lock</string>
     <string name="unlockAction">Unlock</string>
+    <string name="playAction">Play</string>
+    <string name="stopAction">Stop</string>
     <string name="state">State:</string>
 
 
@@ -53,7 +57,24 @@
     <string name="alarmOnRemote">Remotely On</string>
     <string name="alarmOff">Off</string>
     <string name="changeCode">Change Code</string>
-    <string name="insertCodeLabel">Insert code</string>
-    <string name="oldCodeLabel">Insert original code</string>
-    <string name="newCodeLabel">Insert new four digit code</string>
+    <string name="insertCodeLabel">Enter code</string>
+    <string name="oldCodeLabel">Enter original code</string>
+    <string name="newCodeLabel">Enter new four digit code</string>
+    <string name="enterAgain">Incorrect code</string>
+    <string name="invalidCode">Invalid code</string>
+
+
+    <!-- Para el parlante -->
+    <string name="paused">Paused</string>
+    <string name="playing">Playing</string>
+    <string name="stopped">Stopped</string>
+    <string name="volume">Volume</string>
+    <string name="genre">Genre</string>
+    <string name="seePlaylist">See Playlist</string>
+    <string name="clasical">Classical</string>
+    <string name="country" translatable="false">Country</string>
+    <string name="club">Club</string>
+    <string name="latina" translatable="false">Latina</string>
+    <string name="pop" translatable="false">Pop</string>
+    <string name="rock" translatable="false">Rock</string>
 </resources>
