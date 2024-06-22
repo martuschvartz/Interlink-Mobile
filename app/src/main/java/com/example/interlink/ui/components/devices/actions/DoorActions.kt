@@ -1,5 +1,6 @@
 package com.example.interlink.ui.components.devices.actions
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import com.example.interlink.model.Door
 import com.example.interlink.model.Status
 import com.example.interlink.ui.components.customShadow
 import com.example.interlink.ui.devices.DoorViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_intergrey
 import com.example.interlink.ui.theme.md_theme_light_interred
@@ -126,7 +128,8 @@ fun DoorActions(
                     shape = RoundedCornerShape(10.dp),
                     border = BorderStroke(3.dp, Color.Black),
                     onClick = {
-                        doorViewModel.open()
+                        val newState = doorViewModel.open()
+                        Log.d("DEBUG", "Salimos con $newState")
                     },
                     enabled = doorDevice.lock == "unlocked"
                 ) {

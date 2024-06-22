@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.interlink.ui.components.AlarmSwitch
+//import com.example.interlink.ui.components.AlarmSwitch
 import com.example.interlink.ui.theme.md_theme_light_coffee
 
 // el modifier default es la misma clase Modifier, sino es el que le paso
@@ -49,7 +51,8 @@ fun HomePage(
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ){
-                            AlarmSwitch()
+                            Text("Quien chota sos", color = Color.Black)
+//                            AlarmSwitch()
                         }
                     }
                 }

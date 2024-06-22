@@ -60,9 +60,11 @@ class DeviceRemoteDataSource (private val deviceService: DeviceService
         action: String,
         parameters: Array<*>
     ): Array<*> {
-        return handleApiResponse {
+        var toRet = handleApiResponse {
             deviceService.executeDeviceAction(deviceId, action, parameters)
         }
+        Log.d("DEBUG", "$toRet")
+        return toRet
     }
 
     companion object {

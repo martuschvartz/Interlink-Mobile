@@ -41,8 +41,4 @@ class DeviceRepository(
     ): Array<*> {
         return remoteDataSource.executeDeviceAction(deviceId, action, parameters)
     }
-
-//    suspend fun getEvents(): RemoteEvent {
-//        return remoteDataSource.getEvents()
-//    }
 }

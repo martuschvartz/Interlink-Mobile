@@ -1,11 +1,13 @@
 package com.example.interlink.ui.devices
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.interlink.DataSourceException
 import com.example.interlink.model.Door
 import com.example.interlink.model.Error
 import com.example.interlink.repository.DeviceRepository
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,19 +45,11 @@ class DoorViewModel(
 
     fun unlock() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.UNLOCK_ACTION) },
-        { state, _ -> state }
+        { state, response ->
+            Log.d("DEBUG", "$response")
+            state }
     )
 
-    // Esta funcion inicial ya no se usa CREO pero la dejo por si la necesito mas adelante
-    private fun <T> collectOnViewModelScope(
-        flow: Flow<T>,
-        updateState: (DoorUiState, T) -> DoorUiState
-    ) = viewModelScope.launch {
-        flow
-            .distinctUntilChanged()
-            .catch { e -> _uiState.update { it.copy(error = handleError(e)) } }
-            .collect { response -> _uiState.update { updateState(it, response) } }
-    }
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
@@ -70,6 +64,24 @@ class DoorViewModel(
             _uiState.update { it.copy(loading = false, error = handleError(e)) }
         }
     }
+
+//    private fun <R> runOnViewModelScope(block: suspend () -> R, updateState: (DoorUiState, R) -> DoorUiState): R? {
+//        var toRet : R? = null
+//        viewModelScope.launch {
+//            _uiState.update { it.copy(loading = true, error = null) }
+//            runCatching { block() }.onSuccess { response ->
+//                toRet = response
+//                Log.d("DEBUG", "$response")
+//
+//                _uiState.update { updateState(it, response).copy(loading = false) }
+//            }.onFailure { e ->
+//                Log.d("DEBUG", "$e")
+//
+//                _uiState.update { it.copy(loading = false, error = handleError(e)) }
+//            }
+//        }
+//        return toRet // Directly return the result from the block
+//    }
 
     private fun handleError(e: Throwable): Error {
         return if (e is DataSourceException) {
