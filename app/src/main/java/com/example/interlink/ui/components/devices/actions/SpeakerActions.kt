@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -76,6 +77,13 @@ fun SpeakerActions(
         Pair(Pair("pop",stringResource(id = R.string.pop)),null),
         Pair(Pair("rock",stringResource(id = R.string.rock)),null)
     )
+
+    // Cancion
+    val text = remember(speakerDevice.song?.title) {
+        speakerDevice.song?.title?.let {
+            if (it.length <= 19) it else it.substring(0, 17) + "..."
+        } ?: ""
+    }
 
 
 
@@ -243,7 +251,68 @@ fun SpeakerActions(
         }
 
         // row de canciones
+        if(speakerDevice.status != Status.STOPPED){
+            Row(
+                modifier = Modifier.padding(5.dp)
+            ){
+                OutlinedCard(
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 5.dp,
+                            spread = 3f
+                        ),
+                    colors = CardDefaults.outlinedCardColors(
+                        containerColor = md_theme_light_coffee
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp)
+                    ) {
 
+                        // Titulo de la cancion
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                        ){
+                            OutlinedCard(
+                                modifier = Modifier
+                                    .customShadow(
+                                        borderRadius = 10.dp,
+                                        offsetY = 8.dp,
+                                        offsetX = 5.dp,
+                                        spread = 3f
+                                    ),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = md_theme_light_background
+                                ),
+                                shape = RoundedCornerShape(10.dp),
+                                border = BorderStroke(3.dp, Color.Black)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(15.dp),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = text,
+                                        color = Color.Black,
+                                        style = MaterialTheme.typography.titleLarge
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // row de playlist
 
