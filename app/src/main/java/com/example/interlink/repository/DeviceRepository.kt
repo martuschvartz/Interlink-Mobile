@@ -34,11 +34,11 @@ class DeviceRepository(
         return remoteDataSource.deleteDevice(deviceId)
     }
 
-    suspend fun executeDeviceAction(
+    suspend fun <T : Any> executeDeviceAction(
         deviceId: String,
         action: String,
         parameters: Array<*> = emptyArray<Any>()
-    ): Array<*> {
+    ): T {
         return remoteDataSource.executeDeviceAction(deviceId, action, parameters)
     }
 }

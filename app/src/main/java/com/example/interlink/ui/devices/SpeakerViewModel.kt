@@ -6,6 +6,7 @@ import com.example.interlink.DataSourceException
 import com.example.interlink.model.Speaker
 import com.example.interlink.model.Error
 import com.example.interlink.repository.DeviceRepository
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,48 +35,48 @@ class SpeakerViewModel(
 
     fun play() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PLAY_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun stop() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.STOP_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun pause() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PAUSE_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun resume() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.RESUME_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun setVolume(volume: Int) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.SET_VOLUME_ACTION, arrayOf(volume)) },
-        { state, _ -> state }
+        { state, response : Int -> state }
     )
 
     fun setGenre(genre: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.SET_GENRE_ACTION, arrayOf(genre)) },
-        { state, _ -> state }
+        { state, response : String -> state }
     )
 
 
     fun nextSong() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.NEXT_SONG_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun previousSong() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.PREVIOUS_SONG_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun getPlaylist() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.GET_PLAYLIST_ACTION) },
-        { state, _ -> state }
+        { state, response : JsonObject -> state }
     )
 
 

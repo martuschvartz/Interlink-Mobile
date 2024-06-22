@@ -30,58 +30,54 @@ class DoorViewModel(
 
     fun open() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.OPEN_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun close() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.CLOSE_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun lock() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.LOCK_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean ->
+            state }
     )
 
     fun unlock() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.UNLOCK_ACTION) },
-        { state, response ->
-            Log.d("DEBUG", "$response")
+        { state, response : Boolean ->
             state }
     )
 
+    suspend fun <R> execAndHandle(
+        func: () ->  CompletableDeferred<R?>
+    ) : R? {
+        val resultDeferred = func()
+        return resultDeferred.await()
+    }
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
         updateState: (DoorUiState, R) -> DoorUiState
-    ): Job = viewModelScope.launch {
-        _uiState.update { it.copy(loading = true, error = null) }
-        runCatching {
-            block()
-        }.onSuccess { response ->
-            _uiState.update { updateState(it, response).copy(loading = false) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(loading = false, error = handleError(e)) }
-        }
-    }
+    ): CompletableDeferred<R?> {
+        val resultDeferred = CompletableDeferred<R?>()
 
-//    private fun <R> runOnViewModelScope(block: suspend () -> R, updateState: (DoorUiState, R) -> DoorUiState): R? {
-//        var toRet : R? = null
-//        viewModelScope.launch {
-//            _uiState.update { it.copy(loading = true, error = null) }
-//            runCatching { block() }.onSuccess { response ->
-//                toRet = response
-//                Log.d("DEBUG", "$response")
-//
-//                _uiState.update { updateState(it, response).copy(loading = false) }
-//            }.onFailure { e ->
-//                Log.d("DEBUG", "$e")
-//
-//                _uiState.update { it.copy(loading = false, error = handleError(e)) }
-//            }
-//        }
-//        return toRet // Directly return the result from the block
-//    }
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true, error = null) }
+            runCatching {
+                block()
+            }.onSuccess { response ->
+                _uiState.update { updateState(it, response).copy(loading = false) }
+                resultDeferred.complete(response)
+            }.onFailure { e ->
+                _uiState.update { it.copy(loading = false, error = handleError(e)) }
+                resultDeferred.complete(null)
+            }
+        }
+
+        return resultDeferred
+    }
 
     private fun handleError(e: Throwable): Error {
         return if (e is DataSourceException) {

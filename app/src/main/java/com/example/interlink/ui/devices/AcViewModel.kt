@@ -30,37 +30,37 @@ class AcViewModel(
     // Aca van las funciones en si (el Ac.OPEN_ACTION esta en la clase Ac mas arriba)
     fun turnOn() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.TURN_ON_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun turnOff() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.TURN_OFF_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun setTemperature(temperature: Int) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_TEMPERATURE_ACTION, arrayOf(temperature)) },
-        { state, _ -> state }
+        { state, response : Int -> state }
     )
 
     fun setMode(mode: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_MODE_ACTION, arrayOf(mode)) },
-        { state, _ -> state }
+        { state, response : String -> state }
     )
 
     fun setVerticalSwing(mode: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_VERTICAL_SWING_ACTION, arrayOf(mode)) },
-        { state, _ -> state }
+        { state, response : String -> state }
     )
 
     fun setHorizontalSwing(mode: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_HORIZONTAL_SWING_ACTION, arrayOf(mode)) },
-        { state, _ -> state }
+        { state, response : String -> state }
     )
 
     fun setFanSpeed(mode: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_FAN_SPEED_ACTION, arrayOf(mode)) },
-        { state, _ -> state }
+        { state, response : String -> state }
     )
 
     private fun <T> collectOnViewModelScope(
