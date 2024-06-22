@@ -28,22 +28,22 @@ class AlarmViewModel(
 
     fun armAway(pin: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Alarm.ARM_AWAY_ACTION, arrayOf(pin)) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun armStay(pin: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Alarm.ARM_STAY_ACTION, arrayOf(pin)) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun disarm(pin: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Alarm.DISARM_ACTION, arrayOf(pin)) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun changeSecurityCode(oldPin: String, newPin: String) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Alarm.CHANGE_SECURITY_CODE_ACTION, arrayOf(oldPin, newPin)) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
 

@@ -34,12 +34,12 @@ class LampViewModel(
 
     fun turnOn() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Lamp.TURN_ON_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun turnOff() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Lamp.TURN_OFF_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     private fun <T> collectOnViewModelScope(
