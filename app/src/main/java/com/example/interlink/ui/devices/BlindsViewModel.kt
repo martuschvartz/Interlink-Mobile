@@ -28,17 +28,17 @@ class BlindsViewModel(
 
     fun open() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Blinds.OPEN_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun close() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Blinds.CLOSE_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun setLevel(level: Int) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Blinds.SET_LEVEL_ACTION, arrayOf(level)) },
-        { state, _ -> state }
+        { state, response : Int -> state }
     )
 
     private fun <T> collectOnViewModelScope(

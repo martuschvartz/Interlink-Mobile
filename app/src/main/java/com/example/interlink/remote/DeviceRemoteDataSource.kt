@@ -55,14 +55,15 @@ class DeviceRemoteDataSource (private val deviceService: DeviceService
         }
     }
 
-    suspend fun executeDeviceAction(
+    suspend fun <T : Any> executeDeviceAction(
         deviceId: String,
         action: String,
         parameters: Array<*>
-    ): Array<*> {
-        return handleApiResponse {
+    ): T {
+        val toRet = handleApiResponse {
             deviceService.executeDeviceAction(deviceId, action, parameters)
         }
+        return toRet as T
     }
 
     companion object {

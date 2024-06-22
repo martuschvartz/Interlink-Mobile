@@ -1,11 +1,13 @@
 package com.example.interlink.ui.devices
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.interlink.DataSourceException
 import com.example.interlink.model.Door
 import com.example.interlink.model.Error
 import com.example.interlink.repository.DeviceRepository
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,47 +30,53 @@ class DoorViewModel(
 
     fun open() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.OPEN_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun close() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.CLOSE_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean -> state }
     )
 
     fun lock() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.LOCK_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean ->
+            state }
     )
 
     fun unlock() = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Door.UNLOCK_ACTION) },
-        { state, _ -> state }
+        { state, response : Boolean ->
+            state }
     )
 
-    // Esta funcion inicial ya no se usa CREO pero la dejo por si la necesito mas adelante
-    private fun <T> collectOnViewModelScope(
-        flow: Flow<T>,
-        updateState: (DoorUiState, T) -> DoorUiState
-    ) = viewModelScope.launch {
-        flow
-            .distinctUntilChanged()
-            .catch { e -> _uiState.update { it.copy(error = handleError(e)) } }
-            .collect { response -> _uiState.update { updateState(it, response) } }
+    suspend fun <R> execAndHandle(
+        func: () ->  CompletableDeferred<R?>
+    ) : R? {
+        val resultDeferred = func()
+        return resultDeferred.await()
     }
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
         updateState: (DoorUiState, R) -> DoorUiState
-    ): Job = viewModelScope.launch {
-        _uiState.update { it.copy(loading = true, error = null) }
-        runCatching {
-            block()
-        }.onSuccess { response ->
-            _uiState.update { updateState(it, response).copy(loading = false) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(loading = false, error = handleError(e)) }
+    ): CompletableDeferred<R?> {
+        val resultDeferred = CompletableDeferred<R?>()
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true, error = null) }
+            runCatching {
+                block()
+            }.onSuccess { response ->
+                _uiState.update { updateState(it, response).copy(loading = false) }
+                resultDeferred.complete(response)
+            }.onFailure { e ->
+                _uiState.update { it.copy(loading = false, error = handleError(e)) }
+                resultDeferred.complete(null)
+            }
         }
+
+        return resultDeferred
     }
 
     private fun handleError(e: Throwable): Error {
