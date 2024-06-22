@@ -8,15 +8,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.interlink.database.FavoritesDatabase
 import com.example.interlink.ui.components.BottomInterBar
 import com.example.interlink.ui.components.TopInterlinkBar
+import com.example.interlink.ui.devices.FavoritesEntryViewModel
+import com.example.interlink.ui.devices.FavoritesEntryViewModelFactory
 import com.example.interlink.ui.navigation.InterNavHost
 import com.example.interlink.ui.navigation.NavigationInterRail
 import com.example.interlink.ui.theme.InterlinkTheme
@@ -25,10 +31,18 @@ import com.example.interlink.ui.theme.InterlinkTheme
 @Composable
 fun InterlinkApp() {
     InterlinkTheme {
+
+        val context = LocalContext.current
+
         // Controladores de Navegación
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination?.route
+
+        // Base de datos para devices favoritos
+        val database = remember { FavoritesDatabase.getDatabase(context) }
+        val viewModelFactory = remember { FavoritesEntryViewModelFactory(database.favoriteDeviceDao()) }
+        val favDevViewModel : FavoritesEntryViewModel = viewModel(factory = viewModelFactory)
 
         BoxWithConstraints{
             // Para el caso del celular, en portrait o landscape
@@ -56,7 +70,7 @@ fun InterlinkApp() {
                             .padding(innerPadding)
                     )
                     {
-                        InterNavHost(navController = navController)
+                        InterNavHost(navController = navController, favDevViewModel = favDevViewModel)
                     }
                 }
 
@@ -83,7 +97,7 @@ fun InterlinkApp() {
                                 restoreState = true
                             }
                         }
-                        InterNavHost(navController = navController)
+                        InterNavHost(navController = navController, favDevViewModel = favDevViewModel)
                     }
                 }
             }
