@@ -6,6 +6,7 @@ import com.example.interlink.DataSourceException
 import com.example.interlink.model.Alarm
 import com.example.interlink.model.Error
 import com.example.interlink.repository.DeviceRepository
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,6 +47,12 @@ class AlarmViewModel(
         { state, response : Boolean -> state }
     )
 
+    suspend fun <Boolean> fetchNewVal(
+        func: () -> CompletableDeferred<Boolean>
+    ) : Boolean{
+        val resultDeferred = func()
+        return resultDeferred.await()
+    }
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
@@ -60,15 +67,23 @@ class AlarmViewModel(
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
         updateState: (AlarmUiState, R) -> AlarmUiState
-    ): Job = viewModelScope.launch {
-        _uiState.update { it.copy(loading = true, error = null) }
-        runCatching {
-            block()
-        }.onSuccess { response ->
-            _uiState.update { updateState(it, response).copy(loading = false) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(loading = false, error = handleError(e)) }
+    ): CompletableDeferred<R?> {
+        val resultDeferred = CompletableDeferred<R?>()
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true, error = null) }
+            runCatching {
+                block()
+            }.onSuccess { response ->
+                _uiState.update { updateState(it, response).copy(loading = false) }
+                resultDeferred.complete(response)
+            }.onFailure { e ->
+                _uiState.update { it.copy(loading = false, error = handleError(e)) }
+                resultDeferred.complete(null)
+            }
         }
+
+        return resultDeferred
     }
 
     private fun handleError(e: Throwable): Error {

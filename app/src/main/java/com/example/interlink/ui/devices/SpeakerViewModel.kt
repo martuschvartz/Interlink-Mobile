@@ -121,23 +121,6 @@ class SpeakerViewModel(
         return resultDeferred
     }
 
-//    private fun <R> runOnViewModelScope(
-//        block: suspend () -> R,
-//        updateState: (SpeakerUiState, R) -> SpeakerUiState
-//    ): Job = viewModelScope.launch {
-//        _uiState.update { it.copy(loading = true, error = null) }
-//        runCatching {
-//            block()
-//        }.onSuccess { response ->
-//            val result = if (response is List<*>) response else emptyList<Any>()
-//
-//            _uiState.update { updateState(it, response).copy(loading = false, playlist = result) }
-//            Log.d("DEBUG", "${_uiState.value}")
-//        }.onFailure { e ->
-//            _uiState.update { it.copy(loading = false, error = handleError(e)) }
-//        }
-//    }
-
 
     private fun handleError(e: Throwable): Error {
         return if (e is DataSourceException) {
