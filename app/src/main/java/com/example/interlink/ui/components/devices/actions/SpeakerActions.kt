@@ -1,14 +1,23 @@
 package com.example.interlink.ui.components.devices.actions
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -23,6 +32,8 @@ import com.example.interlink.model.Speaker
 import com.example.interlink.model.Status
 import com.example.interlink.ui.components.customShadow
 import com.example.interlink.ui.devices.SpeakerViewModel
+import com.example.interlink.ui.theme.md_theme_light_background
+import com.example.interlink.ui.theme.md_theme_light_coffee
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_interred
 
@@ -131,7 +142,66 @@ fun SpeakerActions(
         }
 
         // Row de volumen
+        Row(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Text(
+                text = stringResource(id = R.string.volume),
+                color = Color.Black,
+                style = MaterialTheme.typography.titleMedium
+            )
 
+            OutlinedCard(
+                modifier = Modifier
+                    .width(121.dp)
+                    .height(100.dp),
+                colors = CardDefaults.outlinedCardColors(
+                    containerColor = md_theme_light_background,
+                    contentColor = Color.Black
+                ),
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(1.dp, md_theme_light_coffee)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(start = 15.dp, end = 5.dp)
+                        .fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = speakerDevice.volume.toString(),
+                        color = Color.Black,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Column {
+                        Icon(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clickable {
+                                           speakerViewModel.setVolume(speakerDevice.volume + 1)
+                                },
+                            imageVector = Icons.Default.KeyboardArrowUp,
+                            contentDescription = null
+                        )
+
+                        Icon(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clickable {
+                                    speakerViewModel.setVolume(speakerDevice.volume - 1)
+                                },
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+        }
 
         // Row de género
 
