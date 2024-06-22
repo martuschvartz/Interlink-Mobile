@@ -6,6 +6,8 @@
     <string name="devices">Dispositivos\n</string>
     <string name="activity">Actividad\n</string>
     <string name="inter_title">INTERLINK</string>
+    <string name="channel_name">Device notifications</string>
+    <string name="channel_description">Device notifications</string>
 
 
     <!-- Estados Generales-->
@@ -47,8 +49,7 @@
     <string name="cool">Frío</string>
     <string name="heat">Calor</string>
     <string name="fan">Ventilador</string>
-
-
+  
     <!-- Para la alarma -->
     <string name="alarmOnLocal">Encendida Local</string>
     <string name="alarmOnRemote">Encendida Remoto</string>
@@ -57,4 +58,22 @@
     <string name="insertCodeLabel">Ingrese el código</string>
     <string name="oldCodeLabel">Ingrese el código original</string>
     <string name="newCodeLabel">Ingrese el nuevo código de 4 dígitos</string>
+
+    <!-- Mensajes de eventos -->
+    <!-- Mensajes de puerta -->
+    <string name="closedDoor">Se cerro la puerta</string>
+    <string name="openedDoor">Se abrio la puerta</string>
+    <string name="lockedDoor">Se trabo la puera</string>
+    <string name="unlockedDoor">Se destrabo la puerta</string>
+
+    <!-- Mensajes de alarma -->
+    <string name="armedAlarm">Se activo la alarma</string>
+    <string name="disarmedAlarm">Se desactivo la alarma</string>
+
+    <!-- Mensajes de persiana -->
+    <string name="closedBlinds">Se cerro la persiana</string>
+    <string name="openedBlinds">Se abrio la persiana</string>
+    <string name="openingBlinds">Se esta abriendo la persiana</string>
+    <string name="closingBlinds">Se esta cerrando la persiana</string>
+
 </resources>
