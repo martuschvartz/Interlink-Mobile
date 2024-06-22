@@ -8,6 +8,7 @@
     <string name="channel_name">Device notifications</string>
     <string name="channel_description">Device notifications</string>
 
+
     <!-- Estados Generales-->
     <string name="onAction">Turn On</string>
     <string name="offACtion">Turn Off</string>
@@ -18,6 +19,7 @@
     <string name="lockAction">Lock</string>
     <string name="unlockAction">Unlock</string>
     <string name="state">State:</string>
+
 
     <!-- Para la puerta -->
     <string name="doorOpened">Opened</string>
@@ -34,6 +36,7 @@
     <string name="blindsClosed">Closed</string>
     <string name="loading">Processing</string>
 
+
     <!-- Para el aire  -->
     <string name="acOn">On</string>
     <string name="acOff">Off</string>
@@ -45,6 +48,15 @@
     <string name="cool">Cool</string>
     <string name="heat">Heat</string>
     <string name="fan">Fan</string>
+  
+    <!-- Para la alarma -->
+    <string name="alarmOnLocal">Locally On</string>
+    <string name="alarmOnRemote">Remotely On</string>
+    <string name="alarmOff">Off</string>
+    <string name="changeCode">Change Code</string>
+    <string name="insertCodeLabel">Insert code</string>
+    <string name="oldCodeLabel">Insert original code</string>
+    <string name="newCodeLabel">Insert new four digit code</string>
 
     <!-- Mensajes de eventos -->
     <!-- Mensajes de puerta -->
@@ -62,5 +74,6 @@
     <string name="openedBlinds">Blinds were opened</string>
     <string name="openingBlinds">Blinds are being opened</string>
     <string name="closingBlinds">Blinds are being closed</string>
+
 
 </resources>

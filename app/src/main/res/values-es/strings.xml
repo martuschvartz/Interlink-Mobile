@@ -9,6 +9,7 @@
     <string name="channel_name">Device notifications</string>
     <string name="channel_description">Device notifications</string>
 
+
     <!-- Estados Generales-->
     <string name="onAction">Encender</string>
     <string name="offACtion">Apagar</string>
@@ -20,12 +21,14 @@
     <string name="unlockAction">Destrabar</string>
     <string name="state">Estado:</string>
 
+
     <!-- Para la puerta -->
     <string name="doorOpened">Abierto</string>
     <string name="doorClosed">Cerrado</string>
     <string name="doorLocked">Trabada</string>
     <string name="doorUnlocked">Destrabada</string>
     <string name="doorLock">Traba:</string>
+
 
     <!-- Para la persiana -->
     <string name="blindsCurrentLevel">Nivel Actual:</string>
@@ -46,6 +49,15 @@
     <string name="cool">Frío</string>
     <string name="heat">Calor</string>
     <string name="fan">Ventilador</string>
+  
+    <!-- Para la alarma -->
+    <string name="alarmOnLocal">Encendida Local</string>
+    <string name="alarmOnRemote">Encendida Remoto</string>
+    <string name="alarmOff">Apagada</string>
+    <string name="changeCode">Cambiar Código</string>
+    <string name="insertCodeLabel">Ingrese el código</string>
+    <string name="oldCodeLabel">Ingrese el código original</string>
+    <string name="newCodeLabel">Ingrese el nuevo código de 4 dígitos</string>
 
     <!-- Mensajes de eventos -->
     <!-- Mensajes de puerta -->
@@ -63,6 +75,5 @@
     <string name="openedBlinds">Se abrio la persiana</string>
     <string name="openingBlinds">Se esta abriendo la persiana</string>
     <string name="closingBlinds">Se esta cerrando la persiana</string>
-
 
 </resources>

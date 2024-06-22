@@ -46,6 +46,7 @@ fun DoorActions(
         else -> null
     }
 
+
     Column{
         Row(
             modifier = Modifier
