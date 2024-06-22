@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -83,6 +85,13 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     implementation (libs.androidx.navigation.compose)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.rxjava2)
+    implementation(libs.androidx.room.rxjava3)
+    implementation(libs.androidx.room.guava)
+    testImplementation(libs.androidx.room.testing)
+    implementation(libs.androidx.room.paging)
+    ksp(libs.androidx.room.compiler)
     annotationProcessor(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

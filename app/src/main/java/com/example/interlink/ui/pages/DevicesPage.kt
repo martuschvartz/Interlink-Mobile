@@ -30,6 +30,7 @@ import com.example.interlink.ui.devices.AlarmViewModel
 import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
+import com.example.interlink.ui.devices.FavoritesEntryViewModel
 import com.example.interlink.ui.devices.LampViewModel
 import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.getViewModelFactory
@@ -46,6 +47,7 @@ fun DevicesPage(
     alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory()),
     blindsViewModel: BlindsViewModel = viewModel(factory = getViewModelFactory()),
     speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory()),
+    favDevViewModel : FavoritesEntryViewModel
 ){
 
     val uiState by viewModel.uiState.collectAsState()
@@ -76,6 +78,7 @@ fun DevicesPage(
                         device = device,
                         viewModel = deviceViewModel,
                         expanded = device.id == expandedDeviceId,
+                        favDevViewModel = favDevViewModel
                     ) { device ->
                         expandedDeviceId = if (device.id == expandedDeviceId) null else device.id
                         selectedDeviceId = device.id
