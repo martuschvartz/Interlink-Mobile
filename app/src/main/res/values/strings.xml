@@ -79,9 +79,6 @@
     <string name="latina" translatable="false">Latina</string>
     <string name="pop" translatable="false">Pop</string>
     <string name="rock" translatable="false">Rock</string>
-    <string name="insertCodeLabel">Insert code</string>
-    <string name="oldCodeLabel">Insert original code</string>
-    <string name="newCodeLabel">Insert new four digit code</string>
 
   
   
