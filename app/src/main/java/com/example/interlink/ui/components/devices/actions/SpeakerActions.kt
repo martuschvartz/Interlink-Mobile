@@ -1,5 +1,6 @@
 package com.example.interlink.ui.components.devices.actions
 
+import SelectTextField
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -65,6 +66,17 @@ fun SpeakerActions(
         actionButtonTextColor = Color.Black
         actionButtonTitle = stringResource(id = R.string.playAction)
     }
+
+    // Generos
+    val genres = listOf(
+        Pair(Pair("classical", stringResource(id = R.string.clasical)), null),
+        Pair(Pair("country", stringResource(id = R.string.country)), null),
+        Pair(Pair("dance",stringResource(id = R.string.club)),null),
+        Pair(Pair("latina",stringResource(id = R.string.latina)),null),
+        Pair(Pair("pop",stringResource(id = R.string.pop)),null),
+        Pair(Pair("rock",stringResource(id = R.string.rock)),null)
+    )
+
 
 
     // si cada 1 segundo hace un update de los device, puedo tener una variable mutablestateof
@@ -183,7 +195,7 @@ fun SpeakerActions(
                             modifier = Modifier
                                 .size(50.dp)
                                 .clickable {
-                                           speakerViewModel.setVolume(speakerDevice.volume + 1)
+                                    speakerViewModel.setVolume(speakerDevice.volume + 1)
                                 },
                             imageVector = Icons.Default.KeyboardArrowUp,
                             contentDescription = null
@@ -204,7 +216,31 @@ fun SpeakerActions(
         }
 
         // Row de género
+        Row(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Text(
+                text = stringResource(id = R.string.genre),
+                color = Color.Black,
+                style = MaterialTheme.typography.titleMedium
+            )
 
+            SelectTextField(
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(100.dp),
+                showIcon = false,
+                initialValue = Pair(Pair(speakerDevice.genre,speakerDevice.genre),null),
+                options = genres,
+                onValueChanged = { selectedString ->
+                    speakerViewModel.setGenre(selectedString)
+                }
+            )
+        }
 
         // row de canciones
 
