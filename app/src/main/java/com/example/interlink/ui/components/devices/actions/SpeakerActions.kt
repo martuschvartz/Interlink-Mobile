@@ -23,17 +23,20 @@ import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -106,6 +109,16 @@ fun SpeakerActions(
         pauseButtonIcon = Icons.Default.Pause
         pauseButtonColor = md_theme_light_interred
     }
+
+    // Barra de progreso
+
+    var progressPercentage by remember { mutableFloatStateOf(0f) }
+    progressPercentage = speakerDevice.song?.let {
+        percentageTimePassed(
+            maxTime = it.duration,
+            currentTime = it.progress
+        )
+    } ?: 0f
 
     // si cada 1 segundo hace un update de los device, puedo tener una variable mutablestateof
     // que sea el porcentaje de la cancion pasada, se hace mediante un calculo con la duracion
@@ -331,9 +344,50 @@ fun SpeakerActions(
                             }
                         }
 
+                        // barra de progreso
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp, bottom = 3.dp)
+                        ){
+                            LinearProgressIndicator(
+                                progress = { progressPercentage },
+                                modifier = Modifier.fillMaxWidth(),
+                                color = Color.White,
+                                trackColor = Color.Gray,
+                                strokeCap = StrokeCap.Square,
+                                gapSize = 0.dp,
+
+                            )
+                        }
+
+                        // tiempos
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding( bottom = 10.dp)
+                        ){
+                            speakerDevice.song?.let {
+                                Text(
+                                    text = it.progress,
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                            speakerDevice.song?.let {
+                                Text(
+                                    text = it.duration,
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                        }
+
+
                         // botones de control
                         Row(
-                            horizontalArrangement = Arrangement.SpaceAround,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp)
@@ -458,4 +512,22 @@ fun SpeakerActions(
     }
 }
 
+
+@Composable
+fun timeToSeconds(time: String): Int {
+    val (minutes, seconds) = time.split(":").map { it.toInt() }
+    return minutes * 60 + seconds
+}
+
+@Composable
+fun percentageTimePassed(maxTime: String, currentTime: String): Float {
+    val maxTimeInSeconds = timeToSeconds(maxTime)
+    val currentTimeInSeconds = timeToSeconds(currentTime)
+
+    if (maxTimeInSeconds == 0) {
+        return 0f // Prevent division by zero
+    }
+
+    return (currentTimeInSeconds.toFloat() / maxTimeInSeconds.toFloat())
+}
 
