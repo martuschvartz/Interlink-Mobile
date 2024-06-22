@@ -1,7 +1,5 @@
 
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -49,17 +47,12 @@ fun SelectTextField(
         expanded = expanded,
         onExpandedChange = {
             expanded = !expanded
-        },
-        modifier = modifier
-            .width(121.dp)
-            .height(100.dp)
+        }
     ){
 
         if(showIcon){
             OutlinedTextField(
-                modifier = Modifier
-                    .width(121.dp)
-                    .height(100.dp)
+                modifier = modifier
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable),
                 value = "",
                 onValueChange = {},
@@ -88,9 +81,7 @@ fun SelectTextField(
 
         else{
             OutlinedTextField(
-                modifier = Modifier
-                    .width(121.dp)
-                    .height(100.dp)
+                modifier = modifier
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable),
                 value = selectedValue.first.second,
                 onValueChange = {},
@@ -105,7 +96,7 @@ fun SelectTextField(
                     focusedBorderColor = md_theme_light_interblue,
                     unfocusedBorderColor = md_theme_light_coffee
                 ),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
             )
         }
 

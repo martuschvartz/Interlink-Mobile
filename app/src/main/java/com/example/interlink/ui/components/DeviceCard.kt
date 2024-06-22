@@ -3,7 +3,6 @@ package com.example.interlink.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +27,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,24 +37,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.interlink.model.Ac
+import com.example.interlink.model.Alarm
 import com.example.interlink.model.Blinds
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.Door
-import com.example.interlink.model.Status
+import com.example.interlink.model.Speaker
 import com.example.interlink.ui.components.devices.actions.AcActions
+import com.example.interlink.ui.components.devices.actions.AlarmActions
 import com.example.interlink.ui.components.devices.actions.BlindsActions
 import com.example.interlink.ui.components.devices.actions.DoorActions
+import com.example.interlink.ui.components.devices.actions.SpeakerActions
 import com.example.interlink.ui.components.devices.description.AcDescription
+import com.example.interlink.ui.components.devices.description.AlarmDescription
 import com.example.interlink.ui.components.devices.description.BlindsDescription
 import com.example.interlink.ui.components.devices.description.DoorDescription
+import com.example.interlink.ui.components.devices.description.SpeakerDescription
 import com.example.interlink.ui.devices.AcViewModel
+import com.example.interlink.ui.devices.AlarmViewModel
 import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DoorViewModel
+import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
 
@@ -208,9 +212,9 @@ fun <T : Device> DeviceCard(
                             ){
                                 when (device.type) {
                                     DeviceType.LAMP -> {}
-                                    DeviceType.SPEAKER -> {}
+                                    DeviceType.SPEAKER -> SpeakerActions(device as Speaker, viewModel as SpeakerViewModel)
                                     DeviceType.BLINDS -> BlindsActions(device as Blinds, viewModel as BlindsViewModel)
-                                    DeviceType.ALARM -> {}
+                                    DeviceType.ALARM -> AlarmActions(device as Alarm, viewModel as AlarmViewModel)
                                     DeviceType.DOOR -> DoorActions(device as Door, viewModel as DoorViewModel)
                                     DeviceType.AC -> AcActions(device as  Ac, viewModel as AcViewModel)
                                 }
@@ -227,9 +231,9 @@ fun <T : Device> DeviceCard(
                     ) {
                         when(device.type){
                             DeviceType.LAMP -> {}
-                            DeviceType.SPEAKER -> {}
+                            DeviceType.SPEAKER -> SpeakerDescription(device as Speaker)
                             DeviceType.BLINDS -> BlindsDescription(device as Blinds)
-                            DeviceType.ALARM -> {}
+                            DeviceType.ALARM -> AlarmDescription(device as Alarm)
                             DeviceType.DOOR -> DoorDescription(device as Door)
                             DeviceType.AC -> AcDescription(device as Ac)
                         }
@@ -239,39 +243,4 @@ fun <T : Device> DeviceCard(
             }
         }
 
-}
-
-
-@Preview
-@Composable
-fun DeviceCardPreview(){
-    Surface(
-        modifier = Modifier
-            .size(500.dp),
-        color = Color.White,
-    ) {
-        val door1 = Door(id="1234",name = "puerta1", status= Status.OPENED, lock = "locked")
-        val door2 = Door(id="5678",name = "puerta2", status= Status.OPENED, lock = "locked")
-
-        var currentDeviceId by remember {mutableStateOf("")}
-
-        Column{
-            Box(
-                modifier = Modifier.padding(10.dp),
-            ) {
-                DeviceCard(currentDeviceId == door1.id, door1, viewModel = null) {
-                    currentDeviceId = door1.id.toString()
-                }
-            }
-
-            Box(
-                modifier = Modifier.padding(10.dp),
-            ) {
-                DeviceCard(currentDeviceId == door2.id, door2, viewModel = null) {
-                    currentDeviceId = door2.id.toString()
-                }
-            }
-        }
-
-    }
 }
