@@ -193,6 +193,9 @@ fun AcActions(
                 )
                 Spacer(modifier = Modifier.padding(1.dp))
                 SelectTextField(
+                    modifier = Modifier
+                        .width(121.dp)
+                        .height(100.dp),
                     showIcon = true,
                     initialValue = Pair(Pair(acDevice.mode, ""), acDevice.getImageVector()),
                     options = acModes,
@@ -215,7 +218,7 @@ fun AcActions(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.padding(1.dp))
-                Card(
+                OutlinedCard(
                     modifier = Modifier
                         .width(121.dp)
                         .height(100.dp),
@@ -227,16 +230,18 @@ fun AcActions(
                     border = BorderStroke(1.dp, md_theme_light_coffee),
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .padding(start = 20.dp, end = 10.dp)
+                            .fillMaxSize(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             text = "$temperatureDisplay°",
                             color = Color.Black,
                             style = MaterialTheme.typography.titleLarge
                         )
-                        Spacer(modifier = Modifier.padding(5.dp))
+
                         Column {
                             Icon(
                                 modifier = Modifier
@@ -283,6 +288,9 @@ fun AcActions(
                 )
                 Spacer(modifier = Modifier.padding(1.dp))
                 SelectTextField(
+                    modifier = Modifier
+                        .width(121.dp)
+                        .height(100.dp),
                     showIcon = false,
                     initialValue = Pair(Pair(acDevice.verticalSwing, acDevice.verticalSwing), null),
                     options = acBladesV,
@@ -301,6 +309,9 @@ fun AcActions(
                 )
                 Spacer(modifier = Modifier.padding(1.dp))
                 SelectTextField(
+                    modifier = Modifier
+                        .width(121.dp)
+                        .height(100.dp),
                     showIcon = false,
                     initialValue = Pair(Pair(acDevice.horizontalSwing, acDevice.horizontalSwing), null),
                     options = acBladesH,
@@ -329,6 +340,9 @@ fun AcActions(
                 )
                 Spacer(modifier = Modifier.padding(1.dp))
                 SelectTextField(
+                    modifier = Modifier
+                        .width(121.dp)
+                        .height(100.dp),
                     showIcon = false,
                     initialValue = Pair(Pair(acDevice.fanSpeed, acDevice.fanSpeed), null),
                     options = acSpeed,
@@ -394,5 +408,51 @@ fun previewww3(){
             }
 
         }
+    }
+}
+
+@Preview
+@Composable
+fun prev(){
+    OutlinedCard(
+        modifier = Modifier
+            .width(121.dp)
+            .height(100.dp),
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = md_theme_light_background,
+            contentColor = Color.Black,
+        ),
+        shape = RoundedCornerShape(10.dp),
+        border = BorderStroke(1.dp, md_theme_light_coffee),
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(start = 20.dp, end = 10.dp)
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "24°",
+                color = Color.Black,
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Column {
+                Icon(
+                    modifier = Modifier
+                        .size(50.dp),
+                    imageVector = Icons.Default.KeyboardArrowUp,
+                    contentDescription = null
+                )
+                Icon(
+                    modifier = Modifier
+                        .size(50.dp),
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = null
+                )
+            }
+        }
+
     }
 }
