@@ -1,6 +1,7 @@
 package com.example.interlink.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,7 +23,7 @@ fun InterNavHost(
         }
 
         composable(route = AppNavigation.ACTIVITY.route){
-            ActivityPage()
+            ActivityPage(context = LocalContext.current)
         }
 
         composable(route = AppNavigation.DEVICES.route){
