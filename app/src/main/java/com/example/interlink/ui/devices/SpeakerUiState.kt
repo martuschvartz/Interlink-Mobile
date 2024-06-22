@@ -6,7 +6,8 @@ import com.example.interlink.model.Error
 data class SpeakerUiState(
     val loading: Boolean = false,
     val error: Error? = null,
-    val currentDevice: Speaker? = null
+    val currentDevice: Speaker? = null,
+    val playlist: List<Any?>? = null
 )
 
 val SpeakerUiState.canExecuteAction: Boolean get() = currentDevice != null && !loading

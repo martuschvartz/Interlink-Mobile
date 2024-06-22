@@ -1,6 +1,7 @@
 package com.example.interlink.ui.components.devices.actions
 
 import SelectTextField
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,10 +29,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,17 +48,20 @@ import com.example.interlink.R
 import com.example.interlink.model.Speaker
 import com.example.interlink.model.Status
 import com.example.interlink.ui.components.customShadow
+import com.example.interlink.ui.devices.SpeakerUiState
 import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
 import com.example.interlink.ui.theme.md_theme_light_interblue
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_interred
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun SpeakerActions(
     speakerDevice : Speaker,
-    speakerViewModel: SpeakerViewModel
+    speakerViewModel: SpeakerViewModel,
 ){
 
     // Estados
@@ -69,6 +75,7 @@ fun SpeakerActions(
     val actionButtonTitle : String
     val actionButtonTextColor : Color
     val actionButtonColor : Color
+    val coroutineScope = rememberCoroutineScope()
 
     if(speakerDevice.status == Status.PLAYING || speakerDevice.status == Status.PAUSED){
         actionButtonColor = md_theme_light_interred
@@ -534,7 +541,14 @@ fun SpeakerActions(
                     shape = RoundedCornerShape(10.dp),
                     border = BorderStroke(3.dp, Color.Black),
                     onClick = {
-                        showPlaylist = true
+                        speakerViewModel.getPlaylist()
+                        var playlist : List<Any?>?= emptyList()
+                        coroutineScope.launch {
+                            playlist = speakerViewModel.fetchPlaylist()
+                            Log.d("DEBUG", "Nos llega: ${playlist}")
+                            showPlaylist = true
+                        }
+
                     }
                 ) {
                     Column(
