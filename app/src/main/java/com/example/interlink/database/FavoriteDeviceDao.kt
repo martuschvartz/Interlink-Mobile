@@ -19,4 +19,6 @@ interface FavoriteDeviceDao {
     @Query("SELECT id FROM favorites")
     fun getFavoritesId(): Flow<List<String>>
 
+    @Query("SELECT EXISTS(SELECT 1 FROM favorites WHERE id = :id)")
+    fun isFavoriteDevice(id: String): Flow<Boolean>
 }

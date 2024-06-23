@@ -162,8 +162,11 @@ fun AlarmActions(
 
                     coroutineScope.launch {
                         response = alarmViewModel.fetchNewVal { alarmViewModel.changeSecurityCode(oldCode, newCode) }!!
-                        Log.d("DEBUG", "Nos llega: ${response}")
+
+
                     }
+
+                    // this
                 }
             }
         }

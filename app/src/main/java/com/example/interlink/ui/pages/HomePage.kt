@@ -1,5 +1,6 @@
 package com.example.interlink.ui.pages
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.interlink.ui.devices.FavoritesEntryViewModel
 import androidx.compose.ui.graphics.Color
@@ -28,17 +30,20 @@ import com.example.interlink.ui.theme.md_theme_light_coffee
 fun HomePage(
     modifier: Modifier = Modifier,
     favDevViewModel : FavoritesEntryViewModel
-){
+) {
 
     val favorites by favDevViewModel.getFavoritesId().collectAsState(initial = emptyList())
+    val isFav by favDevViewModel.isFavoriteDevice("168b60e0259647ce").collectAsState(initial = false)
+    Log.d("DEBUG", "En home page nos llega: $favorites y $isFav")
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(3.dp),
         contentAlignment = Alignment.TopCenter
-    ){
+    ) {
         LazyColumn() {
-            item(){
+            item() {
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = md_theme_light_coffee
@@ -47,27 +52,29 @@ fun HomePage(
                         .size(300.dp)
                         .padding(3.dp),
 
-                ) {
+                    ) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center                    ){
-                        Row (
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
-                        ){
+                        ) {
                         }
                     }
                 }
             }
         }
 
-    Column(
-        modifier = Modifier
-    ) {
+        Column(
+            modifier = Modifier
+        ) {
 
-        favorites.forEach { 
-            Text(text = it)
+            favorites.forEach {
+                Text(text = it)
+            }
         }
     }
 }
