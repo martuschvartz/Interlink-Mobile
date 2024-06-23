@@ -53,7 +53,6 @@ fun ActivityPage(
     viewModel: EventsViewModel = viewModel(factory = getViewModelFactory())
 ){
 
-    val uiState by viewModel.uiState.collectAsState()
     val stored by storedEvents.getStoredEvents().collectAsState(initial = emptyList())
     Log.d("DEBUG", "Encontramos: $stored")
     val coroutineScope = rememberCoroutineScope()
@@ -67,15 +66,7 @@ fun ActivityPage(
         Row(
             modifier = modifier.fillMaxWidth()
                 .clickable {
-//                    coroutineScope.launch {
-//                        storedEvents.insertEvent(
-//                            StoredEventData(
-//                                "test",
-//                                "un test ha aparecido",
-//                                "25:00:00"
-//                            )
-//                        )
-//                    }
+                    storedEvents.deleteAllEvents()
                 },
 
             horizontalArrangement = Arrangement.Start,
@@ -90,7 +81,7 @@ fun ActivityPage(
 
         Row{
             LazyColumn {
-                items(uiState.events) { event ->
+                items(stored) { event ->
                     Box(modifier = Modifier.padding(10.dp)){
                         EventCard(event = event)
                     }

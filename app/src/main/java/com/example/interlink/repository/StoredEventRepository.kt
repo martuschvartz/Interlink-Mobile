@@ -18,4 +18,8 @@ class StoredEventRepository(private val storedEventDao: StoredEventDao) {
     suspend fun deleteEvent(event: StoredEvent) {
         storedEventDao.delete(event)
     }
+
+    suspend fun deleteAllEvents() {
+        storedEventDao.deleteAllEvents()
+    }
 }

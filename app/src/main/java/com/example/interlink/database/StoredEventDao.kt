@@ -19,4 +19,7 @@ interface StoredEventDao {
 
     @Query("SELECT name, description, timestamp FROM events")
     fun getStoredEvents(): Flow<List<StoredEventData>>
+
+    @Query("DELETE FROM events")
+    suspend fun deleteAllEvents()
 }

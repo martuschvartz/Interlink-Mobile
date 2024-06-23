@@ -29,8 +29,13 @@ class StoredEventEntryViewModel(private val repository: StoredEventRepository) :
     }
 
     fun getStoredEvents() : Flow<List<StoredEventData>>{
-//        Log.d("DEBUG", "${favDevDao.getFavoritesId()}")
         return repository.getStoredEvents()
+    }
+
+    fun deleteAllEvents(){
+        viewModelScope.launch {
+            repository.deleteAllEvents()
+        }
     }
 
 }

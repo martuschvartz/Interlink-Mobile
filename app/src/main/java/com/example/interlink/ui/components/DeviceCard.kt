@@ -86,8 +86,6 @@ fun <T : Device> DeviceCard(
 
     // por default la card arranca sin ser favorita
     val isFav by favDevViewModel.isFavoriteDevice(device.id!!).collectAsState(initial = false)
-    var fav by remember { mutableStateOf(isFav) }
-    Log.d("DEBUG","Nos llega en device: $isFav")
 
     val icon = when(device.type){
         DeviceType.LAMP -> Icons.Default.Lightbulb
