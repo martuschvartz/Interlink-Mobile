@@ -16,7 +16,8 @@ fun InterNavHost(
     startDestination: String = AppNavigation.HOME.route,
     favDevViewModel: FavoritesEntryViewModel?,
     useLazyColumn: Boolean,
-    storedEventViewModel : StoredEventEntryViewModel?,
+    favDevViewModel: FavoritesEntryViewModel?,
+    storedEventViewModel : StoredEventEntryViewModel?
 ){
     NavHost(
         navController = navController,

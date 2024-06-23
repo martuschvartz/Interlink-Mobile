@@ -129,7 +129,7 @@ fun InterlinkApp() {
                             navController = navController,
                             favDevViewModel = favDevViewModel,
                             storedEventViewModel = storedEventViewModel,
-                            useLazyColumn = false,
+                            useLazyColumn = false
                         )
                     }
                 }
