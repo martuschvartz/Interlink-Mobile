@@ -22,9 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interlink.R
 import com.example.interlink.ui.components.EventCard
+import com.example.interlink.ui.devices.DevicesViewModel
+import com.example.interlink.ui.devices.EventsViewModel
 import com.example.interlink.ui.devices.StoredEventEntryViewModel
+import com.example.interlink.ui.getViewModelFactory
 
 // el modifier default es la misma clase Modifier, sino es el que le paso
 
@@ -32,11 +36,13 @@ import com.example.interlink.ui.devices.StoredEventEntryViewModel
 fun ActivityPage(
     modifier: Modifier = Modifier,
     storedEvents : StoredEventEntryViewModel,
-    useLazyColumn : Boolean
+    useLazyColumn : Boolean,
+    eventsViewModel: EventsViewModel = viewModel(factory = getViewModelFactory()),
 ){
 
+    // no usa el uiState pero triggerea el update continuo, mini hack para ahorrar codigo redundante
+    val uiState by eventsViewModel.uiState.collectAsState()
     val stored by storedEvents.getStoredEvents().collectAsState(initial = emptyList())
-    Log.d("DEBUG", "Encontramos: $stored")
 
 
     // Todo: agregar un boton para borrar las notifs que no sea el de activity
@@ -54,7 +60,7 @@ fun ActivityPage(
         ) {
             Text(
                 text = stringResource(id = R.string.activity),
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold
             )
