@@ -38,7 +38,7 @@ class BlindsViewModel(
 
     fun setLevel(level: Int) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Blinds.SET_LEVEL_ACTION, arrayOf(level)) },
-        { state, response : Int -> state }
+        { state, response : Double -> state }
     )
 
     private fun <T> collectOnViewModelScope(
