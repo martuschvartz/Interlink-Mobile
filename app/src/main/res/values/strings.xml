@@ -5,6 +5,7 @@
     <string name="devices">Devices\n</string>
     <string name="activity">Activity\n</string>
     <string name="recent_activity">Recent activity</string>
+    <string name="no_activity">No recent activity!</string>
     <string name="inter_title">INTERLINK</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>

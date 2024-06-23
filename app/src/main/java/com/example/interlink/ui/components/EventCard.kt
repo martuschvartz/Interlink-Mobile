@@ -49,7 +49,8 @@ fun EventCard(event : StoredEventData) {
                 offsetY = 6.dp,
                 offsetX = 6.dp,
                 spread = 3f
-            ),
+            )
+            .width(380.dp),
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(3.dp, Color.Black)
     ){

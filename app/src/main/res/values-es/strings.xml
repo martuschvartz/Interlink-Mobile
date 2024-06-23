@@ -8,6 +8,7 @@
     <string name="inter_title">INTERLINK</string>
     <string name="accept">Aceptar</string>
     <string name="recent_activity">Actividad reciente</string>
+    <string name="no_activity">No hay actividad reciente!</string>
     <string name="cancel">Cancelar</string>
     <string name="channel_name">Device notifications</string>
     <string name="channel_description">Device notifications</string>

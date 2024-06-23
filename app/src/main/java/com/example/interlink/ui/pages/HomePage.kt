@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -102,6 +103,7 @@ fun HomePage(
 
         Row(
             modifier = Modifier.padding(6.dp)
+
         ) {
             Card(
                 colors = CardDefaults.cardColors(
@@ -113,7 +115,7 @@ fun HomePage(
                         offsetY = 6.dp,
                         offsetX = 6.dp,
                         spread = 3f
-                    ),
+                    ).height(200.dp),
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(3.dp, Color.Black)
             ){
@@ -129,17 +131,33 @@ fun HomePage(
                         fontWeight = FontWeight.Bold,
                     )
                 }
-                Row(modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,){
-                    // Esto solo va a mostrar los 3 eventos mas recientes
-                    LazyColumn {
-                        items(recents) { event ->
-                            Box(modifier = Modifier.padding(10.dp)) {
-                                EventCard(event = event)
+                if (recents.isEmpty()){
+                    Row(modifier = modifier.fillMaxSize(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.no_activity),
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.headlineSmall,
+                        )
+                    }
+                }
+
+                else{
+                    Row(modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ){
+                        LazyColumn {
+                            items(recents) { event ->
+                                Box(modifier = Modifier.padding(10.dp)) {
+                                    EventCard(event = event)
+                                }
                             }
                         }
                     }
                 }
+
             }
         }
 
@@ -214,13 +232,5 @@ fun HomePage(
         }
     }
 }
-//        Column(
-//            modifier = Modifier
-//        ) {
-//
-//            favorites.forEach {
-//                Text(text = it)
-//            }
-//        }
 
 
