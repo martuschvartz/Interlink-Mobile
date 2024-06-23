@@ -56,6 +56,7 @@ import com.example.interlink.ui.devices.AlarmViewModel
 import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
+import com.example.interlink.ui.devices.EventsViewModel
 import com.example.interlink.ui.devices.LampViewModel
 import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.getViewModelFactory
@@ -77,9 +78,11 @@ fun HomePage(
     alarmViewModel: AlarmViewModel = viewModel(factory = getViewModelFactory()),
     blindsViewModel: BlindsViewModel = viewModel(factory = getViewModelFactory()),
     speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory()),
+    eventsViewModel: EventsViewModel = viewModel(factory = getViewModelFactory()),
 ) {
     val recents by storedEvents.getRecentEvents().collectAsState(initial = emptyList())
     val uiState by devicesViewModel.uiState.collectAsState()
+    val eventUiState by eventsViewModel.uiState.collectAsState()
     val favorites by favDevViewModel.getFavoritesId().collectAsState(initial = emptyList())
 
     var selectedDeviceId by remember { mutableStateOf<String?>(null) }
