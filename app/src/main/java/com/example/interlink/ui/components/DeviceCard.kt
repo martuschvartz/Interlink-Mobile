@@ -1,5 +1,6 @@
 package com.example.interlink.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -79,6 +80,7 @@ fun <T : Device> DeviceCard(
     onClick: (Device) -> Unit
 ){
 
+    Log.d("DEBUG", "en Device card me llega landscape como $landscape")
     val coroutineScope = rememberCoroutineScope()
 
     // por default la card arranca sin ser favorita

@@ -65,6 +65,7 @@ fun SpeakerActions(
 ){
     // Global
     val actionsModifier = if(landscape) Modifier.verticalScroll(rememberScrollState()) else Modifier
+    Log.d("DEBUG", "en speaker me llega como $landscape")
 
     // Estados
     val status = when(speakerDevice.status){

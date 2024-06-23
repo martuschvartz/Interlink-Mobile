@@ -137,7 +137,7 @@ fun InterlinkApp() {
             // Para tablet, en landscape o portrait
             else{
                 Scaffold(
-                    topBar = { TopInterlinkBar(Modifier.height(104.dp)) },
+                    topBar = { TopInterlinkBar(Modifier.height(104.dp)) }
                 ) {innerPadding ->
                     Row(
                         modifier = Modifier
