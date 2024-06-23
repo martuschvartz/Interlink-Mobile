@@ -1,5 +1,7 @@
 package com.example.interlink.ui.pages
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interlink.R
+import com.example.interlink.database.StoredEventData
 import com.example.interlink.model.Ac
 import com.example.interlink.model.Alarm
 import com.example.interlink.model.Blinds
@@ -33,8 +37,12 @@ import com.example.interlink.ui.components.DeviceCard
 import com.example.interlink.ui.components.EventCard
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.EventsViewModel
+import com.example.interlink.ui.devices.FavoritesEntryViewModel
+import com.example.interlink.ui.devices.StoredEventEntryViewModel
+import com.example.interlink.ui.devices.StoredEventEntryViewModelFactory
 import com.example.interlink.ui.getViewModelFactory
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // el modifier default es la misma clase Modifier, sino es el que le paso
 
@@ -42,8 +50,14 @@ import kotlinx.coroutines.delay
 fun ActivityPage(
     modifier: Modifier = Modifier,
     viewModel: EventsViewModel = viewModel(factory = getViewModelFactory()),
+    storedEvents : StoredEventEntryViewModel
     ){
+
     val uiState by viewModel.uiState.collectAsState()
+    val stored by storedEvents.getStoredEvents().collectAsState(initial = emptyList())
+    Log.d("DEBUG", "Encontramos: $stored")
+    val coroutineScope = rememberCoroutineScope()
+
 
     Column (
         modifier = modifier.fillMaxSize(),
@@ -51,14 +65,26 @@ fun ActivityPage(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
+            modifier = modifier.fillMaxWidth()
+                .clickable {
+                    coroutineScope.launch {
+                        storedEvents.insertEvent(
+                            StoredEventData(
+                                "test",
+                                "un test ha aparecido",
+                                "25:00:00"
+                            )
+                        )
+                    }
+                },
+
+            horizontalArrangement = Arrangement.Start,
         ){
           Text(
               text = stringResource(id = R.string.activity),
               color = Color.Black,
               style = MaterialTheme.typography.headlineLarge,
-              fontWeight = FontWeight.Bold
+              fontWeight = FontWeight.Bold,
           )
         }
 

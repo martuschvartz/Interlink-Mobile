@@ -33,8 +33,6 @@ fun HomePage(
 ) {
 
     val favorites by favDevViewModel.getFavoritesId().collectAsState(initial = emptyList())
-    val isFav by favDevViewModel.isFavoriteDevice("168b60e0259647ce").collectAsState(initial = false)
-    Log.d("DEBUG", "En home page nos llega: $favorites y $isFav")
 
     Box(
         modifier = Modifier
@@ -68,14 +66,14 @@ fun HomePage(
             }
         }
 
-        Column(
-            modifier = Modifier
-        ) {
-
-            favorites.forEach {
-                Text(text = it)
-            }
-        }
+//        Column(
+//            modifier = Modifier
+//        ) {
+//
+//            favorites.forEach {
+//                Text(text = it)
+//            }
+//        }
     }
 }
 
