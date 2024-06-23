@@ -58,7 +58,8 @@ fun NavigationInterRail(
                         onClick = { onNavigate(item.route) },
                         destination = item,
                         selected = item.route == currentDestination,
-                        tablet = true
+                        tablet = true,
+                        showLabels = true
                     )
                 }
             }

@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AcUnit
 import androidx.compose.material.icons.filled.Air
@@ -27,10 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,7 +48,7 @@ import com.example.interlink.ui.theme.md_theme_light_interred
 @Composable
 fun AcActions(
     acDevice : Ac,
-    acViewModel: AcViewModel
+    acViewModel: AcViewModel,
 ) {
 
     val status = when(acDevice.status){
@@ -106,7 +104,9 @@ fun AcActions(
         actionButtonTextColor = Color.White
     }
 
-    Column{
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ){
 
         // Row de Estado
         Row(
@@ -174,181 +174,190 @@ fun AcActions(
         }
 
         // Row de Modo y Temperatura
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    text = stringResource(R.string.mode),
-                    color = Color.Black,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.padding(1.dp))
-                SelectTextField(
-                    modifier = Modifier
-                        .width(121.dp)
-                        .height(100.dp),
-                    showIcon = true,
-                    initialValue = Pair(Pair(acDevice.mode, ""), acDevice.getImageVector()),
-                    options = acModes,
-                    onValueChanged = { selectedString ->
-                        when (selectedString) {
-                            "cool" -> acViewModel.setMode("cool")
-                            "heat" -> acViewModel.setMode("heat")
-                            "fan" -> acViewModel.setMode("fan")
-                            else -> {}
-                        }
-                    }
-                )
-            }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    text = stringResource(R.string.temp)+" (°C)",
-                    color = Color.Black,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.padding(1.dp))
-                OutlinedCard(
-                    modifier = Modifier
-                        .width(121.dp)
-                        .height(100.dp),
-                    colors = CardDefaults.outlinedCardColors(
-                        containerColor = md_theme_light_background,
-                        contentColor = Color.Black,
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, md_theme_light_coffee),
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
+                    Text(
+                        text = stringResource(R.string.mode),
+                        color = Color.Black,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    SelectTextField(
                         modifier = Modifier
-                            .padding(start = 20.dp, end = 10.dp)
-                            .fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "${acDevice.temperature}°",
-                            color = Color.Black,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-
-                        Column {
-                            Icon(
-                                modifier = Modifier
-                                    .size(50.dp)
-                                    .clickable {
-                                        acViewModel.setTemperature(acDevice.temperature + 1)
-                                    },
-                                imageVector = Icons.Default.KeyboardArrowUp,
-                                contentDescription = null
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .size(50.dp)
-                                    .clickable {
-                                        acViewModel.setTemperature(acDevice.temperature - 1)
-                                    },
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = null
-                            )
+                            .width(121.dp)
+                            .height(100.dp),
+                        showIcon = true,
+                        initialValue = Pair(Pair(acDevice.mode, ""), acDevice.getImageVector()),
+                        options = acModes,
+                        onValueChanged = { selectedString ->
+                            when (selectedString) {
+                                "cool" -> acViewModel.setMode("cool")
+                                "heat" -> acViewModel.setMode("heat")
+                                "fan" -> acViewModel.setMode("fan")
+                                else -> {}
+                            }
                         }
-                    }
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.temp) + " (°C)",
+                        color = Color.Black,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    OutlinedCard(
+                        modifier = Modifier
+                            .width(121.dp)
+                            .height(100.dp),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = md_theme_light_background,
+                            contentColor = Color.Black,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, md_theme_light_coffee),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(start = 20.dp, end = 10.dp)
+                                .fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "${acDevice.temperature}°",
+                                color = Color.Black,
+                                style = MaterialTheme.typography.titleLarge
+                            )
 
+                            Column {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clickable {
+                                            acViewModel.setTemperature(acDevice.temperature + 1)
+                                        },
+                                    imageVector = Icons.Default.KeyboardArrowUp,
+                                    contentDescription = null
+                                )
+                                Icon(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clickable {
+                                            acViewModel.setTemperature(acDevice.temperature - 1)
+                                        },
+                                    imageVector = Icons.Default.KeyboardArrowDown,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+
+                    }
                 }
             }
-        }
 
-        // Row de BladesV y BladesH
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    text = stringResource(R.string.verticalBlades),
-                    color = Color.Black,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.padding(1.dp))
-                SelectTextField(
-                    modifier = Modifier
-                        .width(121.dp)
-                        .height(100.dp),
-                    showIcon = false,
-                    initialValue = Pair(Pair(acDevice.verticalSwing, acDevice.verticalSwing), null),
-                    options = acBladesV,
-                    onValueChanged = { selectedString ->
-                        acViewModel.setVerticalSwing(selectedString)
-                    }
-                )
-            }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    text = stringResource(R.string.horizontalBlades),
-                    color = Color.Black,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.padding(1.dp))
-                SelectTextField(
-                    modifier = Modifier
-                        .width(121.dp)
-                        .height(100.dp),
-                    showIcon = false,
-                    initialValue = Pair(Pair(acDevice.horizontalSwing, acDevice.horizontalSwing), null),
-                    options = acBladesH,
-                    onValueChanged = { selectedString ->
-                        acViewModel.setHorizontalSwing(selectedString)
-                    }
-                )
-            }
-        }
-
-        // Row de Speed
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    text = stringResource(R.string.fan),
-                    color = Color.Black,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.padding(1.dp))
-                SelectTextField(
-                    modifier = Modifier
-                        .width(121.dp)
-                        .height(100.dp),
-                    showIcon = false,
-                    initialValue = Pair(Pair(acDevice.fanSpeed, acDevice.fanSpeed), null),
-                    options = acSpeed,
-                    onValueChanged = { selectedString ->
-                        acViewModel.setFanSpeed(selectedString)
-                    }
-                )
+            // Row de BladesV y BladesH
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.verticalBlades),
+                        color = Color.Black,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    SelectTextField(
+                        modifier = Modifier
+                            .width(121.dp)
+                            .height(100.dp),
+                        showIcon = false,
+                        initialValue = Pair(
+                            Pair(acDevice.verticalSwing, acDevice.verticalSwing),
+                            null
+                        ),
+                        options = acBladesV,
+                        onValueChanged = { selectedString ->
+                            acViewModel.setVerticalSwing(selectedString)
+                        }
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.horizontalBlades),
+                        color = Color.Black,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    SelectTextField(
+                        modifier = Modifier
+                            .width(121.dp)
+                            .height(100.dp),
+                        showIcon = false,
+                        initialValue = Pair(
+                            Pair(
+                                acDevice.horizontalSwing,
+                                acDevice.horizontalSwing
+                            ), null
+                        ),
+                        options = acBladesH,
+                        onValueChanged = { selectedString ->
+                            acViewModel.setHorizontalSwing(selectedString)
+                        }
+                    )
+                }
             }
 
-        }
+            // Row de Speed
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.fan),
+                        color = Color.Black,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    SelectTextField(
+                        modifier = Modifier
+                            .width(121.dp)
+                            .height(100.dp),
+                        showIcon = false,
+                        initialValue = Pair(Pair(acDevice.fanSpeed, acDevice.fanSpeed), null),
+                        options = acSpeed,
+                        onValueChanged = { selectedString ->
+                            acViewModel.setFanSpeed(selectedString)
+                        }
+                    )
+                }
+
+            }
+
     }
 
 }

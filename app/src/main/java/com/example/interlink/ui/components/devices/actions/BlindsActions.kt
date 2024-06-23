@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -44,7 +46,7 @@ import com.example.interlink.ui.theme.md_theme_light_interred
 @Composable
 fun BlindsActions(
     blindsDevice : Blinds,
-    blindsViewModel : BlindsViewModel
+    blindsViewModel : BlindsViewModel,
 ){
 
     val status = when(blindsDevice.status){
@@ -76,7 +78,9 @@ fun BlindsActions(
         actionButtonTextColor = Color.White
     }
 
-    Column{
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ){
         Row(
             modifier = Modifier
                 .padding(5.dp)
@@ -143,65 +147,67 @@ fun BlindsActions(
 
         }
 
-        Row(
-            modifier = Modifier
-                .padding(5.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(id = R.string.blindsLevel),
-                color = Color.Black,
-                style = MaterialTheme.typography.titleMedium
-            )
 
-            Card(
+            Row(
                 modifier = Modifier
-                    .customShadow(
-                        borderRadius = 10.dp,
-                        offsetY = 8.dp,
-                        offsetX = 5.dp,
-                        spread = 3f
-                    ),
-                colors = CardDefaults.outlinedCardColors(
-                    containerColor = md_theme_light_background,
-                    contentColor = Color.Black,
-                ),
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(3.dp, Color.Black),
+                    .padding(5.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp, vertical = 5.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = blindsDevice.level.toString(),
-                        color = Color.Black,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Spacer(modifier = Modifier.padding(horizontal = 10.dp))
-                    Column {
-                        Icon(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clickable { blindsViewModel.setLevel(blindsDevice.level + 10) },
-                            imageVector = Icons.Default.KeyboardArrowUp,
-                            contentDescription = null
-                        )
-                        Icon(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clickable { blindsViewModel.setLevel(blindsDevice.level - 10) },
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = null
-                        )
-                    }
-                }
+                Text(
+                    text = stringResource(id = R.string.blindsLevel),
+                    color = Color.Black,
+                    style = MaterialTheme.typography.titleMedium
+                )
 
+                Card(
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 5.dp,
+                            spread = 3f
+                        ),
+                    colors = CardDefaults.outlinedCardColors(
+                        containerColor = md_theme_light_background,
+                        contentColor = Color.Black,
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black),
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp, vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = blindsDevice.level.toString(),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+                        Column {
+                            Icon(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clickable { blindsViewModel.setLevel(blindsDevice.level + 10) },
+                                imageVector = Icons.Default.KeyboardArrowUp,
+                                contentDescription = null
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clickable { blindsViewModel.setLevel(blindsDevice.level - 10) },
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = null
+                            )
+                        }
+                    }
+
+                }
             }
-        }
+
     }
 }
 
