@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,8 +48,8 @@ import com.example.interlink.ui.devices.AlarmViewModel
 import com.example.interlink.ui.devices.BlindsViewModel
 import com.example.interlink.ui.devices.DevicesViewModel
 import com.example.interlink.ui.devices.DoorViewModel
-import com.example.interlink.ui.devices.FavoritesEntryViewModel
 import com.example.interlink.ui.devices.EventsViewModel
+import com.example.interlink.ui.devices.FavoritesEntryViewModel
 import com.example.interlink.ui.devices.LampViewModel
 import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.devices.StoredEventEntryViewModel
@@ -81,7 +82,7 @@ fun HomePage(
     var selectedDeviceId by remember { mutableStateOf<String?>(null) }
     var expandedDeviceId by remember { mutableStateOf<String?>(null) }
 
-    Log.d("ROW", "$useLazyColumn")
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -274,7 +275,7 @@ fun HomePage(
                             )
                         }
                         if (recents.isEmpty()){
-                            Row(modifier = modifier.fillMaxSize(),
+                            Row(modifier = modifier.width(380.dp),
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -353,7 +354,7 @@ fun HomePage(
                                         viewModel = deviceViewModel,
                                         expanded = device.id == expandedDeviceId,
                                         favDevViewModel = favDevViewModel,
-                                        landscape = !useLazyColumn
+                                        landscape = false
                                     ) { device ->
                                         expandedDeviceId =
                                             if (device.id == expandedDeviceId) null else device.id
