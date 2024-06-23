@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CardDefaults
@@ -52,7 +54,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AlarmActions(
     alarmDevice: Alarm,
-    alarmViewModel: AlarmViewModel
+    alarmViewModel: AlarmViewModel,
 ){
     val status = when(alarmDevice.status){
         Status.ARMEDSTAY -> stringResource(id = R.string.alarmOnLocal)
@@ -69,7 +71,9 @@ fun AlarmActions(
     val coroutineScope = rememberCoroutineScope()
 
 
-    Column{
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ){
         Row(
             modifier = Modifier
                 .padding(10.dp)
@@ -240,58 +244,58 @@ fun AlarmActions(
             }
 
         }
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Absolute.Center
-        ) {
-            OutlinedCard(
+            Row(
                 modifier = Modifier
-                    .customShadow(
-                        borderRadius = 10.dp,
-                        offsetY = 8.dp,
-                        offsetX = 5.dp,
-                        spread = 3f
-                    ),
-                colors = CardDefaults.outlinedCardColors(
-                    containerColor = md_theme_light_intergreen
-                ),
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(3.dp, Color.Black),
-                onClick = {
-                    changeCodeDialog = true
-                }
-            ){
-                Column(
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Absolute.Center
+            ) {
+                OutlinedCard(
                     modifier = Modifier
-                        .padding(15.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 5.dp,
+                            spread = 3f
+                        ),
+                    colors = CardDefaults.outlinedCardColors(
+                        containerColor = md_theme_light_intergreen
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black),
+                    onClick = {
+                        changeCodeDialog = true
+                    }
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.changeCode),
-                        color= Color.Black,
-                        style = MaterialTheme.typography.titleLarge,
-                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(15.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.changeCode),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                    }
+                }
+
+                if (changeCodeDialog) {
+                    ChangeCodeDialog(
+                        onDismissRequest = { changeCodeDialog = false },
+
+
+                        alarmViewModel = alarmViewModel,
+                        coroutineScope = coroutineScope
+                    ) { oldCode, newCode ->
+                        alarmViewModel.changeSecurityCode(oldCode, newCode)
+
+
+                    }
                 }
             }
-
-            if(changeCodeDialog){
-                ChangeCodeDialog(
-                    onDismissRequest = { changeCodeDialog = false },
-
-                  
-                    alarmViewModel = alarmViewModel,
-                    coroutineScope = coroutineScope
-                ) {oldCode, newCode ->
-                    alarmViewModel.changeSecurityCode(oldCode,newCode)
-
-                    
-                }
-            }
-        }
     }
 }
 

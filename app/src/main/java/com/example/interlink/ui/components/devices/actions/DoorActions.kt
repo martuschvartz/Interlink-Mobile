@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -32,7 +34,7 @@ import com.example.interlink.ui.theme.md_theme_light_interred
 @Composable
 fun DoorActions(
     doorDevice : Door,
-    doorViewModel : DoorViewModel
+    doorViewModel : DoorViewModel,
 ){
     val status = when(doorDevice.status){
         Status.OPENED -> stringResource(id = R.string.doorOpened)
@@ -46,7 +48,9 @@ fun DoorActions(
         else -> null
     }
 
-    Column{
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ){
         Row(
             modifier = Modifier
                 .padding(5.dp)
@@ -144,103 +148,104 @@ fun DoorActions(
             }
         }
 
-        Row(
-            modifier = Modifier
-                .padding(5.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column{
-                Row(
-                    modifier = Modifier,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.doorLock),
-                        color = Color.Black,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Spacer(modifier = Modifier.padding(2.dp))
-                    if (locked != null) {
+
+            Row(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = locked,
-                            color = Color.Gray,
+                            text = stringResource(id = R.string.doorLock),
+                            color = Color.Black,
                             style = MaterialTheme.typography.titleMedium
                         )
+                        Spacer(modifier = Modifier.padding(2.dp))
+                        if (locked != null) {
+                            Text(
+                                text = locked,
+                                color = Color.Gray,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
                     }
                 }
-            }
-            if (doorDevice.lock == "locked") {
-                // boton de destrabar
-                OutlinedCard(
-                    modifier = Modifier
-                        .customShadow(
-                            borderRadius = 10.dp,
-                            offsetY = 8.dp,
-                            offsetX = 5.dp,
-                            spread = 3f
-                        ),
-                    colors = CardDefaults.outlinedCardColors(
-                        containerColor = md_theme_light_interred,
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(3.dp, Color.Black),
-                    onClick = {
-                        doorViewModel.unlock()
-                    }
-                ) {
-                    Column(
+                if (doorDevice.lock == "locked") {
+                    // boton de destrabar
+                    OutlinedCard(
                         modifier = Modifier
-                            .padding(15.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.unlockAction),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-            }
-            if (doorDevice.lock == "unlocked") {
-                // boton de trabar que traba la puerta, enabled si la puerta está cerrada, si no no se puede tocar
-                OutlinedCard(
-                    modifier = Modifier
-                        .customShadow(
-                            borderRadius = 10.dp,
-                            offsetY = 8.dp,
-                            offsetX = 5.dp,
-                            spread = 3f
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 8.dp,
+                                offsetX = 5.dp,
+                                spread = 3f
+                            ),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = md_theme_light_interred,
+                            contentColor = Color.White
                         ),
-                    colors = CardDefaults.outlinedCardColors(
-                        containerColor = md_theme_light_intergreen,
-                        contentColor = Color.White,
-                        disabledContentColor = Color.White,
-                        disabledContainerColor = md_theme_light_intergrey
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(3.dp, Color.Black),
-                    onClick = {
-                        doorViewModel.lock()
-                    },
-                    enabled = doorDevice.status == Status.CLOSED
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(15.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black),
+                        onClick = {
+                            doorViewModel.unlock()
+                        }
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.lockAction),
-                            style = MaterialTheme.typography.titleLarge
-                        )
+                        Column(
+                            modifier = Modifier
+                                .padding(15.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.unlockAction),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    }
+                }
+                if (doorDevice.lock == "unlocked") {
+                    // boton de trabar que traba la puerta, enabled si la puerta está cerrada, si no no se puede tocar
+                    OutlinedCard(
+                        modifier = Modifier
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 8.dp,
+                                offsetX = 5.dp,
+                                spread = 3f
+                            ),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = md_theme_light_intergreen,
+                            contentColor = Color.White,
+                            disabledContentColor = Color.White,
+                            disabledContainerColor = md_theme_light_intergrey
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black),
+                        onClick = {
+                            doorViewModel.lock()
+                        },
+                        enabled = doorDevice.status == Status.CLOSED
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(15.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.lockAction),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
                     }
                 }
             }
-        }
     }
 
 }

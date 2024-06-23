@@ -13,12 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.interlink.ui.navigation.AppNavigation
 
 @Composable
 fun CustomBarButton(
+    showLabels : Boolean,
     tablet: Boolean,
     selected: Boolean = false,
     onClick: () -> Unit,
@@ -51,8 +51,8 @@ fun CustomBarButton(
                         .size(41.dp)
                 )
 
-                // Para la tablet, no muestra el texto de aquellos botones no seleccionados
-                if(selected || !tablet) {
+                // Para la tablet, no muestra el texto de aquellos botones no seleccionados, para ladnscape directamente no lo muestra
+                if(showLabels && (!tablet || selected)) {
                     Text(
                         text = stringResource(id = destination.title),
                         modifier = Modifier
@@ -63,10 +63,4 @@ fun CustomBarButton(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun CustomBarButtonPreview(){
-    CustomBarButton(onClick = {}, destination = AppNavigation.ACTIVITY  , selected = true, tablet = false)
 }
