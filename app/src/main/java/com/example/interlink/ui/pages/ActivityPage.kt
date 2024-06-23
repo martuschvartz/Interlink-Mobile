@@ -74,7 +74,7 @@ fun ActivityPage(
         ){
           Text(
               text = stringResource(id = R.string.activity),
-              color = Color.Black,
+              color = MaterialTheme.colorScheme.onSurface,
               style = MaterialTheme.typography.headlineLarge,
               fontWeight = FontWeight.Bold,
           )

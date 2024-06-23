@@ -54,7 +54,7 @@ fun HomePage(
         ) {
             Text(
                 text = stringResource(id = R.string.home),
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
             )

@@ -51,7 +51,6 @@ fun DoorActions(
         else -> null
     }
 
-
     Column{
         Row(
             modifier = Modifier
@@ -194,7 +193,7 @@ fun DoorActions(
                     shape = RoundedCornerShape(10.dp),
                     border = BorderStroke(3.dp, Color.Black),
                     onClick = {
-
+                        doorViewModel.unlock()
                     }
                 ) {
                     Column(
