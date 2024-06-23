@@ -35,7 +35,12 @@ import com.example.interlink.ui.theme.md_theme_light_interred
 fun DoorActions(
     doorDevice : Door,
     doorViewModel : DoorViewModel,
+    landscape : Boolean
 ){
+
+    // Global
+    val actionsModifier = if(landscape) Modifier.verticalScroll(rememberScrollState()) else Modifier
+
     val status = when(doorDevice.status){
         Status.OPENED -> stringResource(id = R.string.doorOpened)
         Status.CLOSED -> stringResource(id = R.string.doorClosed)
@@ -49,7 +54,7 @@ fun DoorActions(
     }
 
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = actionsModifier
     ){
         Row(
             modifier = Modifier

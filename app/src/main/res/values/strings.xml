@@ -2,8 +2,8 @@
     <string name="app_name">Interlink</string>
     <string name="home">Home</string>
     <string name="favorites">Favorites</string>
-    <string name="devices">Devices\n</string>
-    <string name="activity">Activity\n</string>
+    <string name="devices">Devices</string>
+    <string name="activity">Activity</string>
     <string name="recent_activity">Recent activity</string>
     <string name="no_activity">No recent activity!</string>
     <string name="inter_title">INTERLINK</string>

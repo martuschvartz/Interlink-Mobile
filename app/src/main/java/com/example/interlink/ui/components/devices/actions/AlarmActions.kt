@@ -55,7 +55,12 @@ import kotlinx.coroutines.launch
 fun AlarmActions(
     alarmDevice: Alarm,
     alarmViewModel: AlarmViewModel,
+    landscape : Boolean
 ){
+
+    // Global
+    val actionsModifier = if(landscape) Modifier.verticalScroll(rememberScrollState()) else Modifier
+
     val status = when(alarmDevice.status){
         Status.ARMEDSTAY -> stringResource(id = R.string.alarmOnLocal)
         Status.ARMEDAWAY -> stringResource(id = R.string.alarmOnRemote)
@@ -72,7 +77,7 @@ fun AlarmActions(
 
 
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = actionsModifier
     ){
         Row(
             modifier = Modifier
