@@ -29,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,15 +47,12 @@ import com.example.interlink.R
 import com.example.interlink.model.Speaker
 import com.example.interlink.model.Status
 import com.example.interlink.ui.components.customShadow
-import com.example.interlink.ui.devices.SpeakerUiState
 import com.example.interlink.ui.devices.SpeakerViewModel
 import com.example.interlink.ui.theme.md_theme_light_background
 import com.example.interlink.ui.theme.md_theme_light_coffee
 import com.example.interlink.ui.theme.md_theme_light_interblue
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_interred
-import com.google.gson.JsonParser
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -133,12 +129,6 @@ fun SpeakerActions(
     // playlist
     var showPlaylist by remember { mutableStateOf(false) }
     var playlist by remember { mutableStateOf<List<Any?>?>(emptyList())}
-
-
-    // si cada 1 segundo hace un update de los device, puedo tener una variable mutablestateof
-    // que sea el porcentaje de la cancion pasada, se hace mediante un calculo con la duracion
-    // total de la cancion y el tiempo transcurrido. O sea a esa variable le asigno el resultado
-    // de la funcion supongo, porque se va a ir updateando todo el tiempo
 
 
 
@@ -548,7 +538,6 @@ fun SpeakerActions(
 
                         coroutineScope.launch {
                             playlist = speakerViewModel.fetchPlaylist()
-                            Log.d("DEBUG", "Nos llega: ${playlist}")
                             showPlaylist = true
                         }
 
