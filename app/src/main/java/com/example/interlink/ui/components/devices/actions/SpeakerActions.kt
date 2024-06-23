@@ -61,7 +61,11 @@ import kotlinx.coroutines.launch
 fun SpeakerActions(
     speakerDevice : Speaker,
     speakerViewModel: SpeakerViewModel,
+    landscape : Boolean
 ){
+    // Global
+    val actionsModifier = if(landscape) Modifier.verticalScroll(rememberScrollState()) else Modifier
+
     // Estados
     val status = when(speakerDevice.status){
         Status.PLAYING -> stringResource(id = R.string.playing)
@@ -134,7 +138,7 @@ fun SpeakerActions(
 
 
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = actionsModifier
     ){
 
         // Row de estado

@@ -15,7 +15,6 @@ fun InterNavHost(
     navController: NavHostController,
     startDestination: String = AppNavigation.HOME.route,
     useLazyColumn: Boolean,
-    favDevViewModel: FavoritesEntryViewModel?,
     storedEventViewModel : StoredEventEntryViewModel?
 ){
     NavHost(
@@ -25,14 +24,21 @@ fun InterNavHost(
         composable(route = AppNavigation.HOME.route){
             if (favDevViewModel != null) {
                 if (storedEventViewModel != null) {
-                    HomePage(favDevViewModel = favDevViewModel, storedEvents = storedEventViewModel)
+                    HomePage(
+                        favDevViewModel = favDevViewModel,
+                        storedEvents = storedEventViewModel,
+                        useLazyColumn = useLazyColumn
+                    )
                 }
             }
         }
 
         composable(route = AppNavigation.ACTIVITY.route){
             if (storedEventViewModel != null) {
-                ActivityPage(storedEvents = storedEventViewModel)
+                ActivityPage(
+                    storedEvents = storedEventViewModel,
+                    useLazyColumn = useLazyColumn
+                )
             }
         }
 
