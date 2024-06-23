@@ -14,7 +14,6 @@ import com.example.interlink.ui.pages.HomePage
 fun InterNavHost(
     navController: NavHostController,
     startDestination: String = AppNavigation.HOME.route,
-    favDevViewModel: FavoritesEntryViewModel?,
     useLazyColumn: Boolean,
     favDevViewModel: FavoritesEntryViewModel?,
     storedEventViewModel : StoredEventEntryViewModel?
