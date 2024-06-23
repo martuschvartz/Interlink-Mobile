@@ -50,6 +50,7 @@ fun ActivityPage(
                 .fillMaxWidth()
                 .padding(10.dp),
             horizontalArrangement = Arrangement.Start,
+
         ) {
             Text(
                 text = stringResource(id = R.string.activity),
