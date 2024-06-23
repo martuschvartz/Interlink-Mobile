@@ -116,6 +116,7 @@ fun InterlinkApp() {
                         InterNavHost(
                             navController = navController,
                             favDevViewModel = favDevViewModel,
+                            storedEventViewModel = storedEventViewModel,
                             useLazyColumn = false
                         )
                     }
