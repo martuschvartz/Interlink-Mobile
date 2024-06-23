@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -68,6 +69,7 @@ fun HomePage(
     modifier: Modifier = Modifier,
     favDevViewModel : FavoritesEntryViewModel,
     storedEvents : StoredEventEntryViewModel,
+    useLazyColumn: Boolean,
     devicesViewModel : DevicesViewModel = viewModel(factory = getViewModelFactory()),
     lampViewModel: LampViewModel = viewModel(factory = getViewModelFactory()),
     doorViewModel: DoorViewModel = viewModel(factory = getViewModelFactory()),
@@ -83,13 +85,15 @@ fun HomePage(
     var selectedDeviceId by remember { mutableStateOf<String?>(null) }
     var expandedDeviceId by remember { mutableStateOf<String?>(null) }
 
+    Log.d("ROW", "$useLazyColumn")
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                .fillMaxWidth()
                 .padding(10.dp),
             horizontalArrangement = Arrangement.Start,
         ) {
@@ -101,134 +105,281 @@ fun HomePage(
             )
         }
 
-        Row(
-            modifier = Modifier.padding(6.dp)
+        // Vertical
+        if (useLazyColumn){
+            // activity
+            Row(
+                modifier = Modifier.padding(6.dp)
 
-        ) {
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = md_theme_light_coffee
-                ),
-                modifier = Modifier
-                    .customShadow(
-                        borderRadius = 10.dp,
-                        offsetY = 6.dp,
-                        offsetX = 6.dp,
-                        spread = 3f
-                    ).height(200.dp),
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(3.dp, Color.Black)
-            ){
-                Row(
-                    modifier = modifier.fillMaxWidth()
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.recent_activity),
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-                if (recents.isEmpty()){
-                    Row(modifier = modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+            ) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = md_theme_light_coffee
+                    ),
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 6.dp,
+                            offsetX = 6.dp,
+                            spread = 3f
+                        )
+                        .height(200.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black)
+                ){
+                    Row(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = stringResource(id = R.string.no_activity),
+                            text = stringResource(id = R.string.recent_activity),
                             color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.headlineSmall,
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
-                }
+                    if (recents.isEmpty()){
+                        Row(modifier = modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.no_activity),
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.headlineSmall,
+                            )
+                        }
+                    }
 
-                else{
-                    Row(modifier = modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
-                    ){
-                        LazyColumn {
-                            items(recents) { event ->
-                                Box(modifier = Modifier.padding(10.dp)) {
-                                    EventCard(event = event)
+                    else{
+                        Row(modifier = modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start
+                        ){
+                            LazyColumn {
+                                items(recents) { event ->
+                                    Box(modifier = Modifier.padding(10.dp)) {
+                                        EventCard(event = event)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            // devices
+            Row(
+                modifier = Modifier.padding(6.dp)
+            ) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = md_theme_light_background
+                    ),
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 6.dp,
+                            offsetX = 6.dp,
+                            spread = 3f
+                        ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black)
+                ){
+                    Row(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.favorites),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                    LazyColumn(
+                        modifier = modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        items(uiState.devices.filter { device -> device.id in favorites }) { device ->
+                            Box(modifier = Modifier.padding(10.dp)) {
+                                val deviceViewModel = when (device.type) {
+                                    DeviceType.LAMP -> lampViewModel
+                                    DeviceType.SPEAKER -> speakerViewModel
+                                    DeviceType.BLINDS -> blindsViewModel
+                                    DeviceType.ALARM -> alarmViewModel
+                                    DeviceType.DOOR -> doorViewModel
+                                    DeviceType.AC -> acViewModel
+                                }
+
+                                DeviceCard(
+                                    currentDevice = device.id == selectedDeviceId,
+                                    device = device,
+                                    viewModel = deviceViewModel,
+                                    expanded = device.id == expandedDeviceId,
+                                    favDevViewModel = favDevViewModel,
+                                    landscape = !useLazyColumn
+                                ) { device ->
+                                    expandedDeviceId =
+                                        if (device.id == expandedDeviceId) null else device.id
+                                    selectedDeviceId = device.id
+                                    when (device.type) {
+                                        DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
+                                        DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
+                                        DeviceType.BLINDS -> blindsViewModel.setCurrentDevice(device as Blinds)
+                                        DeviceType.ALARM -> alarmViewModel.setCurrentDevice(device as Alarm)
+                                        DeviceType.AC -> acViewModel.setCurrentDevice(device as Ac)
+                                        DeviceType.SPEAKER -> speakerViewModel.setCurrentDevice(device as Speaker)
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
             }
         }
 
-        Row(
-            modifier = Modifier.padding(6.dp)
-        ) {
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = md_theme_light_background
-                ),
-                modifier = Modifier
-                    .customShadow(
-                        borderRadius = 10.dp,
-                        offsetY = 6.dp,
-                        offsetX = 6.dp,
-                        spread = 3f
-                    ),
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(3.dp, Color.Black)
-            ){
-                Row(
-                    modifier = modifier.fillMaxWidth()
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.Start,
+        // Horizontal
+        else {
+            Row(){
+                Column (
+                    modifier = Modifier.padding(6.dp)
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.favorites),
-                        color = Color.Black,
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-                LazyColumn(
-                    modifier = modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    items(uiState.devices.filter { device -> device.id in favorites }) { device ->
-                        Box(modifier = Modifier.padding(10.dp)) {
-                            val deviceViewModel = when (device.type) {
-                                DeviceType.LAMP -> lampViewModel
-                                DeviceType.SPEAKER -> speakerViewModel
-                                DeviceType.BLINDS -> blindsViewModel
-                                DeviceType.ALARM -> alarmViewModel
-                                DeviceType.DOOR -> doorViewModel
-                                DeviceType.AC -> acViewModel
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = md_theme_light_coffee
+                        ),
+                        modifier = Modifier
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 6.dp,
+                                offsetX = 6.dp,
+                                spread = 3f
+                            )
+                            .fillMaxHeight(),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black)
+                    ){
+                        Row(
+                            modifier = modifier
+                                .padding(10.dp),
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.recent_activity),
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.headlineLarge,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                        if (recents.isEmpty()){
+                            Row(modifier = modifier.fillMaxSize(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.no_activity),
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    style = MaterialTheme.typography.headlineSmall,
+                                )
                             }
+                        }
 
-                            DeviceCard(
-                                currentDevice = device.id == selectedDeviceId,
-                                device = device,
-                                viewModel = deviceViewModel,
-                                expanded = device.id == expandedDeviceId,
-                                favDevViewModel = favDevViewModel,
-                            ) { device ->
-                                expandedDeviceId =
-                                    if (device.id == expandedDeviceId) null else device.id
-                                selectedDeviceId = device.id
-                                when (device.type) {
-                                    DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
-                                    DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
-                                    DeviceType.BLINDS -> blindsViewModel.setCurrentDevice(device as Blinds)
-                                    DeviceType.ALARM -> alarmViewModel.setCurrentDevice(device as Alarm)
-                                    DeviceType.AC -> acViewModel.setCurrentDevice(device as Ac)
-                                    DeviceType.SPEAKER -> speakerViewModel.setCurrentDevice(device as Speaker)
+                        else{
+                            Row(modifier = modifier,
+                                horizontalArrangement = Arrangement.Start
+                            ){
+                                LazyColumn {
+                                    items(recents) { event ->
+                                        Box(modifier = Modifier.padding(10.dp)) {
+                                            EventCard(event = event)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                Column(
+                    modifier = Modifier.padding(6.dp)
+                ) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = md_theme_light_background
+                        ),
+                        modifier = Modifier
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 6.dp,
+                                offsetX = 6.dp,
+                                spread = 3f
+                            ),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black)
+                    ){
+                        Row(
+                            modifier = modifier
+                                .padding(10.dp),
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.favorites),
+                                color = Color.Black,
+                                style = MaterialTheme.typography.headlineLarge,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                        LazyColumn(
+                            modifier = modifier.fillMaxHeight(),
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            items(uiState.devices.filter { device -> device.id in favorites }) { device ->
+                                Box(modifier = Modifier.padding(10.dp)) {
+                                    val deviceViewModel = when (device.type) {
+                                        DeviceType.LAMP -> lampViewModel
+                                        DeviceType.SPEAKER -> speakerViewModel
+                                        DeviceType.BLINDS -> blindsViewModel
+                                        DeviceType.ALARM -> alarmViewModel
+                                        DeviceType.DOOR -> doorViewModel
+                                        DeviceType.AC -> acViewModel
+                                    }
+
+                                    DeviceCard(
+                                        currentDevice = device.id == selectedDeviceId,
+                                        device = device,
+                                        viewModel = deviceViewModel,
+                                        expanded = device.id == expandedDeviceId,
+                                        favDevViewModel = favDevViewModel,
+                                        landscape = !useLazyColumn
+                                    ) { device ->
+                                        expandedDeviceId =
+                                            if (device.id == expandedDeviceId) null else device.id
+                                        selectedDeviceId = device.id
+                                        when (device.type) {
+                                            DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
+                                            DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
+                                            DeviceType.BLINDS -> blindsViewModel.setCurrentDevice(device as Blinds)
+                                            DeviceType.ALARM -> alarmViewModel.setCurrentDevice(device as Alarm)
+                                            DeviceType.AC -> acViewModel.setCurrentDevice(device as Ac)
+                                            DeviceType.SPEAKER -> speakerViewModel.setCurrentDevice(device as Speaker)
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+
+
         }
     }
 }

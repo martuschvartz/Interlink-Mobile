@@ -77,7 +77,7 @@ fun DevicesPage(
         ) {
             Text(
                 text = stringResource(id = R.string.devices),
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold
             )
