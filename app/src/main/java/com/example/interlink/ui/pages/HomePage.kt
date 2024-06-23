@@ -152,7 +152,7 @@ fun HomePage(
 
                     else{
                         Row(modifier = modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start
+                            horizontalArrangement = Arrangement.Center
                         ){
                             LazyColumn {
                                 items(recents) { event ->

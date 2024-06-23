@@ -95,6 +95,7 @@ fun InterlinkApp() {
                             favDevViewModel = favDevViewModel,
                             storedEventViewModel = storedEventViewModel,
                             useLazyColumn = true,
+                            isPhone = true
                         )
                     }
                 }
@@ -129,7 +130,8 @@ fun InterlinkApp() {
                             navController = navController,
                             favDevViewModel = favDevViewModel,
                             storedEventViewModel = storedEventViewModel,
-                            useLazyColumn = false
+                            useLazyColumn = false,
+                            isPhone = true
                         )
                     }
                 }
@@ -162,6 +164,7 @@ fun InterlinkApp() {
                             favDevViewModel = favDevViewModel,
                             storedEventViewModel = storedEventViewModel,
                             useLazyColumn = isPortrait,
+                            isPhone = false
                         )
                     
                     }

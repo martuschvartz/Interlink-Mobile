@@ -1,9 +1,12 @@
 package com.example.interlink.ui.pages
 
 import android.util.Log
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,12 +38,14 @@ import com.example.interlink.ui.getViewModelFactory
 
 // el modifier default es la misma clase Modifier, sino es el que le paso
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ActivityPage(
     modifier: Modifier = Modifier,
     storedEvents : StoredEventEntryViewModel,
     useLazyColumn : Boolean,
     eventsViewModel: EventsViewModel = viewModel(factory = getViewModelFactory()),
+    isPhone : Boolean,
 ){
 
     // no usa el uiState pero triggerea el update continuo, mini hack para ahorrar codigo redundante
@@ -46,7 +53,6 @@ fun ActivityPage(
     val stored by storedEvents.getStoredEvents().collectAsState(initial = emptyList())
 
 
-    // Todo: agregar un boton para borrar las notifs que no sea el de activity
     Column (
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -84,12 +90,30 @@ fun ActivityPage(
                 }
             }
             else{
-                LazyRow(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    items(stored) { event ->
-                        Box(modifier = Modifier.padding(10.dp)) {
-                            EventCard(event = event)
+                if(isPhone){
+                    LazyRow(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        items(stored) { event ->
+                            Box(modifier = Modifier.padding(10.dp)) {
+                                EventCard(event = event)
+                            }
+                        }
+                    }
+                }
+                else {
+                    FlowRow(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .padding(10.dp)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        stored.forEach { event ->
+                            Box(modifier = Modifier.padding(10.dp)) {
+                                EventCard(event = event)
+                            }
                         }
                     }
                 }

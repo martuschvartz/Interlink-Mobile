@@ -16,7 +16,8 @@ fun InterNavHost(
     startDestination: String = AppNavigation.HOME.route,
     useLazyColumn: Boolean,
     favDevViewModel: FavoritesEntryViewModel?,
-    storedEventViewModel : StoredEventEntryViewModel?
+    storedEventViewModel : StoredEventEntryViewModel?,
+    isPhone: Boolean
 ){
     NavHost(
         navController = navController,
@@ -38,7 +39,8 @@ fun InterNavHost(
             if (storedEventViewModel != null) {
                 ActivityPage(
                     storedEvents = storedEventViewModel,
-                    useLazyColumn = useLazyColumn
+                    useLazyColumn = useLazyColumn,
+                    isPhone = isPhone
                 )
             }
         }
@@ -48,6 +50,7 @@ fun InterNavHost(
                 DevicesPage(
                     favDevViewModel = favDevViewModel,
                     useLazyColumn = useLazyColumn,
+                    isPhone = isPhone
                 )
             }
         }
