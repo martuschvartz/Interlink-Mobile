@@ -49,7 +49,11 @@ import com.example.interlink.ui.theme.md_theme_light_interred
 fun AcActions(
     acDevice : Ac,
     acViewModel: AcViewModel,
+    landscape : Boolean
 ) {
+
+    // Global
+    val actionsModifier = if(landscape) Modifier.verticalScroll(rememberScrollState()) else Modifier
 
     val status = when(acDevice.status){
         Status.ON -> stringResource(id = R.string.acOn)
@@ -105,7 +109,7 @@ fun AcActions(
     }
 
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = actionsModifier
     ){
 
         // Row de Estado

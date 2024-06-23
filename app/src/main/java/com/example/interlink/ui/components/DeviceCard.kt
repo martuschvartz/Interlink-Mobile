@@ -73,6 +73,7 @@ fun <T : Device> DeviceCard(
     currentDevice: Boolean,
     device: T,
     viewModel: ViewModel?,
+    landscape: Boolean,
     expanded: Boolean = false,
     favDevViewModel : FavoritesEntryViewModel,
     onClick: (Device) -> Unit
@@ -232,11 +233,11 @@ fun <T : Device> DeviceCard(
                             ){
                                 when (device.type) {
                                     DeviceType.LAMP -> {}
-                                    DeviceType.SPEAKER -> SpeakerActions(device as Speaker, viewModel as SpeakerViewModel)
-                                    DeviceType.BLINDS -> BlindsActions(device as Blinds, viewModel as BlindsViewModel)
-                                    DeviceType.ALARM -> AlarmActions(device as Alarm, viewModel as AlarmViewModel)
-                                    DeviceType.DOOR -> DoorActions(device as Door, viewModel as DoorViewModel)
-                                    DeviceType.AC -> AcActions(device as  Ac, viewModel as AcViewModel)
+                                    DeviceType.SPEAKER -> SpeakerActions(device as Speaker, viewModel as SpeakerViewModel, landscape)
+                                    DeviceType.BLINDS -> BlindsActions(device as Blinds, viewModel as BlindsViewModel, landscape)
+                                    DeviceType.ALARM -> AlarmActions(device as Alarm, viewModel as AlarmViewModel, landscape)
+                                    DeviceType.DOOR -> DoorActions(device as Door, viewModel as DoorViewModel, landscape)
+                                    DeviceType.AC -> AcActions(device as  Ac, viewModel as AcViewModel, landscape)
                                 }
                             }
                         }

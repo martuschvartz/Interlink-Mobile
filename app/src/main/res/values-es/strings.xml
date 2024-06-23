@@ -3,8 +3,8 @@
     <string name="app_name">Interlink</string>
     <string name="home">Inicio</string>
     <string name="favorites">Favoritos</string>
-    <string name="devices">Dispositivos\n</string>
-    <string name="activity">Actividad\n</string>
+    <string name="devices">Dispositivos</string>
+    <string name="activity">Actividad</string>
     <string name="inter_title">INTERLINK</string>
     <string name="accept">Aceptar</string>
     <string name="recent_activity">Actividad reciente</string>

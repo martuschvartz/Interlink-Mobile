@@ -47,7 +47,11 @@ import com.example.interlink.ui.theme.md_theme_light_interred
 fun BlindsActions(
     blindsDevice : Blinds,
     blindsViewModel : BlindsViewModel,
+    landscape : Boolean
 ){
+
+    // Global
+    val actionsModifier = if(landscape) Modifier.verticalScroll(rememberScrollState()) else Modifier
 
     val status = when(blindsDevice.status){
         Status.OPENED -> stringResource(id = R.string.blindsOpened)
@@ -57,7 +61,7 @@ fun BlindsActions(
         else -> null
     }
 
-    var lockAction by remember { mutableStateOf(false) }
+    val lockAction by remember { mutableStateOf(false) }
     val actionButtonTitle : String
     val actionButtonColor : Color
     val actionButtonTextColor : Color
@@ -79,7 +83,7 @@ fun BlindsActions(
     }
 
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = actionsModifier
     ){
         Row(
             modifier = Modifier

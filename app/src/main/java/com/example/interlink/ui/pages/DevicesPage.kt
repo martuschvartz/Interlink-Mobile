@@ -2,11 +2,16 @@ package com.example.interlink.ui.pages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,8 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.interlink.R
 import com.example.interlink.model.Ac
 import com.example.interlink.model.Alarm
 import com.example.interlink.model.Blinds
@@ -49,76 +57,58 @@ fun DevicesPage(
     speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory()),
     favDevViewModel : FavoritesEntryViewModel,
     useLazyColumn : Boolean,
-){
+) {
 
     val uiState by viewModel.uiState.collectAsState()
     var selectedDeviceId by remember { mutableStateOf<String?>(null) }
     var expandedDeviceId by remember { mutableStateOf<String?>(null) }
 
 
-    if(useLazyColumn) {
-            LazyColumn(
-                modifier = modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(uiState.devices) { device ->
-                    Box(modifier = Modifier.padding(10.dp)) {
-                        val deviceViewModel = when (device.type) {
-                            DeviceType.LAMP -> lampViewModel
-                            DeviceType.SPEAKER -> speakerViewModel
-                            DeviceType.BLINDS -> blindsViewModel
-                            DeviceType.ALARM -> alarmViewModel
-                            DeviceType.DOOR -> doorViewModel
-                            DeviceType.AC -> acViewModel
-                        }
-                        DeviceCard(
-                            currentDevice = device.id == selectedDeviceId,
-                            device = device,
-                            viewModel = deviceViewModel,
-                            expanded = device.id == expandedDeviceId,
-                            favDevViewModel = favDevViewModel,
-                        ) { device ->
-                            expandedDeviceId =
-                                if (device.id == expandedDeviceId) null else device.id
-                            selectedDeviceId = device.id
-                            when (device.type) {
-                                DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
-                                DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
-                                DeviceType.BLINDS -> blindsViewModel.setCurrentDevice(device as Blinds)
-                                DeviceType.ALARM -> alarmViewModel.setCurrentDevice(device as Alarm)
-                                DeviceType.AC -> acViewModel.setCurrentDevice(device as Ac)
-                                DeviceType.SPEAKER -> speakerViewModel.setCurrentDevice(device as Speaker)
-                            }
-                        }
-                    }
-                }
-            }
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            horizontalArrangement = Arrangement.Start,
+        ) {
+            Text(
+                text = stringResource(id = R.string.devices),
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
         }
 
-        else{
-            LazyRow(
-                modifier = modifier.fillMaxSize(),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                items(uiState.devices) { device ->
-                    Box(modifier = Modifier.padding(10.dp)) {
-                        val deviceViewModel = when (device.type) {
-                            DeviceType.LAMP -> lampViewModel
-                            DeviceType.SPEAKER -> speakerViewModel
-                            DeviceType.BLINDS -> blindsViewModel
-                            DeviceType.ALARM -> alarmViewModel
-                            DeviceType.DOOR -> doorViewModel
-                            DeviceType.AC -> acViewModel
-                        }
-
+        Row(
+            verticalAlignment = Alignment.Top
+        ) {
+            if (useLazyColumn) {
+                LazyColumn(
+                    modifier = modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(uiState.devices) { device ->
+                        Box(modifier = Modifier.padding(10.dp)) {
+                            val deviceViewModel = when (device.type) {
+                                DeviceType.LAMP -> lampViewModel
+                                DeviceType.SPEAKER -> speakerViewModel
+                                DeviceType.BLINDS -> blindsViewModel
+                                DeviceType.ALARM -> alarmViewModel
+                                DeviceType.DOOR -> doorViewModel
+                                DeviceType.AC -> acViewModel
+                            }
                             DeviceCard(
                                 currentDevice = device.id == selectedDeviceId,
                                 device = device,
                                 viewModel = deviceViewModel,
                                 expanded = device.id == expandedDeviceId,
                                 favDevViewModel = favDevViewModel,
+                                landscape = !useLazyColumn
                             ) { device ->
                                 expandedDeviceId =
                                     if (device.id == expandedDeviceId) null else device.id
@@ -132,8 +122,50 @@ fun DevicesPage(
                                     DeviceType.SPEAKER -> speakerViewModel.setCurrentDevice(device as Speaker)
                                 }
                             }
+                        }
+                    }
+                }
+            } else {
+                LazyRow(
+                    modifier = modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    items(uiState.devices) { device ->
+                        Box(modifier = Modifier.padding(10.dp)) {
+                            val deviceViewModel = when (device.type) {
+                                DeviceType.LAMP -> lampViewModel
+                                DeviceType.SPEAKER -> speakerViewModel
+                                DeviceType.BLINDS -> blindsViewModel
+                                DeviceType.ALARM -> alarmViewModel
+                                DeviceType.DOOR -> doorViewModel
+                                DeviceType.AC -> acViewModel
+                            }
+
+                            DeviceCard(
+                                currentDevice = device.id == selectedDeviceId,
+                                device = device,
+                                viewModel = deviceViewModel,
+                                expanded = device.id == expandedDeviceId,
+                                favDevViewModel = favDevViewModel,
+                                landscape = useLazyColumn
+                            ) { device ->
+                                expandedDeviceId =
+                                    if (device.id == expandedDeviceId) null else device.id
+                                selectedDeviceId = device.id
+                                when (device.type) {
+                                    DeviceType.LAMP -> lampViewModel.setCurrentDevice(device as Lamp)
+                                    DeviceType.DOOR -> doorViewModel.setCurrentDevice(device as Door)
+                                    DeviceType.BLINDS -> blindsViewModel.setCurrentDevice(device as Blinds)
+                                    DeviceType.ALARM -> alarmViewModel.setCurrentDevice(device as Alarm)
+                                    DeviceType.AC -> acViewModel.setCurrentDevice(device as Ac)
+                                    DeviceType.SPEAKER -> speakerViewModel.setCurrentDevice(device as Speaker)
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+    }
 }
