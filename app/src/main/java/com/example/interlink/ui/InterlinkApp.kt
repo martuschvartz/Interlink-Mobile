@@ -1,15 +1,20 @@
 package com.example.interlink.ui
 
+import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +38,7 @@ fun InterlinkApp() {
     InterlinkTheme {
 
         val context = LocalContext.current
+        val configuration = LocalConfiguration.current
 
         // Controladores de Navegación
         val navController = rememberNavController()
@@ -45,11 +51,18 @@ fun InterlinkApp() {
         val favDevViewModel : FavoritesEntryViewModel = viewModel(factory = viewModelFactory)
 
         BoxWithConstraints{
-            // Para el caso del celular, en portrait o landscape
-            if (maxWidth < 600.dp ) {
+
+            val isPhone = maxWidth < 600.dp || maxHeight < 480.dp
+            val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+            Log.d("DEBUG", "es portrait : $isPortrait")
+            Log.d("DEBUG", "es phone : $isPhone")
+
+            // Para el celular, en portrait
+            if (isPhone && isPortrait) {
 
                 Scaffold(
-                    topBar = { TopInterlinkBar() },
+                    topBar = { TopInterlinkBar(Modifier.height(104.dp)) },
                     bottomBar = {
                         BottomInterBar(
                             currentDestination = currentDestination,
@@ -67,18 +80,44 @@ fun InterlinkApp() {
                     ) {innerPadding ->
                     Box(
                         modifier = Modifier
+                            .fillMaxSize()
                             .padding(innerPadding)
                     )
                     {
-                        InterNavHost(navController = navController, favDevViewModel = favDevViewModel)
+                        InterNavHost(
+                            navController = navController,
+                            favDevViewModel = favDevViewModel,
+                            useLazyColumn = true
+                        )
                     }
                 }
 
-            // Para el caso de la tablet, portrait o landscape
-            } else {
+            // Para el caso del celular en landscape
+            } else if (isPhone && !isPortrait) {
 
                 Scaffold(
-                    topBar = { TopInterlinkBar() }
+                    topBar = { TopInterlinkBar(Modifier.height(74.dp)) },
+                    // el icono default intento que sea el de la current,
+                    floatingActionButtonPosition = FabPosition.Start,
+                    floatingActionButton = {  }
+                ) {innerPadding ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        InterNavHost(
+                            navController = navController,
+                            favDevViewModel = favDevViewModel,
+                            useLazyColumn = false
+                        )
+                    }
+                }
+            }
+            // Para tablet, en landscape o portrait
+            else{
+                Scaffold(
+                    topBar = { TopInterlinkBar(Modifier.height(104.dp)) },
                 ) {innerPadding ->
                     Row(
                         modifier = Modifier
@@ -97,7 +136,11 @@ fun InterlinkApp() {
                                 restoreState = true
                             }
                         }
-                        InterNavHost(navController = navController, favDevViewModel = favDevViewModel)
+                        InterNavHost(
+                            navController = navController,
+                            favDevViewModel = favDevViewModel,
+                            useLazyColumn = isPortrait
+                        )
                     }
                 }
             }

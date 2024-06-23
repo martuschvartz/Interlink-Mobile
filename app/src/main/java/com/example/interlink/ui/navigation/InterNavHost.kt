@@ -13,6 +13,7 @@ import com.example.interlink.ui.pages.HomePage
 fun InterNavHost(
     navController: NavHostController,
     startDestination: String = AppNavigation.HOME.route,
+    useLazyColumn: Boolean,
     favDevViewModel : FavoritesEntryViewModel?
 ){
     NavHost(
@@ -31,7 +32,10 @@ fun InterNavHost(
 
         composable(route = AppNavigation.DEVICES.route){
             if (favDevViewModel != null) {
-                DevicesPage(favDevViewModel = favDevViewModel)
+                DevicesPage(
+                    favDevViewModel = favDevViewModel,
+                    useLazyColumn = useLazyColumn
+                )
             }
         }
     }

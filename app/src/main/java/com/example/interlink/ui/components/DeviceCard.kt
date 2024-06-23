@@ -134,6 +134,7 @@ fun <T : Device> DeviceCard(
                         modifier = Modifier
                             .padding(10.dp),
                     ) {
+                        // Título e ícono
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -230,8 +231,8 @@ fun <T : Device> DeviceCard(
                             }
                         }
 
+                        // Acciones de los dispositivos
                         if (expanded && currentDevice) {
-                            // aca va las accinoes de los dispositivos
                             Row(
                                 modifier = Modifier
                                     .padding(5.dp),
