@@ -31,8 +31,8 @@
 
 
     <!-- Para la puerta -->
-    <string name="doorOpened">Abierto</string>
-    <string name="doorClosed">Cerrado</string>
+    <string name="doorOpened">Abierta</string>
+    <string name="doorClosed">Cerrada</string>
     <string name="doorLocked">Trabada</string>
     <string name="doorUnlocked">Destrabada</string>
     <string name="doorLock">Traba:</string>
@@ -78,7 +78,7 @@
     <string name="playing">Reproduciendo</string>
     <string name="stopped">Pausado</string>
     <string name="volume">Volumen</string>
-    <string name="genre">Génerp</string>
+    <string name="genre">Género</string>
     <string name="seePlaylist">Ver Playlist</string>
     <string name="clasical">Clásica</string>
     <string name="club">Boliche</string>

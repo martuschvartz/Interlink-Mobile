@@ -110,7 +110,7 @@ fun SelectTextField(
                     text = {
                         Text(
                             text = option.first.second,
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium
                         )
                     },

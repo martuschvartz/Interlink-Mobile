@@ -26,7 +26,7 @@ fun DoorDescription(
 
     val locked = when(doorDevice.lock){
         "locked" -> stringResource(id = R.string.doorLocked)
-        else -> stringResource(id = R.string.unlockAction)
+        else -> stringResource(id = R.string.doorUnlocked)
     }
 
     Row {
