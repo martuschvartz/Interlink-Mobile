@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -60,7 +62,6 @@ fun SpeakerActions(
     speakerDevice : Speaker,
     speakerViewModel: SpeakerViewModel,
 ){
-
     // Estados
     val status = when(speakerDevice.status){
         Status.PLAYING -> stringResource(id = R.string.playing)
@@ -132,7 +133,9 @@ fun SpeakerActions(
 
 
 
-    Column{
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ){
 
         // Row de estado
         Row(
@@ -201,369 +204,369 @@ fun SpeakerActions(
         }
 
         // Row de volumen
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
-            Text(
-                text = stringResource(id = R.string.volume),
-                color = Color.Black,
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            OutlinedCard(
-                modifier = Modifier
-                    .width(121.dp)
-                    .height(100.dp),
-                colors = CardDefaults.outlinedCardColors(
-                    containerColor = md_theme_light_background,
-                    contentColor = Color.Black
-                ),
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(1.dp, md_theme_light_coffee)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(start = 15.dp, end = 5.dp)
-                        .fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
-                    Text(
-                        text = speakerDevice.volume.toString(),
-                        color = Color.Black,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Column {
-                        Icon(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .clickable {
-                                    speakerViewModel.setVolume(speakerDevice.volume + 1)
-                                },
-                            imageVector = Icons.Default.KeyboardArrowUp,
-                            contentDescription = null
-                        )
-
-                        Icon(
-                            modifier = Modifier
-                                .size(50.dp)
-                                .clickable {
-                                    speakerViewModel.setVolume(speakerDevice.volume - 1)
-                                },
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = null
-                        )
-                    }
-                }
-            }
-        }
-
-        // Row de género
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
-            Text(
-                text = stringResource(id = R.string.genre),
-                color = Color.Black,
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            SelectTextField(
-                modifier = Modifier
-                    .width(200.dp)
-                    .height(80.dp),
-                showIcon = false,
-                initialValue = Pair(Pair(speakerDevice.genre,speakerDevice.genre),null),
-                options = genres,
-                onValueChanged = { selectedString ->
-                    speakerViewModel.setGenre(selectedString)
-                }
-            )
-        }
-
-        // row de canciones
-        if(speakerDevice.status != Status.STOPPED){
-            Row(
-                modifier = Modifier.padding(5.dp)
-            ){
-                OutlinedCard(
-                    modifier = Modifier
-                        .customShadow(
-                            borderRadius = 10.dp,
-                            offsetY = 8.dp,
-                            offsetX = 5.dp,
-                            spread = 3f
-                        ),
-                    colors = CardDefaults.outlinedCardColors(
-                        containerColor = md_theme_light_coffee
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(3.dp, Color.Black)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(10.dp)
-                    ) {
-
-                        // Titulo de la cancion
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp)
-                        ){
-                            OutlinedCard(
-                                modifier = Modifier
-                                    .customShadow(
-                                        borderRadius = 10.dp,
-                                        offsetY = 8.dp,
-                                        offsetX = 5.dp,
-                                        spread = 3f
-                                    ),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = md_theme_light_background
-                                ),
-                                shape = RoundedCornerShape(10.dp),
-                                border = BorderStroke(3.dp, Color.Black)
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(15.dp),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = text,
-                                        color = Color.Black,
-                                        style = MaterialTheme.typography.titleLarge
-                                    )
-                                }
-                            }
-                        }
-
-                        // barra de progreso
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 10.dp, bottom = 3.dp)
-                        ){
-                            LinearProgressIndicator(
-                                progress = { progressPercentage },
-                                modifier = Modifier.fillMaxWidth(),
-                                color = Color.White,
-                                trackColor = Color.Gray,
-                                strokeCap = StrokeCap.Square,
-                                gapSize = 0.dp,
-
-                            )
-                        }
-
-                        // tiempos
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 10.dp)
-                        ){
-                            speakerDevice.song?.let {
-                                Text(
-                                    text = it.progress,
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
-                            speakerDevice.song?.let {
-                                Text(
-                                    text = it.duration,
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
-                        }
-
-
-                        // botones de control
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp)
-                        ){
-                            OutlinedCard(
-                                modifier = Modifier
-                                    .customShadow(
-                                        borderRadius = 10.dp,
-                                        offsetY = 8.dp,
-                                        offsetX = 5.dp,
-                                        spread = 3f
-                                    ),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = md_theme_light_intergreen
-                                ),
-                                shape = RoundedCornerShape(10.dp),
-                                border = BorderStroke(3.dp, Color.Black),
-                                onClick = {
-                                    speakerViewModel.previousSong()
-                                }
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(15.dp),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.SkipPrevious,
-                                        contentDescription = null,
-                                        tint = Color.Black,
-                                        modifier = Modifier
-                                            .size(50.dp)
-                                    )
-                                }
-                            }
-
-
-                            OutlinedCard(
-                                modifier = Modifier
-                                    .customShadow(
-                                        borderRadius = 10.dp,
-                                        offsetY = 8.dp,
-                                        offsetX = 5.dp,
-                                        spread = 3f
-                                    ),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = pauseButtonColor
-                                ),
-                                shape = RoundedCornerShape(10.dp),
-                                border = BorderStroke(3.dp, Color.Black),
-                                onClick = {
-                                    if (speakerDevice.status == Status.PAUSED) {
-                                        speakerViewModel.resume()
-                                        paused = false
-                                    }
-                                    if (speakerDevice.status == Status.PLAYING) {
-                                        speakerViewModel.pause()
-                                        paused = true
-                                    }
-                                }
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(15.dp),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Icon(
-                                        imageVector = pauseButtonIcon,
-                                        contentDescription = null,
-                                        tint = Color.Black,
-                                        modifier = Modifier
-                                            .size(50.dp)
-                                    )
-                                }
-                            }
-
-
-                            OutlinedCard(
-                                modifier = Modifier
-                                    .customShadow(
-                                        borderRadius = 10.dp,
-                                        offsetY = 8.dp,
-                                        offsetX = 5.dp,
-                                        spread = 3f
-                                    ),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = md_theme_light_intergreen
-                                ),
-                                shape = RoundedCornerShape(10.dp),
-                                border = BorderStroke(3.dp, Color.Black),
-                                onClick = {
-                                    speakerViewModel.nextSong()
-                                }
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .padding(15.dp),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.SkipNext,
-                                        contentDescription = null,
-                                        tint = Color.Black,
-                                        modifier = Modifier
-                                            .size(50.dp)
-                                    )
-                                }
-                            }
-
-
-                        }
-                    }
-                }
-            }
-
-
-            // row de playlist
             Row(
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ){
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(id = R.string.volume),
+                    color = Color.Black,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
                 OutlinedCard(
                     modifier = Modifier
-                        .customShadow(
-                            borderRadius = 10.dp,
-                            offsetY = 8.dp,
-                            offsetX = 5.dp,
-                            spread = 3f
-                        ),
+                        .width(121.dp)
+                        .height(100.dp),
                     colors = CardDefaults.outlinedCardColors(
-                        containerColor = md_theme_light_interblue
+                        containerColor = md_theme_light_background,
+                        contentColor = Color.Black
                     ),
                     shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(3.dp, Color.Black),
-                    onClick = {
-                        speakerViewModel.getPlaylist()
-
-                        coroutineScope.launch {
-                            playlist = speakerViewModel.fetchPlaylist()
-                            showPlaylist = true
-                        }
-
-                    }
+                    border = BorderStroke(1.dp, md_theme_light_coffee)
                 ) {
-                    Column(
+                    Row(
                         modifier = Modifier
-                            .padding(15.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
+                            .padding(start = 15.dp, end = 5.dp)
+                            .fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
-                            text = stringResource(id = R.string.seePlaylist),
+                            text = speakerDevice.volume.toString(),
                             color = Color.Black,
                             style = MaterialTheme.typography.titleLarge
                         )
-                    }
-                }
+                        Column {
+                            Icon(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .clickable {
+                                        speakerViewModel.setVolume(speakerDevice.volume + 1)
+                                    },
+                                imageVector = Icons.Default.KeyboardArrowUp,
+                                contentDescription = null
+                            )
 
-                if(showPlaylist){
-                    ShowPlaylist(playlist){
-                        showPlaylist = false
+                            Icon(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .clickable {
+                                        speakerViewModel.setVolume(speakerDevice.volume - 1)
+                                    },
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
-        }
+
+            // Row de género
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(id = R.string.genre),
+                    color = Color.Black,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                SelectTextField(
+                    modifier = Modifier
+                        .width(200.dp)
+                        .height(80.dp),
+                    showIcon = false,
+                    initialValue = Pair(Pair(speakerDevice.genre, speakerDevice.genre), null),
+                    options = genres,
+                    onValueChanged = { selectedString ->
+                        speakerViewModel.setGenre(selectedString)
+                    }
+                )
+            }
+
+            // row de canciones
+            if (speakerDevice.status != Status.STOPPED) {
+                Row(
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    OutlinedCard(
+                        modifier = Modifier
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 8.dp,
+                                offsetX = 5.dp,
+                                spread = 3f
+                            ),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = md_theme_light_coffee
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(10.dp)
+                        ) {
+
+                            // Titulo de la cancion
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp)
+                            ) {
+                                OutlinedCard(
+                                    modifier = Modifier
+                                        .customShadow(
+                                            borderRadius = 10.dp,
+                                            offsetY = 8.dp,
+                                            offsetX = 5.dp,
+                                            spread = 3f
+                                        ),
+                                    colors = CardDefaults.outlinedCardColors(
+                                        containerColor = md_theme_light_background
+                                    ),
+                                    shape = RoundedCornerShape(10.dp),
+                                    border = BorderStroke(3.dp, Color.Black)
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(15.dp),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(
+                                            text = text,
+                                            color = Color.Black,
+                                            style = MaterialTheme.typography.titleLarge
+                                        )
+                                    }
+                                }
+                            }
+
+                            // barra de progreso
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 10.dp, bottom = 3.dp)
+                            ) {
+                                LinearProgressIndicator(
+                                    progress = { progressPercentage },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    color = Color.White,
+                                    trackColor = Color.Gray,
+                                    strokeCap = StrokeCap.Square,
+                                    gapSize = 0.dp,
+
+                                    )
+                            }
+
+                            // tiempos
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 10.dp)
+                            ) {
+                                speakerDevice.song?.let {
+                                    Text(
+                                        text = it.progress,
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                }
+                                speakerDevice.song?.let {
+                                    Text(
+                                        text = it.duration,
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                }
+                            }
+
+
+                            // botones de control
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp)
+                            ) {
+                                OutlinedCard(
+                                    modifier = Modifier
+                                        .customShadow(
+                                            borderRadius = 10.dp,
+                                            offsetY = 8.dp,
+                                            offsetX = 5.dp,
+                                            spread = 3f
+                                        ),
+                                    colors = CardDefaults.outlinedCardColors(
+                                        containerColor = md_theme_light_intergreen
+                                    ),
+                                    shape = RoundedCornerShape(10.dp),
+                                    border = BorderStroke(3.dp, Color.Black),
+                                    onClick = {
+                                        speakerViewModel.previousSong()
+                                    }
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(15.dp),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.SkipPrevious,
+                                            contentDescription = null,
+                                            tint = Color.Black,
+                                            modifier = Modifier
+                                                .size(50.dp)
+                                        )
+                                    }
+                                }
+
+
+                                OutlinedCard(
+                                    modifier = Modifier
+                                        .customShadow(
+                                            borderRadius = 10.dp,
+                                            offsetY = 8.dp,
+                                            offsetX = 5.dp,
+                                            spread = 3f
+                                        ),
+                                    colors = CardDefaults.outlinedCardColors(
+                                        containerColor = pauseButtonColor
+                                    ),
+                                    shape = RoundedCornerShape(10.dp),
+                                    border = BorderStroke(3.dp, Color.Black),
+                                    onClick = {
+                                        if (speakerDevice.status == Status.PAUSED) {
+                                            speakerViewModel.resume()
+                                            paused = false
+                                        }
+                                        if (speakerDevice.status == Status.PLAYING) {
+                                            speakerViewModel.pause()
+                                            paused = true
+                                        }
+                                    }
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(15.dp),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Icon(
+                                            imageVector = pauseButtonIcon,
+                                            contentDescription = null,
+                                            tint = Color.Black,
+                                            modifier = Modifier
+                                                .size(50.dp)
+                                        )
+                                    }
+                                }
+
+
+                                OutlinedCard(
+                                    modifier = Modifier
+                                        .customShadow(
+                                            borderRadius = 10.dp,
+                                            offsetY = 8.dp,
+                                            offsetX = 5.dp,
+                                            spread = 3f
+                                        ),
+                                    colors = CardDefaults.outlinedCardColors(
+                                        containerColor = md_theme_light_intergreen
+                                    ),
+                                    shape = RoundedCornerShape(10.dp),
+                                    border = BorderStroke(3.dp, Color.Black),
+                                    onClick = {
+                                        speakerViewModel.nextSong()
+                                    }
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(15.dp),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.SkipNext,
+                                            contentDescription = null,
+                                            tint = Color.Black,
+                                            modifier = Modifier
+                                                .size(50.dp)
+                                        )
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+                }
+
+
+                // row de playlist
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    OutlinedCard(
+                        modifier = Modifier
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 8.dp,
+                                offsetX = 5.dp,
+                                spread = 3f
+                            ),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = md_theme_light_interblue
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black),
+                        onClick = {
+                            speakerViewModel.getPlaylist()
+
+                            coroutineScope.launch {
+                                playlist = speakerViewModel.fetchPlaylist()
+                                showPlaylist = true
+                            }
+
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(15.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.seePlaylist),
+                                color = Color.Black,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    }
+
+                    if (showPlaylist) {
+                        ShowPlaylist(playlist) {
+                            showPlaylist = false
+                        }
+                    }
+                }
+            }
 
     }
 }

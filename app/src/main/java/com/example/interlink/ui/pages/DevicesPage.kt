@@ -48,7 +48,7 @@ fun DevicesPage(
     blindsViewModel: BlindsViewModel = viewModel(factory = getViewModelFactory()),
     speakerViewModel: SpeakerViewModel = viewModel(factory = getViewModelFactory()),
     favDevViewModel : FavoritesEntryViewModel,
-    useLazyColumn : Boolean
+    useLazyColumn : Boolean,
 ){
 
     val uiState by viewModel.uiState.collectAsState()

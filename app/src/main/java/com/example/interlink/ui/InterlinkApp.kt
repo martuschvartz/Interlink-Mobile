@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -71,6 +70,8 @@ fun InterlinkApp() {
                     topBar = { TopInterlinkBar(Modifier.height(104.dp)) },
                     bottomBar = {
                         BottomInterBar(
+                            showLabels = true,
+                            modifier = Modifier.height(104.dp),
                             currentDestination = currentDestination,
                         ) { route ->
                             navController.navigate(route) {
@@ -81,8 +82,7 @@ fun InterlinkApp() {
                                 restoreState = true
                             }
                         }
-                    },
-
+                    }
                     ) {innerPadding ->
                     Box(
                         modifier = Modifier
@@ -94,19 +94,31 @@ fun InterlinkApp() {
                             navController = navController,
                             favDevViewModel = favDevViewModel,
                             storedEventViewModel = storedEventViewModel,
-                            useLazyColumn = true
+                            useLazyColumn = true,
                         )
                     }
                 }
 
-            // Para el caso del celular en landscape
+            // Para el caso del celular en landscape,
             } else if (isPhone && !isPortrait) {
 
                 Scaffold(
-                    topBar = { TopInterlinkBar(Modifier.height(74.dp)) },
-                    // el icono default intento que sea el de la current,
-                    floatingActionButtonPosition = FabPosition.Start,
-                    floatingActionButton = {  }
+                    topBar = { TopInterlinkBar(Modifier.height(50.dp)) },
+                    bottomBar = {
+                        BottomInterBar(
+                            modifier = Modifier.height(50.dp),
+                            showLabels = false,
+                            currentDestination = currentDestination,
+                        ) { route ->
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
                 ) {innerPadding ->
                     Box(
                         modifier = Modifier
@@ -149,7 +161,7 @@ fun InterlinkApp() {
                             navController = navController,
                             favDevViewModel = favDevViewModel,
                             storedEventViewModel = storedEventViewModel,
-                            useLazyColumn = isPortrait
+                            useLazyColumn = isPortrait,
                         )
                     
                     }
