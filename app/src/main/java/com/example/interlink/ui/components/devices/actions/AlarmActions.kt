@@ -44,6 +44,8 @@ import com.example.interlink.ui.theme.md_theme_light_interblue
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 import com.example.interlink.ui.theme.md_theme_light_intergrey
 import com.example.interlink.ui.theme.md_theme_light_interred
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -59,34 +61,18 @@ fun AlarmActions(
         else -> null
     }
 
-    var turnOnDialog by remember { mutableStateOf(false) }
     var insertCodeDialog by remember { mutableStateOf(false) }
     var changeCodeDialog by remember { mutableStateOf(false) }
+    var stateFunction by remember { mutableStateOf("") }
 
-
-    var codeEntered by remember { mutableStateOf("0000") }
     var response by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    val actionButtonTitle : String
-    val actionButtonColor : Color
-    val actionButtonTextColor: Color
-
-    if(alarmDevice.status == Status.ARMEDSTAY || alarmDevice.status == Status.ARMEDAWAY){
-        actionButtonTitle = stringResource(id = R.string.offACtion)
-        actionButtonColor = md_theme_light_interred
-        actionButtonTextColor = Color.White
-    }
-    else{
-        actionButtonTitle = stringResource(id = R.string.onAction)
-        actionButtonColor = md_theme_light_intergreen
-        actionButtonTextColor = Color.Black
-    }
 
     Column{
         Row(
             modifier = Modifier
-                .padding(5.dp)
+                .padding(10.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Absolute.SpaceBetween
@@ -110,13 +96,153 @@ fun AlarmActions(
                     }
                 }
             }
+            if(alarmDevice.status == Status.DISARMED) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    OutlinedCard(
+                        modifier = Modifier
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 8.dp,
+                                offsetX = 5.dp,
+                                spread = 3f
+                            ),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = md_theme_light_intergreen
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black),
+                        onClick = {
+                            insertCodeDialog = true
+                            stateFunction = "armStay"
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(15.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.turnOnLocally),
+                                color = Color.Black,
+                                style = MaterialTheme.typography.titleLarge,
+                            )
+                        }
+                    }
 
-            // acá iría la card de encender/apagar, que prende el primer dialog y manda
-            // y manda la accion a hacer, que es
+                    Spacer(modifier = Modifier.padding(3.dp))
+
+                    OutlinedCard(
+                        modifier = Modifier
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 8.dp,
+                                offsetX = 5.dp,
+                                spread = 3f
+                            ),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = md_theme_light_intergreen
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black),
+                        onClick = {
+                            insertCodeDialog = true
+                            stateFunction = "armAway"
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(15.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.turnOnRemotely),
+                                color = Color.Black,
+                                style = MaterialTheme.typography.titleLarge,
+                            )
+                        }
+                    }
+                }
+            }
+            else{
+                OutlinedCard(
+                    modifier = Modifier
+                        .customShadow(
+                            borderRadius = 10.dp,
+                            offsetY = 8.dp,
+                            offsetX = 5.dp,
+                            spread = 3f
+                        ),
+                    colors = CardDefaults.outlinedCardColors(
+                        containerColor = md_theme_light_interred
+                    ),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(3.dp, Color.Black),
+                    onClick = {
+                        insertCodeDialog = true
+                        stateFunction = "disarm"
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(15.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.offACtion),
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                    }
+                }
+            }
+
+            if(insertCodeDialog){
+                when(stateFunction){
+                    "disarm" ->{
+                            InsertCodeDialog(
+                                onDismissRequest = {
+                                    insertCodeDialog = false
+                                },
+                                alarmViewModel = alarmViewModel,
+                                coroutineScope = coroutineScope,
+                            ) { codeEntered ->
+                                alarmViewModel.disarm(codeEntered)
+                            }
+                    }
+                    "armAway" ->{
+                        InsertCodeDialog(
+                            onDismissRequest = {
+                                insertCodeDialog = false
+                            },
+                            alarmViewModel = alarmViewModel,
+                            coroutineScope = coroutineScope
+                        ) {codeEntered ->
+                             alarmViewModel.armAway(codeEntered)
+                        }
+                    }
+                    "armStay" -> {
+                        InsertCodeDialog(
+                            onDismissRequest = {
+                                insertCodeDialog = false
+                            },
+                            alarmViewModel = alarmViewModel,
+                            coroutineScope = coroutineScope,
+                        ) {codeEntered ->
+                            alarmViewModel.armStay(codeEntered)
+                        }
+                    }
+                }
+            }
+
         }
         Row(
             modifier = Modifier
-                .padding(5.dp)
+                .padding(10.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Absolute.Center
@@ -130,7 +256,7 @@ fun AlarmActions(
                         spread = 3f
                     ),
                 colors = CardDefaults.outlinedCardColors(
-                    containerColor = actionButtonColor
+                    containerColor = md_theme_light_intergreen
                 ),
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(3.dp, Color.Black),
@@ -151,30 +277,27 @@ fun AlarmActions(
                     )
                 }
             }
-/*
+
             if(changeCodeDialog){
                 ChangeCodeDialog(
-                    onDismissRequest = { changeCodeDialog = false }
-                ) { oldCode, newCode ->
-
-                    codeEntered = newCode
-
-                    coroutineScope.launch {
-                        response = alarmViewModel.fetchNewVal { alarmViewModel.changeSecurityCode(oldCode, newCode) }!!
-                        Log.d("DEBUG", "Nos llega: ${response}")
-                    }
-
+                    onDismissRequest = { changeCodeDialog = false },
+                    alarmViewModel = alarmViewModel,
+                    coroutineScope = coroutineScope
+                ) {oldCode, newCode ->
+                    alarmViewModel.changeSecurityCode(oldCode,newCode)
                 }
-            }*/
+            }
         }
     }
 }
 
-//Ponerle tamaño fijo a la card
+
 @Composable
 fun ChangeCodeDialog(
     onDismissRequest: () -> Unit,
-    onCodeChanged: (String, String) -> Boolean
+    alarmViewModel: AlarmViewModel,
+    coroutineScope : CoroutineScope,
+    onCodeChanged: (String, String) -> CompletableDeferred<Boolean?>
 ){
     Dialog(onDismissRequest){
 
@@ -182,8 +305,8 @@ fun ChangeCodeDialog(
         var tempCodeEntered by remember { mutableStateOf("") }
         var tempNewCode by remember { mutableStateOf("") }
 
-        var newCodeEnable by remember { mutableStateOf(true) }
-        var codeEnteredEnabled by remember { mutableStateOf(true) }
+        var wrongNewCode by remember { mutableStateOf(false) }
+        var wrongCodeEntered by remember { mutableStateOf(false) }
 
         val focusManager = LocalFocusManager.current
 
@@ -231,11 +354,12 @@ fun ChangeCodeDialog(
                             value = tempCodeEntered,
                             onValueChange = {
                                 tempCodeEntered = it
+                                wrongCodeEntered = false
                             },
-                            isError = !codeEnteredEnabled,
+                            isError = wrongCodeEntered,
                             singleLine = true,
                             supportingText = {
-                                if (!codeEnteredEnabled) {
+                                if (wrongCodeEntered) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
                                         text = stringResource(id = R.string.enterAgain),
@@ -244,7 +368,7 @@ fun ChangeCodeDialog(
                                 }
                             },
                             trailingIcon = {
-                                if (!codeEnteredEnabled)
+                                if (wrongCodeEntered)
                                     Icon(Icons.Filled.Error,null, tint = MaterialTheme.colorScheme.error)
                             },
                             keyboardOptions = KeyboardOptions.Default.copy(
@@ -279,12 +403,12 @@ fun ChangeCodeDialog(
                             value = tempNewCode,
                             onValueChange = {
                                 tempNewCode = it
-                                newCodeEnable = true
+                                wrongNewCode = false
                             },
-                            isError = !newCodeEnable,
+                            isError = wrongNewCode,
                             singleLine = true,
                             supportingText = {
-                                if (!newCodeEnable) {
+                                if (wrongNewCode) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
                                         text = stringResource(id = R.string.invalidCode),
@@ -293,7 +417,7 @@ fun ChangeCodeDialog(
                                 }
                             },
                             trailingIcon = {
-                                if (!newCodeEnable)
+                                if (wrongNewCode)
                                     Icon(Icons.Filled.Error,null, tint = MaterialTheme.colorScheme.error)
                             },
                             keyboardOptions = KeyboardOptions.Default.copy(
@@ -301,7 +425,7 @@ fun ChangeCodeDialog(
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = {
-                                    newCodeEnable = (tempNewCode.length == 4)
+                                    wrongNewCode = tempNewCode.length != 4
                                     focusManager.clearFocus()
                                 }
                             ),
@@ -319,7 +443,7 @@ fun ChangeCodeDialog(
 
                 Spacer(modifier = Modifier.padding(10.dp))
 
-                // donde está el botón de confirmar, solo si no hay valor de error (?
+                // donde está el botón de confirmar,
                 Row(
                     modifier = Modifier
                         .padding(5.dp)
@@ -344,12 +468,15 @@ fun ChangeCodeDialog(
                         shape = RoundedCornerShape(10.dp),
                         border = BorderStroke(3.dp, Color.Black),
                         onClick = {
-                            codeEnteredEnabled = onCodeChanged(tempCodeEntered, tempNewCode)
+                            coroutineScope.launch{
+                                wrongCodeEntered = !(alarmViewModel.fetchNewVal { onCodeChanged(tempCodeEntered, tempNewCode) } !!)
 
-                            // chequeo si cierro el dialogo o no
-                            onDismissRequest()
+                                if(!wrongCodeEntered) {
+                                    onDismissRequest()
+                                }
+                            }
                         },
-                        enabled = newCodeEnable
+                        enabled = !wrongNewCode
                     ) {
                         Column {
                             Column(
@@ -363,6 +490,156 @@ fun ChangeCodeDialog(
                                     style = MaterialTheme.typography.titleLarge,
                                 )
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun InsertCodeDialog(
+    onDismissRequest: () -> Unit,
+    alarmViewModel: AlarmViewModel,
+    coroutineScope : CoroutineScope,
+    onCodeEntered: (String) -> CompletableDeferred<Boolean?>
+){
+    Dialog(onDismissRequest){
+
+        var wrongCode by remember { mutableStateOf(false) }
+        var tempCodeEntered by remember { mutableStateOf("") }
+
+        val focusManager = LocalFocusManager.current
+
+        OutlinedCard(
+            modifier = Modifier
+                .customShadow(
+                    borderRadius = 10.dp,
+                    offsetY = 8.dp,
+                    offsetX = 5.dp,
+                    spread = 3f
+                ),
+            colors = CardDefaults.outlinedCardColors(
+                containerColor = md_theme_light_background,
+                contentColor = Color.White
+            ),
+            shape = RoundedCornerShape(10.dp),
+            border = BorderStroke(3.dp, Color.Black)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(15.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Row de Textfield
+                Row(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+
+                ){
+                    Column(
+                        verticalArrangement = Arrangement.Center
+                    ){
+                        Text(
+                            modifier = Modifier.padding(3.dp),
+                            text = stringResource(id = R.string.insertCodeLabel),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            value = tempCodeEntered,
+                            onValueChange = {
+                                tempCodeEntered = it
+                                wrongCode = false
+                            },
+                            isError = wrongCode,
+                            singleLine = true,
+                            supportingText = {
+                                if (wrongCode) {
+                                    Text(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        text = stringResource(id = R.string.enterAgain),
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                }
+                            },
+                            trailingIcon = {
+                                if (wrongCode)
+                                    Icon(Icons.Filled.Error,null, tint = MaterialTheme.colorScheme.error)
+                            },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    focusManager.clearFocus()
+                                }
+                            ),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedContainerColor = md_theme_light_background,
+                                unfocusedContainerColor = md_theme_light_background,
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
+                                focusedBorderColor = md_theme_light_interblue,
+                                unfocusedBorderColor = md_theme_light_coffee
+                            )
+                        )
+
+                    }
+                }
+
+                // Row de Botón
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ){
+                    OutlinedCard(
+                        modifier = Modifier
+                            .customShadow(
+                                borderRadius = 10.dp,
+                                offsetY = 8.dp,
+                                offsetX = 5.dp,
+                                spread = 3f
+                            ),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = md_theme_light_intergreen,
+                            disabledContainerColor = md_theme_light_intergrey,
+                            contentColor = Color.Black,
+                            disabledContentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(3.dp, Color.Black),
+                        onClick = {
+                            coroutineScope.launch{
+                                wrongCode = !(alarmViewModel.fetchNewVal { onCodeEntered(tempCodeEntered) } !!)
+
+                                if(!wrongCode) {
+                                    onDismissRequest()
+                                }
+                            }
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(15.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.accept),
+                                color= Color.Black,
+                                style = MaterialTheme.typography.titleLarge,
+                            )
                         }
                     }
                 }
