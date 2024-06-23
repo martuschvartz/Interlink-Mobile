@@ -27,13 +27,15 @@ import androidx.compose.ui.unit.dp
 import com.example.interlink.R
 import com.example.interlink.ui.theme.md_theme_light_intergreen
 
+// Le paso la altura yo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopInterlinkBar() {
+fun TopInterlinkBar(
+    modifier : Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(104.dp),
+        modifier = modifier
+            .fillMaxWidth(),
     ) {
         TopAppBar(
             title = {
