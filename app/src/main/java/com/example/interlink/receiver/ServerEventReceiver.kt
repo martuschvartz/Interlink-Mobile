@@ -50,6 +50,7 @@ class ServerEventReceiver : BroadcastReceiver() {
                 remoteEvents.forEach {
                     
                     val notifString = eventDescription(it, context)
+                    Log.d(TAG, "Broadcasting send notification intent (${StoredEvent(name = it.device.name, description = notifString, timestamp = it.timestamp)})")
                     repo.insertEvent(StoredEvent(name = it.device.name, description = notifString, timestamp = it.timestamp))
 
                     val intent2 = Intent().apply {

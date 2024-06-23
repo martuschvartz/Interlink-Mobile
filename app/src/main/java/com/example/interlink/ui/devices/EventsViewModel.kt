@@ -48,6 +48,7 @@ class EventsViewModel(
             ) { state, response ->
                 var filtered: List<RemoteEvent> = filterEvents(response)
                 filtered.forEach{ event ->
+                    Log.d("DEBUG", "Inertamos: ${StoredEvent(name = event.device.name, description =eventDescription(event = event, context = context), timestamp = event.timestamp)}")
                     eventRepo.insertEvent(event = StoredEvent(name = event.device.name, description = eventDescription(event = event, context = context), timestamp = event.timestamp))
                 }
                 state.copy(events = filtered + state.events) }
