@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.interlink.R
+import com.example.interlink.ui.components.DeleteNotifsActionButton
 import com.example.interlink.ui.components.EventCard
 import com.example.interlink.ui.devices.StoredEventEntryViewModel
 
@@ -49,7 +50,7 @@ fun ActivityPage(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = stringResource(id = R.string.activity),
@@ -57,6 +58,9 @@ fun ActivityPage(
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold
             )
+            DeleteNotifsActionButton {
+                storedEvents.deleteAllEvents()
+            }
         }
 
         Row(

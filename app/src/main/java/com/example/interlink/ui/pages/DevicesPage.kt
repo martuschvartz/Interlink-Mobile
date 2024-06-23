@@ -1,5 +1,6 @@
 package com.example.interlink.ui.pages
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,6 +60,7 @@ fun DevicesPage(
     useLazyColumn : Boolean,
 ) {
 
+    Log.d("DEBUG", "en devicePage me llega uselazycolumn como $useLazyColumn")
     val uiState by viewModel.uiState.collectAsState()
     var selectedDeviceId by remember { mutableStateOf<String?>(null) }
     var expandedDeviceId by remember { mutableStateOf<String?>(null) }
@@ -148,7 +150,7 @@ fun DevicesPage(
                                 viewModel = deviceViewModel,
                                 expanded = device.id == expandedDeviceId,
                                 favDevViewModel = favDevViewModel,
-                                landscape = useLazyColumn
+                                landscape = !useLazyColumn
                             ) { device ->
                                 expandedDeviceId =
                                     if (device.id == expandedDeviceId) null else device.id
