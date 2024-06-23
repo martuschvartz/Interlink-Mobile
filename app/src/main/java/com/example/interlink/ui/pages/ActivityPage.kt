@@ -49,9 +49,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun ActivityPage(
     modifier: Modifier = Modifier,
-    viewModel: EventsViewModel = viewModel(factory = getViewModelFactory()),
-    storedEvents : StoredEventEntryViewModel
-    ){
+    storedEvents : StoredEventEntryViewModel,
+    viewModel: EventsViewModel = viewModel(factory = getViewModelFactory())
+){
 
     val uiState by viewModel.uiState.collectAsState()
     val stored by storedEvents.getStoredEvents().collectAsState(initial = emptyList())
@@ -67,15 +67,15 @@ fun ActivityPage(
         Row(
             modifier = modifier.fillMaxWidth()
                 .clickable {
-                    coroutineScope.launch {
-                        storedEvents.insertEvent(
-                            StoredEventData(
-                                "test",
-                                "un test ha aparecido",
-                                "25:00:00"
-                            )
-                        )
-                    }
+//                    coroutineScope.launch {
+//                        storedEvents.insertEvent(
+//                            StoredEventData(
+//                                "test",
+//                                "un test ha aparecido",
+//                                "25:00:00"
+//                            )
+//                        )
+//                    }
                 },
 
             horizontalArrangement = Arrangement.Start,

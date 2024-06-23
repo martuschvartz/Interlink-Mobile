@@ -46,7 +46,7 @@ fun InterlinkApp() {
         val viewModelFactory = remember { FavoritesEntryViewModelFactory(database.favoriteDeviceDao()) }
         val favDevViewModel : FavoritesEntryViewModel = viewModel(factory = viewModelFactory)
 
-
+        // Base de datos para eventos
         val eventViewModelFactory = remember { StoredEventEntryViewModelFactory(database.storedEventDao()) }
         val storedEventViewModel : StoredEventEntryViewModel = viewModel(factory = eventViewModelFactory)
 
