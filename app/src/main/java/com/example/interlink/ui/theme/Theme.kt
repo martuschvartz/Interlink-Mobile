@@ -1,6 +1,7 @@
 package com.example.interlink.ui.theme
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -19,8 +20,8 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     background = md_theme_light_background,
-    onBackground = Color(0x00000000),
-    onSurface = Color(0x00000000),
+    onBackground = Color(0xFF000000),
+    onSurface = Color(0xFFFFFFFF),
     primaryContainer = md_theme_light_coffee,
     onPrimaryContainer = md_theme_light_background,
     primary = md_theme_light_intergreen,
@@ -37,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 private val DarkColorScheme = lightColorScheme(
     background = md_theme_dark_background,
     onBackground = Color(0xFFFFFFFF),
-    onSurface = Color(0x00000000),
+    onSurface = Color(0xFFFFFFFF),
     primaryContainer = md_theme_light_coffee,
     onPrimaryContainer = md_theme_light_background,
     primary = md_theme_light_intergreen,
@@ -62,12 +63,15 @@ fun InterlinkTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            Log.d("DEBUG", "El colorscheme es: ${darkTheme} adentro")
+            if (darkTheme) DarkColorScheme else LightColorScheme
         }
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
+    Log.d("DEBUG", "El colorscheme es: ${colorScheme == DarkColorScheme}")
 
     MaterialTheme(
         colorScheme = colorScheme,
