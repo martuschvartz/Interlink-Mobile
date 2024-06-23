@@ -90,8 +90,6 @@ fun AcActions(
         Pair(Pair("100", "100"), null)
     )
 
-    // Para display
-    var temperatureDisplay by remember { mutableIntStateOf(acDevice.temperature) }
 
     val actionButtonTitle : String
     val actionButtonColor : Color
@@ -237,7 +235,7 @@ fun AcActions(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "$temperatureDisplay°",
+                            text = "${acDevice.temperature}°",
                             color = Color.Black,
                             style = MaterialTheme.typography.titleLarge
                         )
@@ -248,7 +246,6 @@ fun AcActions(
                                     .size(50.dp)
                                     .clickable {
                                         acViewModel.setTemperature(acDevice.temperature + 1)
-                                        temperatureDisplay += 1
                                     },
                                 imageVector = Icons.Default.KeyboardArrowUp,
                                 contentDescription = null
@@ -258,7 +255,6 @@ fun AcActions(
                                     .size(50.dp)
                                     .clickable {
                                         acViewModel.setTemperature(acDevice.temperature - 1)
-                                        temperatureDisplay -= 1
                                     },
                                 imageVector = Icons.Default.KeyboardArrowDown,
                                 contentDescription = null

@@ -59,7 +59,7 @@ class SpeakerViewModel(
 
     fun setVolume(volume: Int) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Speaker.SET_VOLUME_ACTION, arrayOf(volume)) },
-        { state, response : Int -> state }
+        { state, response : Double -> state }
     )
 
     fun setGenre(genre: String) = runOnViewModelScope(

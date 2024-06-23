@@ -62,7 +62,8 @@ fun SelectTextField(
                     selectedValue.second?.let {
                         Icon(
                             imageVector = it,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.Black
                         )
                     }
                 },
@@ -109,7 +110,7 @@ fun SelectTextField(
                     text = {
                         Text(
                             text = option.first.second,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.titleMedium
                         )
                     },

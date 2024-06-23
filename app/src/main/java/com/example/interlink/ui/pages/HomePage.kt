@@ -33,7 +33,6 @@ import com.example.interlink.R
 import com.example.interlink.ui.components.EventCard
 import com.example.interlink.ui.devices.StoredEventEntryViewModel
 import androidx.compose.ui.unit.dp
-import com.example.interlink.ui.devices.FavoritesEntryViewModel
 import com.example.interlink.ui.theme.md_theme_light_coffee
 
 // el modifier default es la misma clase Modifier, sino es el que le paso
