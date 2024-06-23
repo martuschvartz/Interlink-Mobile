@@ -61,16 +61,10 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    val deviceId = intent?.getStringExtra(MyIntent.EVENT_DATA)
-                    if (deviceId != null) {
-                        Text(
-                            text = "$deviceId"
-                        )
-                    }
                 }
+                InterlinkApp()
             }
 
-            InterlinkApp()
         }
 
 

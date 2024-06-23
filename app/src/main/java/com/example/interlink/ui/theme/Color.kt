@@ -10,5 +10,5 @@ val md_theme_light_interred = Color(0xFFBC4749)
 val md_theme_light_intergrey = Color(0xFF424242)
 val md_theme_light_interblue = Color(0xFF2196F3)
 
-val md_theme_dark_background = Color(0xFF121212)
+val md_theme_dark_background = Color(0xFF2E2E2E)
 val md_theme_dark_intergreen = Color(0xFF1B5E20)
