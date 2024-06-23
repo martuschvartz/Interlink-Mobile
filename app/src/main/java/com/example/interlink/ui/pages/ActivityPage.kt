@@ -58,6 +58,7 @@ fun ActivityPage(
     val coroutineScope = rememberCoroutineScope()
 
 
+    // Todo: agregar un boton para borrar las notifs que no sea el de activity
     Column (
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,

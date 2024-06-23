@@ -17,9 +17,12 @@ interface StoredEventDao {
     @Delete
     suspend fun delete(event: StoredEvent)
 
-    @Query("SELECT name, description, timestamp FROM events")
+    @Query("SELECT name, description, timestamp FROM events ORDER BY timestamp DESC")
     fun getStoredEvents(): Flow<List<StoredEventData>>
 
+    @Query("SELECT name, description, timestamp FROM events ORDER BY timestamp DESC LIMIT 3")
+    fun getRecentEvents(): Flow<List<StoredEventData>>
+    
     @Query("DELETE FROM events")
     suspend fun deleteAllEvents()
 }

@@ -23,7 +23,9 @@ fun InterNavHost(
     ){
         composable(route = AppNavigation.HOME.route){
             if (favDevViewModel != null) {
-                HomePage(favDevViewModel = favDevViewModel)
+                if (storedEventViewModel != null) {
+                    HomePage(favDevViewModel = favDevViewModel, storedEvents = storedEventViewModel)
+                }
             }
         }
 

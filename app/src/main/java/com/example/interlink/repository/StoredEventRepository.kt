@@ -11,6 +11,10 @@ class StoredEventRepository(private val storedEventDao: StoredEventDao) {
         return storedEventDao.getStoredEvents()
     }
 
+    fun getRecentEvents(): Flow<List<StoredEventData>> {
+        return storedEventDao.getRecentEvents()
+    }
+
     suspend fun insertEvent(event: StoredEvent) {
         storedEventDao.insert(event)
     }

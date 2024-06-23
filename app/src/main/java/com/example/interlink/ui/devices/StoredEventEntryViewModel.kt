@@ -38,6 +38,11 @@ class StoredEventEntryViewModel(private val repository: StoredEventRepository) :
         }
     }
 
+    fun getRecentEvents() : Flow<List<StoredEventData>>{
+        return repository.getRecentEvents()
+    }
+
+
 }
 
 class StoredEventEntryViewModelFactory(private val storedEventDao: StoredEventDao) : ViewModelProvider.Factory {
