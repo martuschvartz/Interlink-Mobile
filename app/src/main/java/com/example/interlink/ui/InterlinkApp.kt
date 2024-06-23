@@ -28,6 +28,8 @@ import com.example.interlink.ui.components.BottomInterBar
 import com.example.interlink.ui.components.TopInterlinkBar
 import com.example.interlink.ui.devices.FavoritesEntryViewModel
 import com.example.interlink.ui.devices.FavoritesEntryViewModelFactory
+import com.example.interlink.ui.devices.StoredEventEntryViewModel
+import com.example.interlink.ui.devices.StoredEventEntryViewModelFactory
 import com.example.interlink.ui.navigation.InterNavHost
 import com.example.interlink.ui.navigation.NavigationInterRail
 import com.example.interlink.ui.theme.InterlinkTheme
@@ -49,6 +51,10 @@ fun InterlinkApp() {
         val database = remember { FavoritesDatabase.getDatabase(context) }
         val viewModelFactory = remember { FavoritesEntryViewModelFactory(database.favoriteDeviceDao()) }
         val favDevViewModel : FavoritesEntryViewModel = viewModel(factory = viewModelFactory)
+
+        // Base de datos para eventos
+        val eventViewModelFactory = remember { StoredEventEntryViewModelFactory(database.storedEventDao()) }
+        val storedEventViewModel : StoredEventEntryViewModel = viewModel(factory = eventViewModelFactory)
 
         BoxWithConstraints{
 
@@ -87,6 +93,7 @@ fun InterlinkApp() {
                         InterNavHost(
                             navController = navController,
                             favDevViewModel = favDevViewModel,
+                            storedEventViewModel = storedEventViewModel,
                             useLazyColumn = true
                         )
                     }
@@ -136,11 +143,14 @@ fun InterlinkApp() {
                                 restoreState = true
                             }
                         }
+
                         InterNavHost(
                             navController = navController,
                             favDevViewModel = favDevViewModel,
+                            storedEventViewModel = storedEventViewModel,
                             useLazyColumn = isPortrait
                         )
+                    
                     }
                 }
             }

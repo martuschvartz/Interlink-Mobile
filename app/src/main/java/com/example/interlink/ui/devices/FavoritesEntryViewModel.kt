@@ -1,5 +1,6 @@
 package com.example.interlink.ui.devices
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -31,8 +32,14 @@ class FavoritesEntryViewModel(private val favDevDao: FavoriteDeviceDao) : ViewMo
 
     // me da una lista de los favs
     fun getFavoritesId() : Flow<List<String>>{
+//        Log.d("DEBUG", "${favDevDao.getFavoritesId()}")
         return favDevDao.getFavoritesId()
     }
+
+    fun isFavoriteDevice(id: String): Flow<Boolean> {
+        return favDevDao.isFavoriteDevice(id)
+    }
+
 }
 
 class FavoritesEntryViewModelFactory(private val favDevDao: FavoriteDeviceDao) : ViewModelProvider.Factory{

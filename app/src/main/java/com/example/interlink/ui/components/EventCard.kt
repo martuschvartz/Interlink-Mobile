@@ -1,5 +1,6 @@
 package com.example.interlink.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.interlink.R
+import com.example.interlink.database.StoredEvent
+import com.example.interlink.database.StoredEventData
 import com.example.interlink.model.DeviceType
 import com.example.interlink.remote.model.RemoteEvent
 import com.example.interlink.ui.theme.md_theme_light_coffee
@@ -34,7 +37,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 @Composable
-fun EventCard(event : RemoteEvent) {
+fun EventCard(event : StoredEventData) {
     val icon = Icons.Default.Notifications
     Card(
         colors = CardDefaults.cardColors(
@@ -73,7 +76,7 @@ fun EventCard(event : RemoteEvent) {
                         )
                         Spacer(modifier = Modifier.padding(1.dp))
                         Text(
-                            text = event.device.name,
+                            text = event.name,
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Black
@@ -88,7 +91,7 @@ fun EventCard(event : RemoteEvent) {
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(
-                            text = eventDescription(event = event),
+                            text = event.description,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Black
                         )

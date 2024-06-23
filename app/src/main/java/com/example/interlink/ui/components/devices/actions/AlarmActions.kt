@@ -281,10 +281,14 @@ fun AlarmActions(
             if(changeCodeDialog){
                 ChangeCodeDialog(
                     onDismissRequest = { changeCodeDialog = false },
+
+                  
                     alarmViewModel = alarmViewModel,
                     coroutineScope = coroutineScope
                 ) {oldCode, newCode ->
                     alarmViewModel.changeSecurityCode(oldCode,newCode)
+
+                    
                 }
             }
         }

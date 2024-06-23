@@ -40,7 +40,7 @@ class AcViewModel(
 
     fun setTemperature(temperature: Int) = runOnViewModelScope(
         { repository.executeDeviceAction(uiState.value.currentDevice?.id!!, Ac.SET_TEMPERATURE_ACTION, arrayOf(temperature)) },
-        { state, response : Int -> state }
+        { state, response : Double -> state }
     )
 
     fun setMode(mode: String) = runOnViewModelScope(

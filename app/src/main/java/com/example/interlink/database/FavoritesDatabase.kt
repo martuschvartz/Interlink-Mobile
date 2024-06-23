@@ -6,9 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [FavoriteDevice::class], version = 1, exportSchema = false)
+@Database(entities = [StoredEvent::class, FavoriteDevice::class], version = 2, exportSchema = false)
 abstract class FavoritesDatabase : RoomDatabase(){
     abstract fun favoriteDeviceDao() : FavoriteDeviceDao
+    abstract fun storedEventDao() : StoredEventDao
 
     companion object{
         @Volatile
