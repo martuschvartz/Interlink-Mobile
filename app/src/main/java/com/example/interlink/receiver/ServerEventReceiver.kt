@@ -7,6 +7,8 @@ import android.util.Log
 import com.example.interlink.BuildConfig
 import com.example.interlink.MyIntent
 import com.example.interlink.R
+import com.example.interlink.database.FavoritesDatabase
+import com.example.interlink.database.StoredEvent
 import com.example.interlink.remote.model.EventData
 import com.example.interlink.remote.model.RemoteEvent
 import com.google.gson.Gson
@@ -20,6 +22,8 @@ import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
 import com.example.interlink.model.EventDevice
 import com.example.interlink.remote.model.RemoteDeviceType
+import com.example.interlink.repository.StoredEventRepository
+import com.example.interlink.ui.devices.StoredEventEntryViewModelFactory
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -37,22 +41,27 @@ class ServerEventReceiver : BroadcastReceiver() {
         GlobalScope.launch(Dispatchers.IO) {
             val events = fetchEvents()
             if (events != null) {
+                val database = FavoritesDatabase.getDatabase(context!!)
+                val storedEventDao = database.storedEventDao()
+                val repo = StoredEventRepository(storedEventDao)
+
                 val remoteEvents = parseEvents(events)
 
                 remoteEvents.forEach {
                     
                     val notifString = eventDescription(it, context)
-
+                    Log.d(TAG, "Broadcasting send notification intent (${StoredEvent(name = it.device.name, description = notifString, timestamp = it.timestamp)})")
+                    repo.insertEvent(StoredEvent(name = it.device.name, description = notifString, timestamp = it.timestamp))
 
                     val intent2 = Intent().apply {
                         action = MyIntent.SHOW_NOTIFICATION
                         `package` = MyIntent.PACKAGE
                         // Esto tendria que ser el evento
-                        putExtra(MyIntent.EVENT_DATA, notifString)
+                        putExtra(MyIntent.EVENT_DATA, "${it.device.name}: $notifString")
                     }
                     Log.d(TAG, "Broadcasting send notification intent (${intent2})")
 
-                    context?.sendOrderedBroadcast(intent2, null)
+                    context.sendOrderedBroadcast(intent2, null)
                 }
             }
         }
@@ -218,8 +227,10 @@ class ServerEventReceiver : BroadcastReceiver() {
             else -> {}
         }
 
-        return "${event.device.name}: " + toRet
-    }  
+        return toRet
+    }
+
+
     companion object {
         private const val TAG = "NOTIF"
     }

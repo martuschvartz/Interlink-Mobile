@@ -11,16 +11,26 @@ import android.os.Build
 import android.os.SystemClock
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import com.example.interlink.database.FavoritesDatabase
+import com.example.interlink.database.StoredEventDao
 import com.example.interlink.receiver.ServerEventReceiver
 import com.example.interlink.remote.DeviceRemoteDataSource
 import com.example.interlink.remote.api.RetrofitClient
 import com.example.interlink.repository.DeviceRepository
+import com.example.interlink.repository.StoredEventRepository
 
 class ApiApplication : Application() {
 
+    private lateinit var database : FavoritesDatabase
+    private lateinit var storedEventDao : StoredEventDao
+
+
     override fun onCreate() {
         super.onCreate()
+        database = FavoritesDatabase.getDatabase(this)
+        storedEventDao = database.storedEventDao()
 
+        Log.d("DEBUG", "$database, $storedEventDao" )
         createNotificationChannel()
 
         collectServerEvents()
@@ -67,6 +77,10 @@ class ApiApplication : Application() {
 
     val deviceRepository: DeviceRepository
         get() = DeviceRepository(deviceRemoteDataSource)
+
+
+    val eventRepository: StoredEventRepository
+        get() = StoredEventRepository(storedEventDao)
 
     companion object {
         const val TAG = "NOTIF"

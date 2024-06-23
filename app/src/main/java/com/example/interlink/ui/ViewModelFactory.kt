@@ -1,5 +1,6 @@
 package com.example.interlink.ui;
 
+import android.content.Context
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -11,6 +12,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.example.interlink.ApiApplication
 import com.example.interlink.model.Event
 import com.example.interlink.repository.DeviceRepository
+import com.example.interlink.repository.StoredEventRepository
 import com.example.interlink.ui.devices.AcViewModel
 import com.example.interlink.ui.devices.AlarmViewModel
 import com.example.interlink.ui.devices.BlindsViewModel
@@ -24,18 +26,23 @@ import com.example.interlink.ui.devices.SpeakerViewModel
 fun getViewModelFactory(defaultArgs: Bundle? = null): ViewModelFactory {
     val application = (LocalContext.current.applicationContext as ApiApplication)
     val deviceRepository = application.deviceRepository
+    val eventRepository = application.eventRepository
     return ViewModelFactory(
         deviceRepository,
+        eventRepository,
         LocalSavedStateRegistryOwner.current,
-        defaultArgs
+        defaultArgs,
+        application
     )
 }
 
 
 public class ViewModelFactory (
     private val deviceRepository: DeviceRepository,
+    private val eventRepository: StoredEventRepository,
     owner: SavedStateRegistryOwner,
-    defaultArgs: Bundle? = null
+    defaultArgs: Bundle? = null,
+    private val context: Context
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
 
     override fun <T : ViewModel> create(
@@ -48,7 +55,7 @@ public class ViewModelFactory (
                 DevicesViewModel(deviceRepository)
 
             isAssignableFrom(EventsViewModel::class.java) ->
-                EventsViewModel(deviceRepository)
+                EventsViewModel(deviceRepository, eventRepository, context)
 
             isAssignableFrom(LampViewModel::class.java) ->
                 LampViewModel(deviceRepository)

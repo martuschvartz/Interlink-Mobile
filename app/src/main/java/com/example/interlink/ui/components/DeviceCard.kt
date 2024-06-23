@@ -1,5 +1,6 @@
 package com.example.interlink.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,7 +85,7 @@ fun <T : Device> DeviceCard(
     val coroutineScope = rememberCoroutineScope()
 
     // por default la card arranca sin ser favorita
-    var fav by remember { mutableStateOf(false) }
+    val isFav by favDevViewModel.isFavoriteDevice(device.id!!).collectAsState(initial = false)
 
     val icon = when(device.type){
         DeviceType.LAMP -> Icons.Default.Lightbulb
@@ -165,26 +167,13 @@ fun <T : Device> DeviceCard(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    if (fav) {
+                                    if (isFav) {
                                         IconButton(
                                             onClick = {
-                                                fav = !fav
-                                                if(fav){
-                                                    coroutineScope.launch {
-                                                        device.id?.let {
-                                                            favDevViewModel.insertFavorite(
-                                                                it
-                                                            )
-                                                        }
-                                                    }
-                                                }
-                                                else{
-                                                    coroutineScope.launch {
-                                                        device.id?.let {
-                                                            favDevViewModel.deleteFavorite(
-                                                                it
-                                                            )
-                                                        }
+                                                coroutineScope.launch {
+                                                    device.id?.let {
+//                                                        Log.d("DEBUG", "Sacamos: ${device.id}")
+                                                        favDevViewModel.deleteFavorite(it)
                                                     }
                                                 }
                                             }
@@ -197,9 +186,17 @@ fun <T : Device> DeviceCard(
                                                 tint = Color(0xFFFFB703),
                                             )
                                         }
-                                    } else {
+                                    }
+                                    else {
                                         IconButton(
-                                            onClick = { fav = !fav }
+                                            onClick = {
+                                                coroutineScope.launch {
+                                                    device.id?.let {
+//                                                        Log.d("DEBUG", "Agregamos: ${device.id}")
+                                                        favDevViewModel.insertFavorite(it)
+                                                    }
+                                                }
+                                            }
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Default.StarOutline,

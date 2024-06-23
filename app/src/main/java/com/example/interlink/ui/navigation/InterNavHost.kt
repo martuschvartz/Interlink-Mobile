@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.interlink.ui.devices.FavoritesEntryViewModel
+import com.example.interlink.ui.devices.StoredEventEntryViewModel
 import com.example.interlink.ui.pages.ActivityPage
 import com.example.interlink.ui.pages.DevicesPage
 import com.example.interlink.ui.pages.HomePage
@@ -13,7 +14,8 @@ import com.example.interlink.ui.pages.HomePage
 fun InterNavHost(
     navController: NavHostController,
     startDestination: String = AppNavigation.HOME.route,
-    favDevViewModel : FavoritesEntryViewModel?
+    favDevViewModel : FavoritesEntryViewModel?,
+    storedEventViewModel : StoredEventEntryViewModel?
 ){
     NavHost(
         navController = navController,
@@ -21,12 +23,16 @@ fun InterNavHost(
     ){
         composable(route = AppNavigation.HOME.route){
             if (favDevViewModel != null) {
-                HomePage(favDevViewModel = favDevViewModel)
+                if (storedEventViewModel != null) {
+                    HomePage(favDevViewModel = favDevViewModel, storedEvents = storedEventViewModel)
+                }
             }
         }
 
         composable(route = AppNavigation.ACTIVITY.route){
-            ActivityPage()
+            if (storedEventViewModel != null) {
+                ActivityPage(storedEvents = storedEventViewModel)
+            }
         }
 
         composable(route = AppNavigation.DEVICES.route){

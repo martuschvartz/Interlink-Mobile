@@ -34,10 +34,9 @@ private val LightColorScheme = lightColorScheme(
 
 )
 
-// Todo: Cambiar esto a un actual dark theme
 private val DarkColorScheme = lightColorScheme(
-    background = md_theme_light_background,
-    onBackground = Color(0x00000000),
+    background = md_theme_dark_background,
+    onBackground = Color(0xFFFFFFFF),
     onSurface = Color(0x00000000),
     primaryContainer = md_theme_light_coffee,
     onPrimaryContainer = md_theme_light_background,
@@ -71,7 +70,7 @@ fun InterlinkTheme(
     }
 
     MaterialTheme(
-        colorScheme = LightColorScheme,
+        colorScheme = colorScheme,
         typography = Typography,
         content = content
     )
