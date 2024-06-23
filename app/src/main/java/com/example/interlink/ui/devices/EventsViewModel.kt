@@ -1,5 +1,6 @@
 package com.example.interlink.ui.devices
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -11,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.interlink.DataSourceException
 import com.example.interlink.R
 import com.example.interlink.database.FavoritesDatabase
+import com.example.interlink.database.StoredEvent
 import com.example.interlink.database.StoredEventData
 import com.example.interlink.model.Device
 import com.example.interlink.model.DeviceType
@@ -18,6 +20,7 @@ import com.example.interlink.repository.DeviceRepository
 import com.example.interlink.model.Error
 import com.example.interlink.model.Event
 import com.example.interlink.remote.model.RemoteEvent
+import com.example.interlink.repository.StoredEventRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +34,9 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 class EventsViewModel(
-    private val repository: DeviceRepository
+    private val repository: DeviceRepository,
+    private val eventRepo: StoredEventRepository,
+    context: Context
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(EventsUiState())
     val uiState = _uiState.asStateFlow()
@@ -43,13 +48,7 @@ class EventsViewModel(
             ) { state, response ->
                 var filtered: List<RemoteEvent> = filterEvents(response)
                 filtered.forEach{ event ->
-//                    storedEvents.insertEvent(
-//                        StoredEventData(
-//                            "test",
-//                            "un test ha aparecido",
-//                            "25:00:00"
-//                        )
-//                    )
+                    eventRepo.insertEvent(event = StoredEvent(name = event.device.name, description = eventDescription(event = event, context = context), timestamp = event.timestamp))
                 }
                 state.copy(events = filtered + state.events) }
         }
@@ -95,8 +94,7 @@ class EventsViewModel(
         return toRet
     }
 
-    @Composable
-    private fun eventDescription(event: RemoteEvent) : String{
+    private fun eventDescription(event: RemoteEvent, context: Context?) : String{
         var toRet : String = ""
         val argsObject = event.args.asJsonObject
         when(event.device.type){
@@ -104,26 +102,26 @@ class EventsViewModel(
                 when (event.event) {
                     "statusChanged" -> {
                         when(argsObject["newStatus"].asString){
-                            "opened" -> toRet = stringResource(id = R.string.openedDoor)
-                            "closed" -> toRet = stringResource(id = R.string.closedDoor)
+                            "opened" -> toRet = context!!.getString(R.string.openedDoor)
+                            "closed" -> toRet = context!!.getString(R.string.closedDoor)
                         }
                     }
                     "lockChanged" -> when(argsObject["newLock"].asString){
-                        "locked" -> toRet = stringResource(id = R.string.lockedDoor)
-                        "unlocked" -> toRet = stringResource(id = R.string.unlockedDoor)
+                        "locked" -> toRet = context!!.getString(R.string.lockedDoor)
+                        "unlocked" -> toRet = context!!.getString(R.string.unlockedDoor)
                     }
                 }
             }
             DeviceType.ALARM -> when(argsObject["newStatus"].asString){
-                "armedStay" -> toRet = stringResource(id = R.string.armedAlarm)
-                "armedAway" -> toRet = stringResource(id = R.string.armedAlarm)
-                "disarmed" -> toRet = stringResource(id = R.string.disarmedAlarm)
+                "armedStay" -> toRet= context!!.getString(R.string.armedAlarm)
+                "armedAway" -> toRet = context!!.getString(R.string.armedAlarm)
+                "disarmed" -> toRet = context!!.getString(R.string.disarmedAlarm)
             }
             DeviceType.BLINDS-> when(argsObject["newStatus"].asString){
-                "opened" -> toRet = stringResource(id = R.string.openedBlinds)
-                "closed" -> toRet = stringResource(id = R.string.closedBlinds)
-                "opening" -> toRet = stringResource(id = R.string.openingBlinds)
-                "closing" -> toRet = stringResource(id = R.string.closingBlinds)
+                "opened" -> toRet = context!!.getString(R.string.openedBlinds)
+                "closed" -> toRet = context!!.getString(R.string.closedBlinds)
+                "opening" -> toRet = context!!.getString(R.string.openingBlinds)
+                "closing" -> toRet = context!!.getString(R.string.closingBlinds)
             }
 
             else -> {}

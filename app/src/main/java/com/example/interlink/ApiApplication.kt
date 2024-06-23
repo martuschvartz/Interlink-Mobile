@@ -11,10 +11,12 @@ import android.os.Build
 import android.os.SystemClock
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import com.example.interlink.database.FavoritesDatabase
 import com.example.interlink.receiver.ServerEventReceiver
 import com.example.interlink.remote.DeviceRemoteDataSource
 import com.example.interlink.remote.api.RetrofitClient
 import com.example.interlink.repository.DeviceRepository
+import com.example.interlink.repository.StoredEventRepository
 
 class ApiApplication : Application() {
 
@@ -67,6 +69,12 @@ class ApiApplication : Application() {
 
     val deviceRepository: DeviceRepository
         get() = DeviceRepository(deviceRemoteDataSource)
+
+
+    val database = FavoritesDatabase.getDatabase(this)
+    private val storedEventDao = database.storedEventDao()
+    val eventRepository: StoredEventRepository
+        get() = StoredEventRepository(storedEventDao)
 
     companion object {
         const val TAG = "NOTIF"
