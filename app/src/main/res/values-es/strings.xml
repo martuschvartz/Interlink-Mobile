@@ -64,6 +64,9 @@
     <string name="newCodeLabel">Ingrese el nuevo código de 4 dígitos</string>
     <string name="enterAgain">Código incorrecto</string>
     <string name="invalidCode">Código inválido</string>
+    <string name="turnoOnAlarm">Encender Alarma</string>
+    <string name="turnOnRemotely">Encender Remoto</string>
+    <string name="turnOnLocally">Encender Local</string>
 
 
     <!-- Para el parlante -->

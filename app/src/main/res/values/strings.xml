@@ -64,6 +64,9 @@
     <string name="newCodeLabel">Enter new four digit code</string>
     <string name="enterAgain">Incorrect code</string>
     <string name="invalidCode">Invalid code</string>
+    <string name="turnoOnAlarm">Turn On Alarm</string>
+    <string name="turnOnRemotely">Turn On Remotely</string>
+    <string name="turnOnLocally">Turn On Locally</string>
 
 
     <!-- Para el parlante -->
